@@ -30,7 +30,10 @@ struct SDL_Application{
 
     SDL_Window* mWindow;
     SDL_Renderer* mRenderer;
-    SDL_Texture* mTexture;
+    SDL_Texture* bgTexture;
+    SDL_Texture* bubbles_I_texture;
+    SDL_Texture* bubbles_II_texture;
+    SDL_Texture* bubbles_III_texture;
     
     bool running = true;
 
@@ -58,7 +61,7 @@ struct SDL_Application{
 	    if (surface == nullptr){
 		    assert(0 && "ERROR: File not found :c");
 	    }
-	    mTexture = SDL_CreateTextureFromSurface(mRenderer, surface);
+	    bgTexture = SDL_CreateTextureFromSurface(mRenderer, surface);
 
 
 	    SDL_Surface* bubbles_I_surface = SDL_LoadPNG("./bubbles_I.png");
@@ -74,6 +77,11 @@ struct SDL_Application{
         SDL_Surface* bubbles_I_surface = SDL_LoadPNG("./bubbles_I.png");
 	    SDL_Surface* bubbles_II_surface = SDL_LoadPNG("./bubbles_II.png");
 	    SDL_Surface* bubbles_III_surface = SDL_LoadPNG("./bubbles_III.png");
+
+	    bubbles_I_texture   = SDL_CreateTextureFromSurface(mRenderer, bubbles_I_surface);
+	    bubbles_II_texture  = SDL_CreateTextureFromSurface(mRenderer, bubbles_II_surface);
+	    bubbles_III_texture = SDL_CreateTextureFromSurface(mRenderer, bubbles_III_surface);
+        
 
     }
 	// Destructor
@@ -109,15 +117,15 @@ struct SDL_Application{
 		SDL_SetRenderDrawColor(mRenderer, 0xBB, 0xAA, 0xEE, 0xFF);
 		SDL_RenderClear(mRenderer);
 
-		SDL_RenderTexture(mRenderer, mTexture, nullptr, nullptr);
+		SDL_RenderTexture(mRenderer, bgTexture, nullptr, nullptr);
 
         bubbles();
         stars();
 
 		// draw other things here ...
 		
-        // SDL_SetTextureScaleMode(mTexture, SDL_SCALEMODE_NEAREST);        // For pixel-art textures (no interpolation or antialiasing).
-        SDL_SetTextureScaleMode(mTexture, SDL_SCALEMODE_LINEAR);            // For high definition textures (features interpolation and antialiasing).
+        // SDL_SetTextureScaleMode(bgTexture, SDL_SCALEMODE_NEAREST);        // For pixel-art textures (no interpolation or antialiasing).
+        SDL_SetTextureScaleMode(bgTexture, SDL_SCALEMODE_LINEAR);            // For high definition textures (features interpolation and antialiasing).
 
 		SDL_RenderPresent(mRenderer);
 	}
