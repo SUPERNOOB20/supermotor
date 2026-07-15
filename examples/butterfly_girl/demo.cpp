@@ -64,8 +64,8 @@ struct SDL_Application{
 	    bgTexture = SDL_CreateTextureFromSurface(mRenderer, surface);
 
 
-	    SDL_Surface* bubbles_I_surface = SDL_LoadPNG("./bubbles_I.png");
-	    SDL_Surface* bubbles_II_surface = SDL_LoadPNG("./bubbles_II.png");
+	    SDL_Surface* bubbles_I_surface   = SDL_LoadPNG("./bubbles_I.png");
+	    SDL_Surface* bubbles_II_surface  = SDL_LoadPNG("./bubbles_II.png");
 	    SDL_Surface* bubbles_III_surface = SDL_LoadPNG("./bubbles_III.png");
 
         // generate_horizontal_atlas(stars_surface, "stars.png")        < --- Scrapped idea, sorry.
