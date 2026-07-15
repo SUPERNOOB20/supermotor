@@ -1,4 +1,4 @@
-// Removing elements not planned for a while
+// Adding/removing elements not planned for a while
 // (will be implemented in the future,
 //  but it's just not an immediate priority for me rn... e.e)
 
@@ -11,7 +11,22 @@
 
 
 
-// Specifies the Gallery interface.
+//////////  Specifies the Gallery interface.
+
+// Makes gallery items as a "class inside a class"
+/*
+class GalleryItem {
+
+    public:
+        // GalleryItem();
+        T& getPrev(T&);
+        T& getNext(T&); 
+
+    private:
+        T prev;
+        T next; 
+};
+*/
 
 
 template <class T>
@@ -19,14 +34,11 @@ class Gallery {
 
     public:
         Gallery(uint32_t size = 100);
-        T& getPrev(T&);
-        T& getNext(T&); 
         uint32_t getSize(); 
+        T GalleryItem;     // Makes gallery items as a "class inside a class"   (Credits to https://stackoverflow.com/a/10250087/30458314)
 
     private:
         uint32_t size;
-        T previous;
-        T next; 
 };
 
 
@@ -34,7 +46,8 @@ class Gallery {
 
 
 
-// Implements the Gallery interface.
+//////////  Implements the Gallery interface.
+
 // You would usually have this in a .cpp file,
 // but I'd rather do a "header-only game engine",
 // so there goes that design choice of mine...
@@ -64,6 +77,14 @@ class Gallery {
 //      (think of Pureya's menus, for example).
 
 
+//    Q: How is this "Gallery" thing implemented here?
+//    A: Gallery is a template, and
+//       GalleryItem is a class.
+//      
+//             GalleryItem is kind of a "class inside a class" thing here :3
+
+
+
 // Constructor.
 // .
 // You can have uint64_t instead if
@@ -73,18 +94,17 @@ template <class T>
 Gallery <T> :: Gallery (uint32_t this_size)     // Java who? :p
 {
     size = this_size;
+    class GalleryItem
+    {
+    public:
+        T&   getPrev()   { return &getPrev(); }
+        T&   getNext()   { return &getNext(); }
+    private:
+        T    prev;     // "Prev" stands for "previous" (duh...)
+        T    next;
+    };
 }
 
 
-template <class T>
-T& Gallery <T> :: getPrev(T& currentElement)
-{
-    return &getPrev();      // "Prev" stands for "previous" (duh...)
-}
 
 
-template <class T>
-T& Gallery <T> :: getNext(T& currentElement)
-{
-    return &getNext();
-}
