@@ -1,3 +1,8 @@
+// Removing elements not planned for a while
+// (will be implemented in the future,
+//  but it's just not an immediate priority for me rn... e.e)
+
+
 // Specifies the Gallery interface.
 
 
@@ -5,13 +10,15 @@ template <class T>
 class Gallery {
 
 public:
-Pila();
-bool poner(const Tipo);
-bool quitar(Tipo&); 
+    Gallery();
+    T getPrev();
+    T getNext(); 
+    uint32_t getSize(); 
+
 private:
     T size[MaxSize];
-    previous;
-    next; 
+    T previous;
+    T next; 
 };
 
 
@@ -46,16 +53,16 @@ private:
 //
 //      This should allow us (and you!)
 //      to implement grids, image galleries, etc. :3
-//      (think of Pureya's menues, for example).
+//      (think of Pureya's menus, for example).
 
 
 // Constructor.
 // .
-// You can have Uint64 instead if
+// You can have uint64_t instead if
 // (for whatever absolutely MACABRE reason...)
 // you need a bigger Gallery.
 template <class T>
-Gallery T (Uint32 size = 100)
+Gallery <T> :: Gallery (uint32_t size = 100)
 {
     create(size);
 }
