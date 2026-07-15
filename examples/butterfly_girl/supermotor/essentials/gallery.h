@@ -3,22 +3,30 @@
 //  but it's just not an immediate priority for me rn... e.e)
 
 
+
+
+// #include <cstdint.h>     // Includes uintN_t datatypes (I THINK dafsfhdsjg)
+#include <stdint.h>     // Includes uintN_t datatypes (I THINK dafsfhdsjg)
+
+
+
+
 // Specifies the Gallery interface.
 
 
 template <class T>
 class Gallery {
 
-public:
-    Gallery();
-    T getPrev();
-    T getNext(); 
-    uint32_t getSize(); 
+    public:
+        Gallery(uint32_t size = 100);
+        T& getPrev(T&);
+        T& getNext(T&); 
+        uint32_t getSize(); 
 
-private:
-    T size[MaxSize];
-    T previous;
-    T next; 
+    private:
+        uint32_t size;
+        T previous;
+        T next; 
 };
 
 
@@ -62,21 +70,21 @@ private:
 // (for whatever absolutely MACABRE reason...)
 // you need a bigger Gallery.
 template <class T>
-Gallery <T> :: Gallery (uint32_t size = 100)
+Gallery <T> :: Gallery (uint32_t this_size)     // Java who? :p
 {
-    create(size);
+    size = this_size;
 }
 
 
 template <class T>
-void Gallery <T> :: prev(T& prevElement)
+T& Gallery <T> :: getPrev(T& currentElement)
 {
-    getPrev();      // "Prev" stands for "previous" (duh...)
+    return &getPrev();      // "Prev" stands for "previous" (duh...)
 }
 
 
 template <class T>
-void Gallery <T> :: next(T& nextElement)
+T& Gallery <T> :: getNext(T& currentElement)
 {
-    getNext();
+    return &getNext();
 }
