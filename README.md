@@ -1,11 +1,13 @@
 # supermotor
-My own game engine (requires SDL3)<br>
+## My own game engine (requires SDL3)<br>
 <br>
 supermotor features:<br>
 ( ✅️✅️ means already implemented )<br>
 ( ✅️ means planned )<br>
 ( 🔜 means planned, but not for the near future (low priority in my to-do list ) <br>
 ( ❌️ means not planned for the near future )<br>
+<br>
+<br>
 <br>
 ✅️   Batch rendering (loading data to the GPU in bulk)<br>
 ❌️   3D<br>
