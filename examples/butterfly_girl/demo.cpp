@@ -68,15 +68,12 @@ struct SDL_Application{
 	    SDL_Surface* bubbles_II_surface  = SDL_LoadPNG("./bubbles_II.png");
 	    SDL_Surface* bubbles_III_surface = SDL_LoadPNG("./bubbles_III.png");
 
-        // generate_horizontal_atlas(stars_surface, "stars.png")        < --- Scrapped idea, sorry.
-        generate_vertical_atlas(bubbles_I_surface, "bubbles_I_f.png");
-        generate_vertical_atlas(bubbles_II_surface, "bubbles_II_f.png");
-        generate_vertical_atlas(bubbles_III_surface, "bubbles_III_f.png");
 
-        // Maybe not optimal, but OK.
-        SDL_Surface* bubbles_I_surface = SDL_LoadPNG("./bubbles_I.png");
-	    SDL_Surface* bubbles_II_surface = SDL_LoadPNG("./bubbles_II.png");
-	    SDL_Surface* bubbles_III_surface = SDL_LoadPNG("./bubbles_III.png");
+        // generate_and_load_atlas("horizontal", stars_surface, "stars.png")        < --- Scrapped idea, sorry.
+        generate_and_load_atlas("vertical", bubbles_I_surface, "bubbles_I_f.png");
+        generate_and_load_atlas("vertical", bubbles_II_surface, "bubbles_II_f.png");
+        generate_and_load_atlas("vertical", bubbles_III_surface, "bubbles_III_f.png");
+
 
 	    bubbles_I_texture   = SDL_CreateTextureFromSurface(mRenderer, bubbles_I_surface);
 	    bubbles_II_texture  = SDL_CreateTextureFromSurface(mRenderer, bubbles_II_surface);

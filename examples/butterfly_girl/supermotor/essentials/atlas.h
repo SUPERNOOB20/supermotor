@@ -1,3 +1,7 @@
+#ifndef ATLAS_HEADER_FILE
+#define ATLAS_HEADER_FILE
+
+
 // Animation atlas.
 // These functions are handled by the CPU
 // and are rather costly - my suggestions is that you
@@ -41,3 +45,31 @@ bool generate_vertical_atlas(SDL_Surface* image_surface, const char* filename){
 
     return 0;   // Success! :3
 }
+
+
+SDL_Texture load_atlas(SDL_Surface* image_surface, const char* filename){
+
+    SDL_Texture* mTexture
+    bgTexture = SDL_CreateTextureFromSurface(mRenderer, surface);
+
+    return mTexture;   // Success! :3
+}
+
+
+
+
+SDL_Texture generate_and_load_atlas(const char* direction, SDL_Surface* image_surface, const char* filename){
+
+    if direction == vertical{
+        generate_vertical_atlas(image_surface, filename);    
+    } else {       // direction == horizontal
+        generate_horizontal_atlas(image_surface, filename);    
+    }
+    
+
+    load_atlas(image_surface, filename);
+
+    return mTexture;   // Success! :3
+}
+
+#endif

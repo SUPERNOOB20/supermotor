@@ -1,8 +1,29 @@
+#ifndef ANIMATE_HEADER_FILE
+#define ANIMATE_HEADER_FILE
+
+
 // Basic animations for backgrounds and the like.
 
+#include <SDL3/SDL.h>
+#include "atlas.h"
 
 
 
+void animate_vertically() {
+    static frame_counter = 0;
+    if frame_counter = 0{
+        generate_and_load_vertical_atlas(SDL_Surface* image_surface, const char* filename)
+    }
+    
+}
+
+void animate_horizontally() {
+    static frame_counter = 0;
+    if frame_counter = 0{
+        generate_and_load_horizontal_atlas(SDL_Surface* image_surface, const char* filename)
+    }
+    
+}
 
 
 
@@ -28,13 +49,19 @@
 //
 // I wonder if int could be replaced by something like Uint32 or uint32_t here...
 // (e.g: It wouldn't make sense to have an image with negative resolution...)
-static animate(const char* direction, Uint64 duration, int texture_height, int texture_width, Uint64 deltaTime){
+static void animate(SDL_Renderer mRenderer, const char* direction, Uint64 duration, int texture_height, int texture_width, Uint64 deltaTime){
 
     if texture_width == nullptr{
         animate_vertically();
     } else if texture_height == nullptr {
         animate_horizontally();
-    } else {
-        animate_diagonally();
-    }
+    } // else {
+        // animate_diagonally();
+    // }
 }
+
+
+
+
+
+#endif
