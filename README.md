@@ -17,7 +17,8 @@ supermotor features:<br>
 🔜   Squishing and streching <br>
 ❌️   Cameras (and corresponding transformations) <br>
 🔜   Bezier trayectories and transitions <br>
-❌️   Lerps (linear interpolations)
+❌️   Lerps (linear interpolations)<br>
 ✅️   Collisions<br>
+✅️   Transient objects <br>
 ✅️   Screenshots<br>
 ❌️   Shaders, Graphics pipelines
