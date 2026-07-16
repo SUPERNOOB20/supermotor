@@ -13,19 +13,21 @@
 // Will fix in the future with classes and instantiation e.e
 void animation_loop(const char direction, SDL_Surface image_surface, SDL_FRect* &image_pos_rect, const char* filename, Uint64 deltaTime) {
 
-    SDL_Texture* = mTexture;        // Texture declaration.
-
-    static frame_counter = 0;
+    static bool frame_counter = 0;
     if (frame_counter = 0) {        // This step is "heavy". We should do this only once. And ideally in a "loading" screen (not in the middle of the gameplay, where it might stutter the game and tamper the player's experience)
+        SDL_Texture* = mTexture;        // Texture declaration.
         mTexture = generate_and_load_atlas(direction, image_surface, filename);     // Texture initialization (we move your image from the CPU to the GPU here).
     }
 
-    if (direction == vertical){
+    frame_counter += 1;
+
+    if (direction == "vertical"){
         SDL_FRect->y += (deltaTime / 100)
     } else {        // direction == horizontal
         SDL_FRect->x += (deltaTime / 100)
     }
     
+    return mTexture;
 }
 
 
@@ -54,9 +56,9 @@ void animation_loop(const char direction, SDL_Surface image_surface, SDL_FRect* 
 // (e.g: It wouldn't make sense to have an image with negative resolution...)
 static void animate(SDL_Renderer mRenderer, const char* direction, Uint64 duration, int texture_height, int texture_width, Uint64 deltaTime){
 
-    if texture_width == nullptr{
+    if (texture_width == nullptr) {
         animate_vertically();
-    } else if texture_height == nullptr {
+    } else if (texture_height == nullptr) {
         animate_horizontally();
     } // else {
         // animate_diagonally();

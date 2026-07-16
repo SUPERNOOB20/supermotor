@@ -14,7 +14,7 @@
 #include "supermotor/essentials/animate.h"
 #include "supermotor/essentials/atlas.h"
 
-
+Uint64 deltaTime;
 
 //   Overwrite these two values with the resolution of your assets
 //  (For example: mine here is 900x1600)
@@ -23,37 +23,37 @@ static float texture_width = 900.0f;
 static float texture_height = 1600.0f;
 
 SDL_FRect a_dst_rect;
-a_dst_rect.x = 0.0f
-a_dst_rect.y = 0.0f
-a_dst_rect.w = texture_width;
-a_dst_rect.h = texture_height;
+a_dst_rect.x = (float) 0.0f;
+a_dst_rect.y = (float) 0.0f;
+a_dst_rect.w = (float) texture_width;
+a_dst_rect.h = (float) texture_height;
 
 SDL_FRect b_dst_rect;
-b_dst_rect.x = 0.0f
-b_dst_rect.y = 0.0f
-b_dst_rect.w = texture_width;
-b_dst_rect.h = texture_height;
+b_dst_rect.x = (float) 0.0f;
+b_dst_rect.y = (float) 0.0f;
+b_dst_rect.w = (float) texture_width;
+b_dst_rect.h = (float) texture_height;
 
 SDL_FRect c_dst_rect;
-c_dst_rect.x = 0.0f
-c_dst_rect.y = 0.0f
-c_dst_rect.w = texture_width;
-c_dst_rect.h = texture_height;
+c_dst_rect.x = (float) 0.0f;
+c_dst_rect.y = (float) 0.0f;
+c_dst_rect.w = (float) texture_width;
+c_dst_rect.h = (float) texture_height;
 
 
 
 
-void bubbles(deltaTime){
-    a = animation_loop("vertical", bubbles_I_surface, "bubbles_I_f.png", deltaTime);
-    b = animation_loop("vertical", bubbles_II_surface, "bubbles_II_f.png", deltaTime);
-    c = animation_loop("vertical", bubbles_III_surface, "bubbles_III_f.png", deltaTime);
+void bubbles(Uint64 deltaTime){
+    a = animation_loop("vertical", bubbles_I_surface, "bubbles_I_f.png", deltaTime);               //  a
+    b = animation_loop("vertical", bubbles_II_surface, "bubbles_II_f.png", deltaTime);            //   b
+    c = animation_loop("vertical", bubbles_III_surface, "bubbles_III_f.png", deltaTime);         //    c
 
-    SDL_RenderTexture(mRenderer, a, nullptr, nullptr);
-    SDL_RenderTexture(mRenderer, b, nullptr, nullptr);
-	SDL_RenderTexture(mRenderer, c, nullptr, nullptr);
+    SDL_RenderTexture(mRenderer, a, nullptr, &a_dst_rect);
+    SDL_RenderTexture(mRenderer, b, nullptr, &b_dst_rect);
+	SDL_RenderTexture(mRenderer, c, nullptr, &c_dst_rect);
 }
 
-void stars(deltaTime){
+void stars(Uint64 deltaTime){
     // animation_loop ("horizontal", stars_surface, "stars.png", deltaTime)        < --- Scrapped idea, sorry.
    // ...
 }
@@ -167,7 +167,7 @@ struct SDL_Application{
 		Uint64 lastTime = 0;
 		while(running){
 			Uint64 currentTick = SDL_GetTicks();
-			Tick(Uint64 deltaTime);
+			Tick(deltaTime);
 			fps++;
 
 			Uint64 deltaTime = SDL_GetTicks() - currentTick;

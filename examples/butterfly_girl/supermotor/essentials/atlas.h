@@ -27,7 +27,7 @@ bool generate_horizontal_atlas(SDL_Surface* image_surface, const char* filename)
     !SDL_SavePNG(image_surface, filename);
 
     return 0;   // Success! :3
-}t
+}
 
 
 
