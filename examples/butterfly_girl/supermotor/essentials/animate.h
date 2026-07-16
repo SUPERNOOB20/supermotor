@@ -9,18 +9,21 @@
 
 
 
-void animate_vertically() {
-    static frame_counter = 0;
-    if frame_counter = 0{
-        generate_and_load_vertical_atlas(SDL_Surface* image_surface, const char* filename)
-    }
-    
-}
+// Limitation: Probably only one loop at a time cuz static.
+// Will fix in the future with classes and instantiation e.e
+void animation_loop(const char direction, SDL_Surface image_surface, SDL_FRect* &image_pos_rect, const char* filename, Uint64 deltaTime) {
 
-void animate_horizontally() {
+    SDL_Texture* = mTexture;        // Texture declaration.
+
     static frame_counter = 0;
-    if frame_counter = 0{
-        generate_and_load_horizontal_atlas(SDL_Surface* image_surface, const char* filename)
+    if (frame_counter = 0) {        // This step is "heavy". We should do this only once. And ideally in a "loading" screen (not in the middle of the gameplay, where it might stutter the game and tamper the player's experience)
+        mTexture = generate_and_load_atlas(direction, image_surface, filename);     // Texture initialization (we move your image from the CPU to the GPU here).
+    }
+
+    if (direction == vertical){
+        SDL_FRect->y += (deltaTime / 100)
+    } else {        // direction == horizontal
+        SDL_FRect->x += (deltaTime / 100)
     }
     
 }

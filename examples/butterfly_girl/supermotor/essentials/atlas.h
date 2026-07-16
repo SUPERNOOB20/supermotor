@@ -27,7 +27,7 @@ bool generate_horizontal_atlas(SDL_Surface* image_surface, const char* filename)
     !SDL_SavePNG(image_surface, filename);
 
     return 0;   // Success! :3
-}
+}t
 
 
 
@@ -47,10 +47,10 @@ bool generate_vertical_atlas(SDL_Surface* image_surface, const char* filename){
 }
 
 
-SDL_Texture load_atlas(SDL_Surface* image_surface, const char* filename){
+SDL_Texture load_atlas(SDL_Renderer* mRenderer, SDL_Surface* image_surface){
 
     SDL_Texture* mTexture
-    bgTexture = SDL_CreateTextureFromSurface(mRenderer, surface);
+    bgTexture = SDL_CreateTextureFromSurface(mRenderer, image_surface);
 
     return mTexture;   // Success! :3
 }
@@ -58,7 +58,7 @@ SDL_Texture load_atlas(SDL_Surface* image_surface, const char* filename){
 
 
 
-SDL_Texture generate_and_load_atlas(const char* direction, SDL_Surface* image_surface, const char* filename){
+SDL_Texture generate_and_load_atlas(SDL_Renderer* mRenderer, const char* direction, SDL_Surface* image_surface, const char* filename){
 
     if direction == vertical{
         generate_vertical_atlas(image_surface, filename);    
@@ -67,7 +67,7 @@ SDL_Texture generate_and_load_atlas(const char* direction, SDL_Surface* image_su
     }
     
 
-    load_atlas(image_surface, filename);
+    load_atlas(mRenderer, image_surface);
 
     return mTexture;   // Success! :3
 }

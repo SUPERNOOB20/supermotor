@@ -11,16 +11,51 @@
 
 #define WINDOW_WIDTH   1280
 #define WINDOW_HEIGHT   720
+#include "supermotor/essentials/animate.h"
 #include "supermotor/essentials/atlas.h"
 
 
 
+//   Overwrite these two values with the resolution of your assets
+//  (For example: mine here is 900x1600)
+//  (Usually this would be filled automatically, but... e.e)
+static float texture_width = 900.0f;
+static float texture_height = 1600.0f;
+
+SDL_FRect a_dst_rect;
+a_dst_rect.x = 0.0f
+a_dst_rect.y = 0.0f
+a_dst_rect.w = texture_width;
+a_dst_rect.h = texture_height;
+
+SDL_FRect b_dst_rect;
+b_dst_rect.x = 0.0f
+b_dst_rect.y = 0.0f
+b_dst_rect.w = texture_width;
+b_dst_rect.h = texture_height;
+
+SDL_FRect c_dst_rect;
+c_dst_rect.x = 0.0f
+c_dst_rect.y = 0.0f
+c_dst_rect.w = texture_width;
+c_dst_rect.h = texture_height;
 
 
-void bubbles(){
+
+
+void bubbles(deltaTime){
+    a = animation_loop("vertical", bubbles_I_surface, "bubbles_I_f.png", deltaTime);
+    b = animation_loop("vertical", bubbles_II_surface, "bubbles_II_f.png", deltaTime);
+    c = animation_loop("vertical", bubbles_III_surface, "bubbles_III_f.png", deltaTime);
+
+    SDL_RenderTexture(mRenderer, a, nullptr, nullptr);
+    SDL_RenderTexture(mRenderer, b, nullptr, nullptr);
+	SDL_RenderTexture(mRenderer, c, nullptr, nullptr);
 }
 
-void stars(){
+void stars(deltaTime){
+    // animation_loop ("horizontal", stars_surface, "stars.png", deltaTime)        < --- Scrapped idea, sorry.
+   // ...
 }
 
 
@@ -68,13 +103,6 @@ struct SDL_Application{
 	    SDL_Surface* bubbles_II_surface  = SDL_LoadPNG("./bubbles_II.png");
 	    SDL_Surface* bubbles_III_surface = SDL_LoadPNG("./bubbles_III.png");
 
-
-        // generate_and_load_atlas("horizontal", stars_surface, "stars.png")        < --- Scrapped idea, sorry.
-        generate_and_load_atlas("vertical", bubbles_I_surface, "bubbles_I_f.png");
-        generate_and_load_atlas("vertical", bubbles_II_surface, "bubbles_II_f.png");
-        generate_and_load_atlas("vertical", bubbles_III_surface, "bubbles_III_f.png");
-
-
 	    bubbles_I_texture   = SDL_CreateTextureFromSurface(mRenderer, bubbles_I_surface);
 	    bubbles_II_texture  = SDL_CreateTextureFromSurface(mRenderer, bubbles_II_surface);
 	    bubbles_III_texture = SDL_CreateTextureFromSurface(mRenderer, bubbles_III_surface);
@@ -109,15 +137,15 @@ struct SDL_Application{
 	}
 
 
-	void Render(){
+	void Render(Uint64 deltaTime){
 
 		SDL_SetRenderDrawColor(mRenderer, 0xBB, 0xAA, 0xEE, 0xFF);
 		SDL_RenderClear(mRenderer);
 
 		SDL_RenderTexture(mRenderer, bgTexture, nullptr, nullptr);
 
-        bubbles();
-        stars();
+        bubbles(deltaTime);
+        stars(deltaTime);
 
 		// draw other things here ...
 		
@@ -128,10 +156,10 @@ struct SDL_Application{
 	}
 
     // Every tick is one iteration of the game loop.
-	void Tick(){
+	void Tick(Uint64 deltaTime){
 		Input();
 		Update();
-		Render();
+		Render(deltaTime);
 	}
 
 	void MainLoop(){
@@ -139,7 +167,7 @@ struct SDL_Application{
 		Uint64 lastTime = 0;
 		while(running){
 			Uint64 currentTick = SDL_GetTicks();
-			Tick();
+			Tick(Uint64 deltaTime);
 			fps++;
 
 			Uint64 deltaTime = SDL_GetTicks() - currentTick;
