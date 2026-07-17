@@ -1,7 +1,12 @@
 # supermotor
-My own game engine (requires SDL3)<br>
+My own C++ game engine <br>
 <br>
-supermotor features:<br>
+
+## Requirements
+* SDL3
+<br> 
+## Features
+<br>
 ( ✅️✅️ means already implemented )<br>
 ( ✅️ means planned )<br>
 ( 🔜 means planned, but not for the near future (low priority in my to-do list ) <br>
@@ -21,4 +26,19 @@ supermotor features:<br>
 ✅️   Collisions<br>
 ✅️   Transient objects <br>
 ✅️   Screenshots<br>
-❌️   Shaders, Graphics pipelines
+❌️   Shaders, Graphics pipelines<br>
+<br>
+
+## Why you should use supermotor
+<br>
+* It's simple and easy to understand <br>
+* It's open source <br>
+* It's free <br>
+* It's somewhat fast (Written in C++ and GPU accelerated) <br>
+* Working with simple implementations for simple gamedev problems is a great hands-on learning experience that will strengthen your problem-solving skills <br>
+* It's merely a collection of libraries, so it comes with all the advantages of a library:<br>
+  * Customizable — add, remove, or refactor to your hearts content. You can even make your own game engine off of it :)<br>
+  * Lightweight — just "a linker away".<br>
+  * Universal — no GUIs, no hidden dependencies <br>
+  * Multipurpose — Even if it's aimed at making videogames, it can also be used for graphics in general. Animations, videos, movies... the limit is your imagination :3 <br>
+* I'm always willing to explain how it works whenever you need it <br>
