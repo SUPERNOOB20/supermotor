@@ -10,7 +10,7 @@ My own C++ game engine <br>
 <br>
 ( ✅️✅️ means already implemented )<br>
 ( ✅️ means planned )<br>
-( 🔜 means planned, but not for the near future (low priority in my to-do list ) <br>
+( 🔜 means planned, but not for the near future (low priority in my to-do list) ) <br>
 ( ❌️ means not planned for the near future )<br>
 <br>
 <br>
