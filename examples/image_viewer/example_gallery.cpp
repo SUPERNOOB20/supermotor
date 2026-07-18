@@ -54,9 +54,8 @@ struct SDL_Application{
             SDL_SetRenderLogicalPresentation(mRenderer, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 	    }
 
-        // std::string your_filenames_here[4] = {"./YourImagesHere/Remilia.png", "./YourImagesHere/Yorihime.png", "./YourImagesHere/Youmu.png", "./YourImagesHere/Ascent.png"};       // Make sure to do it like this  --->   https://www.w3schools.com/cpp/cpp_arrays.asp
+
         std::string your_filenames_here[4] = {"./Remilia.png", "./Yorihime.png", "./Youmu.png", "./Ascent.png"};
-        // std::string your_filenames_here[4] = {"../examples/image_viewer/Remilia.png", "../examples/image_viewer/Yorihime.png", "../examples/image_viewer/Youmu.png", "../examples/image_viewer/Ascent.png"};
         your_textures_here = generate_textures(mRenderer, your_filenames_here, 4);
 
     }
@@ -105,7 +104,7 @@ struct SDL_Application{
             texture_srcrect.h = (float) 400.0f;
 
             SDL_RenderTexture(mRenderer, your_textures_here[i], &texture_srcrect, nullptr);
-            SDL_SetTextureScaleMode(your_textures_here[i], SDL_SCALEMODE_LINEAR);            // For high definition textures (features interpolation and antialiasing).
+            // SDL_SetTextureScaleMode(your_textures_here[i], SDL_SCALEMODE_LINEAR);            // Optional step - for high definition textures (features interpolation and antialiasing).
         }
 
         // SDL_RenderTexture(mRenderer, your_textures_here[i], nullptr, nullptr);
