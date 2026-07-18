@@ -21,7 +21,7 @@
 
 
 
-std::vector<SDL_Texture> your_textures_here;
+std::vector<SDL_Texture*> your_textures_here;
 
 
 
@@ -54,7 +54,8 @@ struct SDL_Application{
             SDL_SetRenderLogicalPresentation(mRenderer, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 	    }
 
-        your_textures_here = generate_textures("Remilia", "Yorihime", "Youmu", "Ascent");
+        std::string your_filenames_here[4] = {"Remilia", "Yorihime", "Youmu", "Ascent"};       // Make sure to do it like this  --->   https://www.w3schools.com/cpp/cpp_arrays.asp
+        your_textures_here = generate_textures(mRenderer, your_filenames_here, 4);
 
     }
 	// Destructor
@@ -92,8 +93,8 @@ struct SDL_Application{
 
 		// SDL_RenderTexture(mRenderer, mTexture, nullptr, nullptr);
 
-        for (i = 0; i < sizeof(your_textures_here); i++){
-            SDL_RenderTexture(mRenderer, your_textures_here, nullptr, nullptr);
+        for (int i = 0; i < sizeof(your_textures_here); i++){
+            SDL_RenderTexture(mRenderer, your_textures_here[i], nullptr, nullptr);
         }
 
 		// draw other things here ...
