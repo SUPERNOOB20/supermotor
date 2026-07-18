@@ -44,13 +44,24 @@ c_dst_rect.h = (float) texture_height;
 
 
 void bubbles(Uint64 deltaTime){
+
+    SDL Texture* a;
+    SDL Texture* b;
+    SDL Texture* c;
+
     a = animation_loop("vertical", bubbles_I_surface, "bubbles_I_f.png", deltaTime);               //  a
     b = animation_loop("vertical", bubbles_II_surface, "bubbles_II_f.png", deltaTime);            //   b
     c = animation_loop("vertical", bubbles_III_surface, "bubbles_III_f.png", deltaTime);         //    c
 
+    
     SDL_RenderTexture(mRenderer, a, nullptr, &a_dst_rect);
+    delete a;
+    
     SDL_RenderTexture(mRenderer, b, nullptr, &b_dst_rect);
+    delete b;
+
 	SDL_RenderTexture(mRenderer, c, nullptr, &c_dst_rect);
+    delete c;
 }
 
 void stars(Uint64 deltaTime){

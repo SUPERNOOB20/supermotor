@@ -56,9 +56,11 @@ SDL_Texture load_atlas(SDL_Renderer* mRenderer, SDL_Surface* image_surface){
 }
 
 
-
-
-SDL_Texture generate_and_load_atlas(SDL_Renderer* mRenderer, const char* direction, SDL_Surface* image_surface, const char* filename){
+// Horizontal and vertical loop animations require 2 textures:
+// texture1: Original one
+// texture2: Flipped one
+// If I ever implement diagonal atlases, there will be 8 textures.
+SDL_Texture* generate_and_load_atlas(SDL_Renderer* mRenderer, const char* direction, SDL_Surface* image_surface, const char* filename){
 
     if direction == vertical{
         generate_vertical_atlas(image_surface, filename);    
@@ -66,10 +68,12 @@ SDL_Texture generate_and_load_atlas(SDL_Renderer* mRenderer, const char* directi
         generate_horizontal_atlas(image_surface, filename);    
     }
     
+    texture1 = SDL_CreateTextureFromSurface(mRenderer, image_surface);
+    texture2 = load_atlas(mRenderer, image_surface);
 
-    load_atlas(mRenderer, image_surface);
+    SDL_Texture* atlas = new SDL_Texture[];
 
-    return mTexture;   // Success! :3
+    return atlas;   // Success! :3
 }
 
 #endif

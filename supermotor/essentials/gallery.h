@@ -1,3 +1,6 @@
+// I really really wanted to do this on my own, but...
+// ...credits to https://www.geeksforgeeks.org/cpp/cpp-implementation-double-ended-queue/ qwq
+
 // Adding/removing elements not planned for a while
 // (will be implemented in the future,
 //  but it's just not an immediate priority for me rn... e.e)
@@ -12,21 +15,6 @@
 
 
 //////////  Specifies the Gallery interface.
-
-// Makes gallery items as a "class inside a class"
-/*
-class GalleryItem {
-
-    public:
-        // GalleryItem();
-        T& getPrev(T&);
-        T& getNext(T&); 
-
-    private:
-        T prev;
-        T next; 
-};
-*/
 
 
 template <class T>
@@ -85,23 +73,48 @@ class Gallery {
 
 
 
+
+
+
 // Constructor.
 // .
 // You can have uint64_t instead if
 // (for whatever absolutely MACABRE reason...)
 // you need a bigger Gallery.
 template <class T>
-Gallery <T> :: Gallery (uint32_t this_size)     // Java who? :p
+Gallery <T> :: Gallery (uint32_t this_size)     // This is my data structure, the "gallery".
 {
     size = this_size;
-    class GalleryItem
+    class GalleryItem       // Each node of "item" will come from here (1 gallery will have multiple items).
     {
     public:
-        T&   getPrev()   { return &getPrev(); }
-        T&   getNext()   { return &getNext(); }
+        T& getPrev()   { return &getPrev(); }
+        T& getNext()   { return &getNext(); }
+
+        void setPrev() {
+
+            index--;
+            if (index < 0){
+                index = size;
+            }
+            prev = &index;
+        }
+
+
+        void setNext() {
+
+            index++;
+            if (index > size){
+                index = 0;
+            }
+            next = &index;
+        }
+
+
     private:
-        T    prev;     // "Prev" stands for "previous" (duh...)
-        T    next;
+        long int index;
+        T        prev;     // "Prev" stands for "previous" (duh...)
+        T        next;
     };
 }
 
