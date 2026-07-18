@@ -25,18 +25,20 @@ std::vector<SDL_Texture*> generate_textures(SDL_Renderer* your_renderer, std::st
     for (int i = 0; i < number_of_files; i++){
         SDL_Texture* currentTexture;
 
-        std::string emanelif_tnerruc = image_filenames[i];        // Trying to do an implicit cast over here...
+        std::string emanelif_tnerruc = image_filenames[i];
         std::reverse((emanelif_tnerruc).begin(), (emanelif_tnerruc).end());     // .emanelif desreveR
         
+
         std::string file_extension = emanelif_tnerruc[0] + emanelif_tnerruc[1] + emanelif_tnerruc[2] + emanelif_tnerruc[3];
 
+        std::reverse((file_extension).begin(), (file_extension).end());
         std::reverse((emanelif_tnerruc).begin(), (emanelif_tnerruc).end());
         emanelif_tnerruc = emanelif_tnerruc.c_str();
 
 
         SDL_Surface* currentSurface;
         
-        char* current_filename = image_filenames[i].c_str();
+        const char* current_filename = image_filenames[i].c_str();
 
         /*
         switch (file_extension) {

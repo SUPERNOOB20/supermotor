@@ -54,7 +54,7 @@ struct SDL_Application{
             SDL_SetRenderLogicalPresentation(mRenderer, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 	    }
 
-        std::string your_filenames_here[4] = {"Remilia", "Yorihime", "Youmu", "Ascent"};       // Make sure to do it like this  --->   https://www.w3schools.com/cpp/cpp_arrays.asp
+        std::string your_filenames_here[4] = {"YourImagesHere/Remilia.png", "YourImagesHere/Yorihime.png", "YourImagesHere/Youmu.png", "YourImagesHere/Ascent.png"};       // Make sure to do it like this  --->   https://www.w3schools.com/cpp/cpp_arrays.asp
         your_textures_here = generate_textures(mRenderer, your_filenames_here, 4);
 
     }
