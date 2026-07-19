@@ -1,5 +1,5 @@
-// Credits to Mike Shah  -  https://youtu.be/yZl9X47cHi8
-// g++ demo.cpp -O3 -o rgb_demo `pkg-config --libs --cflags sdl3`
+// Boilerplating credits to Mike Shah  -  https://youtu.be/yZl9X47cHi8
+// g++ example_batch_rendering.cpp -O3 -o batch_rendering_app `pkg-config --libs --cflags sdl3`
 
 // .
 // .
