@@ -2,7 +2,7 @@
 My own C++ game engine <br>
 <br>
 
-<p align="center"> <img src = "https://cdn.discordapp.com/attachments/776991837860790326/1528400245698990151/supermotor.png?ex=6a5e2926&is=6a5cd7a6&hm=8d5411318cee3e4b63b9c4c74117fd314a8b45b4cb6e89ec737ce6c2dfc0f404"></p>
+<p align="center"> <img src = "https://cdn.discordapp.com/attachments/1300548390458888213/1528403202909671545/supermotor_v2_no_bg.png?ex=6a5e2be7&is=6a5cda67&hm=39115d05ab4fcc0ef789131969cfa89ce460503da23073f6f67bae9da5e43bf3"></p>
 <br>
 <br>
 
