@@ -9,25 +9,12 @@
 #include <string>
 #include <cassert>
 
-#include "../../supermotor/core.h"
-#include "../../supermotor/essentials/gallery.h"
+#define WINDOW_WIDTH   1280
+#define WINDOW_HEIGHT   720
 
 
-#define WINDOW_WIDTH      640
-#define WINDOW_HEIGHT     480
-
-#define NUMBER_OF_IMAGES  4     // Override this with the number of images your gallery will have.
-
-
-bool my_log = false;
-
-
-
-std::vector<SDL_Texture*> your_textures_here;
-int your_gallery = 0;
-
-
-
+std::vector<SDL_Texture> your_textures_here;
+std::vector<SDL_FRect> your_obstacles_here;
 
 
 struct SDL_Application{
@@ -56,9 +43,12 @@ struct SDL_Application{
             SDL_SetRenderLogicalPresentation(mRenderer, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 	    }
 
+	    SDL_Surface* surface = SDL_LoadPNG("./your_file_here.png");
+	    if (surface == nullptr){
+		    assert(0 && "ERROR: File not found :c");
+	    }
 
-        std::string your_filenames_here[NUMBER_OF_IMAGES] = {"./YourImagesHere/Remilia.png", "./YourImagesHere/Yorihime.png", "./YourImagesHere/Youmu.png", "./YourImagesHere/Ascent.png"};
-        your_textures_here = generate_textures(mRenderer, your_filenames_here, NUMBER_OF_IMAGES);
+	    std::vector<SDL_Texture> mTexture = SDL_CreateTextureFromSurface(mRenderer, surface);
 
     }
 	// Destructor
@@ -83,20 +73,16 @@ struct SDL_Application{
 			} else if (event.type == SDL_EVENT_KEY_DOWN) {
 
                 // SDL_Log("CONGRATULA!!! You pressed the %d key :3)7", event.button.button);
-                my_log = true;
 
-                if (event.button.button == 80){      
-                    your_gallery--;      // Press the left key to move to the previous image.
-                } else if (event.button.button == 79){          
-                    your_gallery++;      // Press the right key to move to the next image.
+                if (event.button.button == 41){          // 41 is the escape key       (you can remap it if you want :3)
+                    SDL_Quit();
                 }
             }
-        }
+		}
 	}
 
    
 	void Update(){
-        your_gallery = supermotor::essentials::gallery_update(your_gallery, NUMBER_OF_IMAGES);
 	}
 
 
@@ -105,28 +91,12 @@ struct SDL_Application{
 		SDL_SetRenderDrawColor(mRenderer, 0xBB, 0xAA, 0xEE, 0xFF);
 		SDL_RenderClear(mRenderer);
 
-		// SDL_RenderTexture(mRenderer, mTexture, nullptr, nullptr);
-
-        // for (int i = 0; i < sizeof(your_textures_here); i++){
-        for (int i = 0; i < 4; i++){
-            
-            SDL_FRect texture_srcrect;
-            texture_srcrect.x = (float) WINDOW_WIDTH  / 2.0f;
-            texture_srcrect.y = (float) WINDOW_HEIGHT / 2.0f;
-            texture_srcrect.w = (float) WINDOW_WIDTH  * 30.0f;
-            texture_srcrect.h = (float) WINDOW_HEIGHT * 30.0f;
-
-            SDL_RenderTexture(mRenderer, your_textures_here[your_gallery], &texture_srcrect, nullptr);
-            // SDL_SetTextureScaleMode(your_textures_here[i], SDL_SCALEMODE_LINEAR);            // Optional step - for high definition textures (features interpolation and antialiasing).
-            // SDL_SetTextureScaleMode(your_textures_here[i], SDL_SCALEMODE_NEAREST);          //  Optional step - for pixel art (nearest neighbour scaling — no interpolation or antialiasing).
-        }
-
-        // SDL_RenderTexture(mRenderer, your_textures_here[i], nullptr, nullptr);
+		SDL_RenderTexture(mRenderer, mTexture, nullptr, nullptr);
 
 		// draw other things here ...
 		
         // SDL_SetTextureScaleMode(mTexture, SDL_SCALEMODE_NEAREST);        // For pixel-art textures (no interpolation or antialiasing).
-        // SDL_SetTextureScaleMode(mTexture, SDL_SCALEMODE_LINEAR);            // For high definition textures (features interpolation and antialiasing).
+        SDL_SetTextureScaleMode(mTexture, SDL_SCALEMODE_LINEAR);            // For high definition textures (features interpolation and antialiasing).
 
 		SDL_RenderPresent(mRenderer);
 	}
@@ -136,11 +106,6 @@ struct SDL_Application{
 		Input();
 		Update();
 		Render();
-
-        if (my_log == true){
-            SDL_Log("current gallery item ID: %d", your_gallery);
-            my_log = false;
-        }
 	}
 
 	void MainLoop(){
