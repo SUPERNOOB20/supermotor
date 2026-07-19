@@ -37,10 +37,11 @@ My own C++ game engine <br>
 ## Why you should use supermotor
 <br>
 
-* It's simple and easy to understand <br>
-* It's open source <br>
-* It's free <br>
-* It's somewhat fast (Written in C++ and GPU accelerated) <br>
+* It's simple and easy to understand. <br>
+* It's open source. <br>
+* It's free. <br>
+* It's powered by SDL3. <br>
+* It's somewhat fast (Written in C++ and GPU accelerated). <br>
 * Working with simple implementations for simple gamedev problems is a great hands-on learning experience that will strengthen your problem-solving skills <br>
 * It's merely a collection of libraries, so it comes with all the advantages of a library:<br>
   * <ins>Customizable</ins> — add, remove, or refactor to your hearts content. You can even make your own game engine off of it :)<br>
