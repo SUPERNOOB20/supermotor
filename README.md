@@ -16,6 +16,7 @@ My own C++ game engine <br>
 ( ✅️ means planned )<br>
 ( 🔜 means planned, but not for the near future (low priority in my to-do list) ) <br>
 ( 🔜🔜 is even less priority than 🔜)<br>
+( ❌️ is out of the scope for this project for now ) <br>
 <br>
 <br>
 <br>
@@ -28,7 +29,7 @@ My own C++ game engine <br>
 ❌️   Cameras (and corresponding transformations) <br>
 🔜🔜 Bezier trayectories and transitions <br>
 ❌️   Lerps (linear interpolations)<br>
-🔜   Collisions<br>
+✅️   Collisions<br>
 🔜   Transient objects <br>
 🔜   Screenshots<br>
 ❌️   Shaders, Graphics pipelines<br>
