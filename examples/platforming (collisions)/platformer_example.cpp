@@ -10,10 +10,14 @@
 #include <cassert>
 #include <vector>
 
+#include "../../supermotor/essentials/collisions.h"
+
 #define WINDOW_WIDTH   1280
 #define WINDOW_HEIGHT   720
 
-#define INERTIA 1.0f
+
+// #define GRAVITY 1.0f
+float gravity = 1.0f;
 
 std::vector<SDL_Texture*> your_textures_here;
 std::vector<SDL_FRect> your_obstacles_here;
@@ -31,7 +35,7 @@ SDL_FRect Player{
     .y = WINDOW_HEIGHT  / 10.0f,
     .w = player_texture_width,
     .h = player_texture_height
-}
+};
 
 
 SDL_FRect Obstacle1{
@@ -39,22 +43,57 @@ SDL_FRect Obstacle1{
     .y = WINDOW_HEIGHT  / 1.15f,
     .w = WINDOW_WIDTH,
     .h = WINDOW_HEIGHT / 10
-}
+};
 
 SDL_FRect Obstacle2{
     .x = WINDOW_WIDTH  / 1.5f,
     .y = WINDOW_WIDTH  / 2.0f,
     .w = WINDOW_WIDTH  / 10.0f,
     .h = WINDOW_HEIGHT / 10.0f
-}
+};
 
 SDL_FRect Obstacle3{
     .x = WINDOW_WIDTH  / 3.5f,
     .y = WINDOW_WIDTH  / 2.0f,
     .w = WINDOW_WIDTH  / 10.0f,
     .h = WINDOW_HEIGHT / 10.0f
+};
+
+std::array<int, 2> previous_player_pos = {0, 0};
+std::array<int, 2> current_player_pos = {0, 0};
+
+void vertical_velocity_decay() {
+    if (vertical_velocity < gravity) {
+        vertical_velocity = 0.0f;
+    } else if (vertical_velocity >= gravity) {
+        vertical_velocity -= gravity;
+    }
 }
 
+void update_player_pos() {
+
+    previous_player_pos = current_player_pos        // previous_player_pos <--- current_player_pos
+
+
+
+    // From here on... current_player_pos <--- new_player_pos
+
+    Player.x += vertical_velocity;
+
+    vertical_velocity_decay();      // You can use "float gravity" or "double gravity" as a parameter here if you want.
+
+    handle_collisions(previous_player_pos, current_player_pos, obstacles);
+}
+
+
+// consumes     std::vector<SDL_FRect> your_obstacles_here
+// and          std::array <int, 2> current_player_pos = {0, 0};
+bool is_airborne(){
+
+    
+
+    return True;
+}
 
 
 struct SDL_Application{
@@ -134,16 +173,9 @@ struct SDL_Application{
    
 	void Update(){
 
-        is_airborne(obstacles);
+        is_airborne();
 
-        handle_collisions(previous_player_pos, current_player_pos, obstacles);
-        player_pos_x += vertical_velocity;
-
-        if (vertical_velocity < gravity) {
-            vertical_velocity = 0.0f;
-        } else if (vertical_velocity >= gravity) {
-            vertical_velocity -= gravity;
-        }
+        update_player_pos();
 	}
 
 
@@ -152,14 +184,28 @@ struct SDL_Application{
 		SDL_SetRenderDrawColor(mRenderer, 0xBB, 0xAA, 0xEE, 0xFF);
 		SDL_RenderClear(mRenderer);
 
-        for (SDL_Texture texture : your_textures_here){
+        /* Why is foreach so buggy in C++...? x.x
+           You can fix it if you want, but I'd rather save myself the struggle. Let's do it with a good old for loop instead.
+
+        for (SDL_Texture* texture : your_textures_here){
     		SDL_RenderTexture(mRenderer, texture, nullptr, nullptr);
+
+            // SDL_SetTextureScaleMode(mTexture, SDL_SCALEMODE_NEAREST);        // For pixel-art textures (no interpolation or antialiasing).
+            SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_LINEAR);            // For high definition textures (features interpolation and antialiasing).
+        }
+        */
+        
+        // for (int i = 0; i < sizeof(your_textures_here); i++){
+            for (int i = 0; i < 2; i++){
+    		SDL_RenderTexture(mRenderer, your_textures_here[i], nullptr, nullptr);
+
+            // SDL_SetTextureScaleMode(your_textures_here[i], SDL_SCALEMODE_NEAREST);        // For pixel-art textures (no interpolation or antialiasing).
+            SDL_SetTextureScaleMode(your_textures_here[i], SDL_SCALEMODE_LINEAR);            // For high definition textures (features interpolation and antialiasing).
         }
 
-		// draw other things here ...
-		
-        // SDL_SetTextureScaleMode(mTexture, SDL_SCALEMODE_NEAREST);        // For pixel-art textures (no interpolation or antialiasing).
-        SDL_SetTextureScaleMode(mTexture, SDL_SCALEMODE_LINEAR);            // For high definition textures (features interpolation and antialiasing).
+
+		// draw other things here ...		
+
 
 		SDL_RenderPresent(mRenderer);
 	}

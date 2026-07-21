@@ -2,6 +2,16 @@
 #include <iostream>
 #include <array>
 
+
+// See the attached drawing for more information.
+int TOP[] = {0, 1};
+int RIGHT[] = {1, 2};
+int BOTTOM[] = {2, 3};
+// int LEFT[] = {0, 3};
+
+
+
+
 namespace supermotor
 {
 
@@ -63,11 +73,21 @@ namespace supermotor
         int get_bottom_left_corner_x()  { return top_left_corner[0]; }
         int get_bottom_left_corner_y()  { return bottom_right_corner[1]; }
 
-        std::array<std::array<int, 2>, 4>   get_all_corners()   { return {top_left_corner[0], top_left_corner[1]}, {top_right_corner[0], top_right_corner[1]}, {bottom_right_corner[0], bottom_right_corner[1]}, {bottom_left_corner[0], bottom_left_corner[1]}; }
+        // std::array<std::array<int, 2>, 4>   get_all_corners()   { return {{top_left_corner[0], top_left_corner[1]}, {get_top_right_corner_x(), get_top_right_corner_y()}, {bottom_right_corner[0], bottom_right_corner[1]}, {get_bottom_left_corner_x(), get_bottom_left_corner_y()}}; }
+        // std::array<std::array<int, 2>, 4>   get_all_corners()   { return res{{{top_left_corner[0], top_left_corner[1]}, {get_top_right_corner_x(), get_top_right_corner_y()}, {bottom_right_corner[0], bottom_right_corner[1]}, {get_bottom_left_corner_x(), get_bottom_left_corner_y()}}}; }
+        std::array<std::array<int, 2>, 4>   get_all_corners()   { return {{{top_left_corner[0], top_left_corner[1]}, {get_top_right_corner_x(), get_top_right_corner_y()}, {bottom_right_corner[0], bottom_right_corner[1]}, {get_bottom_left_corner_x(), get_bottom_left_corner_y()}}}; }
 
-        
+        // Shifts your Rect by x pixels.
+        void move_x(int amount){
+            top_left_corner[0]     += amount;
+            bottom_right_corner[0] += amount;
+        }
 
-        // std::tuple get_top_left_corner_y = return top_left_corner[1];
+        // Shifts your Rect by y pixels.
+        void move_y(int amount){
+            top_left_corner[1]     += amount;
+            bottom_right_corner[1] += amount;
+        }
 
     };
 
@@ -83,8 +103,8 @@ namespace supermotor
 
         std::array<std::array<int, 2>, 4> b_corners = b.get_all_corners();
 
-        for (int corner = 0; corner < 4; counter++) {
-            if ((a.top_left_corner.x() < b.corners[corner][0]) && (a.top_left_corner.y() < b.corners[corner][1]) && (b.corners[corner][0] < a.top_right_corner.x()) && (b.corners[corner][1]) < a.top_bottom_right_corner.y()) {
+        for (int corner = 0; corner < 4; corner++) {
+            if ((a.get_top_left_corner_x() < b_corners[corner][0]) && (a.get_top_left_corner_y() < b_corners[corner][1]) && (b_corners[corner][0] < a.get_top_right_corner_x()) && (b_corners[corner][1]) < a.get_top_bottom_right_corner_y()) {
                 res.push_back(corner);
             }
         }
@@ -165,13 +185,13 @@ namespace supermotor
               break;
 
               case 2:
-                if (current_collisions == [0, 1]) {
+                if ((current_collisions[0] == TOP[0]) && (current_collisions[1] == TOP[1])) {
                   new_player_pos[1] = current_obstacle.get_top_left_corner_y() - 1;
-                } else if (current_collisions == [1, 2]) {
-                  new_player_pos[0] = current_obstacle.get_top_left_corner_x() + 1;
-                } else if (current_colisions == [2, 3]) {
-                  new_player_pos[1] = current_obstacle.get_top_left_corner_y() + 1;
-                } else {         // current_colisions == [0, 3]
+                } else if ((current_collisions[0] == RIGHT[0]) && (current_collisions[1] == RIGHT[1])) {
+                  new_player_pos[0] = current_obstacle.get_top_right_corner_x() + 1;
+                } else if ((current_collisions[0] == BOTTOM[0]) && (current_collisions[1] == BOTTOM[1])) {
+                  new_player_pos[1] = current_obstacle.get_bottom_left_corner_y() + 1;
+                } else {         // ((current_collisions[0] == LEFT[0]) && (current_collisions[1] == LEFT[1]))
                   new_player_pos[0] = current_obstacle.get_top_left_corner_x() - 1;
                 }
 
@@ -180,6 +200,7 @@ namespace supermotor
               default:       // number_of_colliding_vertices == 4  (when the player is inside an obstacle, or an obstacle is inside a player)
                 new_player_pos = previous_player_pos;   // Put the player back into a position where, presumably, no collisions were happening.
 
+        new_player_pos
         return;
     }
 }

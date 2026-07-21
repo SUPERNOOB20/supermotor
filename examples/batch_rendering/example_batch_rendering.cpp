@@ -5,9 +5,10 @@
 // .
 // .
 
-#include <SDL3/SDL.h>
-#include <string>
-#include <cassert>
+// #include <SDL3/SDL.h>
+#include <string>       // std::string
+// #include <cassert>
+// #include <vector>
 
 #include "../../supermotor/core.h"
 
