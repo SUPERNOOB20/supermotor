@@ -9,6 +9,57 @@
 
 
 
+void vertical_velocity_decay() {
+    if (vertical_velocity < gravity) {
+        vertical_velocity = 0.0f;
+    } else if (vertical_velocity >= gravity) {
+        vertical_velocity -= gravity;
+    }
+}
+
+void update_player_pos() {
+
+    previous_player_pos = current_player_pos;        // previous_player_pos <--- current_player_pos
+
+
+
+    // From here on... current_player_pos <--- new_player_pos
+
+    Player.x += vertical_velocity;
+
+    vertical_velocity_decay();      // You can use "float gravity" or "double gravity" as a parameter here if you want.
+
+    supermotor::handle_collisions(previous_player_pos, current_player_pos, obstacles);
+}
+
+
+// consumes     std::vector<SDL_FRect> your_obstacles_here
+// and          std::array <int, 2> current_player_pos = {0, 0};
+//
+// Should be pretty self explanatory:
+// If there is any (currently active) obstacle for which the player would collide
+// if the obstacle was one pixel above, then the player is on the ground.
+bool is_airborne(){
+
+    bool res = true;
+
+    Uint32 your_obstacles_amount = your_obstacles_here.size();
+    for (int i = 0; i < your_obstacles_amount; i++){
+        current_obstacle = your_obstacles_here[i];
+        dummy_current_obstacle = current_obstacle;
+        supermotor::dummy_current_obstacle.move_y(-1);  // Remember that our origin (0, 0) is the top-left corner of the screen.
+
+        if ((supermotor::collidingVertices(Player, current_obstacle).size = 0) && (supermotor::collidingVertices(Player, dummy_current_obstacle).size > 0)){ 
+            res = false;
+        }
+    }
+
+    return False;
+}
+
+
+
+
 
 
 struct SDL_Application{
