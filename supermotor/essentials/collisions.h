@@ -104,7 +104,7 @@ namespace supermotor
         std::array<std::array<int, 2>, 4> b_corners = b.get_all_corners();
 
         for (int corner = 0; corner < 4; corner++) {
-            if ((a.get_top_left_corner_x() < b_corners[corner][0]) && (a.get_top_left_corner_y() < b_corners[corner][1]) && (b_corners[corner][0] < a.get_top_right_corner_x()) && (b_corners[corner][1]) < a.get_top_bottom_right_corner_y()) {
+            if ((a.get_top_left_corner_x() < b_corners[corner][0]) && (a.get_top_left_corner_y() < b_corners[corner][1]) && (b_corners[corner][0] < a.get_top_right_corner_x()) && (b_corners[corner][1]) < a.get_top_right_corner_y()) {
                 res.push_back(corner);
             }
         }

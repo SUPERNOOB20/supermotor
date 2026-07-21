@@ -96,7 +96,8 @@ bool is_airborne(){
 
     bool res = true;
 
-    for (int i = 0; i < your_obstacles_here.size(); i++){
+    Uint32 your_obstacles_amount = your_obstacles_here.size();
+    for (int i = 0; i < your_obstacles_amount; i++){
         current_obstacle = your_obstacles_here[i];
         dummy_current_obstacle = current_obstacle;
         supermotor::dummy_current_obstacle.move_y(-1);  // Remember that our origin (0, 0) is the top-left corner of the screen.
@@ -208,8 +209,8 @@ struct SDL_Application{
             SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_LINEAR);            // For high definition textures (features interpolation and antialiasing).
         }
         */
-        
-        for (int i = 0; i < your_textures_here.size(); i++){
+        Uint32 your_textures_amount = your_textures_here.size();
+        for (int i = 0; i < your_textures_amount; i++){
     		SDL_RenderTexture(mRenderer, your_textures_here[i], nullptr, nullptr);
 
             // SDL_SetTextureScaleMode(your_textures_here[i], SDL_SCALEMODE_NEAREST);        // For pixel-art textures (no interpolation or antialiasing).
