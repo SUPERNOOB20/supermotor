@@ -54,7 +54,7 @@ bool is_airborne(){
         }
     }
 
-    return False;
+    return res;
 }
 
 

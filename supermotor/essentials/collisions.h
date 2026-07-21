@@ -37,6 +37,19 @@ namespace supermotor
       //  vvvv  Constructors  vvvv
       public:
 
+
+        
+        // Attempt at a copy-constructor...
+        Rect(Rect* og_rect)     // NO idea why this consumes Rect* instead of Rect. If you know, please tell me...
+        {
+        	top_left_corner[0] = og_rect->get_top_left_corner_x();
+            top_left_corner[1] = og_rect->get_top_left_corner_y();
+            bottom_right_corner[0] = og_rect->get_bottom_right_corner_x();
+            bottom_right_corner[1] = og_rect->get_bottom_right_corner_y();          
+        }
+        
+
+
         // Rect(std::array<int, 2> top_left_corner, std::array<int, 2> bottom_right_corner) {return {get_bottom_left_corner_x(), get_bottom_left_corner_y()} ;}
         Rect(int p1[2], int p2[2])
         {
@@ -88,50 +101,50 @@ namespace supermotor
 
         //  vvvv  Setters  vvvv
 
-        set_top_left_corner_x(int new_x_value) {
-            delta_x = top_left_corner[0] - new_x_value;       // delta_x = current_x_pos - new_x_pos;
+        void set_top_left_corner_x(int new_x_value) {
+            int delta_x = top_left_corner[0] - new_x_value;       // delta_x = current_x_pos - new_x_pos;
             top_left_corner[0]       =  new_x_value;
             bottom_right_corner[0]  +=  delta_x;
         }
 
-        set_top_left_corner_y(int new_y_value) {
-            delta_y = top_left_corner[1] - new_y_value;       // delta_x = current_x_pos - new_x_pos;
+        void set_top_left_corner_y(int new_y_value) {
+            int delta_y = top_left_corner[1] - new_y_value;       // delta_x = current_x_pos - new_x_pos;
             top_left_corner[1]       =  new_y_value;
             bottom_right_corner[1]  +=  delta_y;
         }
 
-        set_bottom_right_corner_x(int new_x_value) {
-            delta_x = bottom_right_corner[0] - new_x_value;       // delta_x = current_x_pos - new_x_pos;
+        void set_bottom_right_corner_x(int new_x_value) {
+            int delta_x = bottom_right_corner[0] - new_x_value;       // delta_x = current_x_pos - new_x_pos;
             bottom_right_corner[0]    =  new_x_value;
             top_left_corner[0]       +=  delta_x;
         }
 
-        set_bottom_right_corner_y(int new_y_value) {
-            delta_y = bottom_right_corner[1] - new_y_value;       // delta_x = current_x_pos - new_x_pos;
+        void set_bottom_right_corner_y(int new_y_value) {
+            int delta_y = bottom_right_corner[1] - new_y_value;       // delta_x = current_x_pos - new_x_pos;
             bottom_right_corner[1]    =  new_y_value;
             top_left_corner[1]       +=  delta_y;
         }
 
-        set_top_right_corner_x(int new_x_value) {
-            delta_x = get_top_left_corner_x() - new_x_value;
+        void set_top_right_corner_x(int new_x_value) {
+            int delta_x = get_top_left_corner_x() - new_x_value;
             top_left_corner[0]     += delta_x;
             bottom_right_corner[0] += delta_x;
         }
 
-        set_top_right_corner_y(int new_y_value) {
-            delta_y = get_top_left_corner_y() - new_y_value;
+        void set_top_right_corner_y(int new_y_value) {
+            int delta_y = get_top_left_corner_y() - new_y_value;
             top_left_corner[1]     += delta_y;
             bottom_right_corner[1] += delta_y;
         }
 
-        set_bottom_left_corner_x(int new_x_value) {
-            delta_x = get_bottom_left_corner_x() - new_x_value;
+        void set_bottom_left_corner_x(int new_x_value) {
+            int delta_x = get_bottom_left_corner_x() - new_x_value;
             top_left_corner[0]     += delta_x;
             bottom_right_corner[0] += delta_x;
         }
 
-        set_bottom_left_corner_y(int new_y_value) {
-            delta_y = get_bottom_left_corner_y() - new_y_value;
+        void set_bottom_left_corner_y(int new_y_value) {
+            int delta_y = get_bottom_left_corner_y() - new_y_value;
             top_left_corner[1]     += delta_y;
             bottom_right_corner[1] += delta_y;
         }
@@ -184,16 +197,17 @@ namespace supermotor
 
         // Previously int new_player_pos[] = {current_player_pos->get_top_left_corner_x(), current_player_pos->get_top_left_corner_y()};
         // This is a much better approach, with copy constructors:
-        Rect new_player_pos (current_player_pos);
+        Rect new_player_pos(current_player_pos);
 
 
         // "For obstacle in obstacles":
         for (int i = 0; i < obstacles.size(); i++){
             Rect current_obstacle = obstacles[i];
-            int current_collisions[] = collidingVertices(new_player_pos, current_obstacle);     // Implicit cast from to std::vector<int> to int[] (I hope it works...)
+            int current_collisions[] = {};      // Array init.
+            current_collisions[] = collidingVertices(new_player_pos, current_obstacle);     // Implicit cast from to std::vector<int> to int[] (I hope it works...)
             number_of_colliding_vertices = current_collisions.size();
 
-            switch(number_of_colliding_vertices)
+            switch(number_of_colliding_vertices) {
               case 1:
 
                 int horizontal_clip_distance; 
@@ -273,7 +287,8 @@ namespace supermotor
 
               default:       // number_of_colliding_vertices == 4  (when the player is inside an obstacle, or an obstacle is inside a player)
                 new_player_pos = previous_player_pos;   // Put the player back into a position where, presumably, no collisions were happening (if you want the player to die or suffer damage when a block is inside them, do damage/death hurtbox logic instead (NOT hitbox logic)).
-
+                }
+            }
 
         current_player_pos = new_player_pos;
         return;
