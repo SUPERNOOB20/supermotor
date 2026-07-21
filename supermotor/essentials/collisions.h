@@ -121,7 +121,7 @@ namespace supermotor
         int new_player_pos[] = {current_player_pos.get_top_left_corner_x(), current_player_pos.get_top_left_corner_y()};
 
         // "For obstacle in obstacles":
-        for (int i++, i < obstacles.length, i++){
+        for (int i = 0; i < obstacles.length; i++){
             Rect current_obstacle = obstacles[i];
             int current_collisions[] = collidingVertices(player_pos, current_obstacle);     // Implicit cast from to std::vector<int> to int[] (I hope it works...)
             number_of_colliding_vertices = current_collisions.length();
@@ -129,7 +129,7 @@ namespace supermotor
             switch(number_of_colliding_vertices)
               case 1:
 
-                switch (current_collisions){
+                switch (current_collisions[0]){
                     case 0:                   // Player has crashed into the top left corner of the obstacle.
                     
                         horizontal_clip_distance  = new_player_pos[0] - current_obstacle.get_top_left_corner_x();
@@ -200,7 +200,7 @@ namespace supermotor
               default:       // number_of_colliding_vertices == 4  (when the player is inside an obstacle, or an obstacle is inside a player)
                 new_player_pos = previous_player_pos;   // Put the player back into a position where, presumably, no collisions were happening.
 
-        new_player_pos
+        current_player_pos.new_player_pos
         return;
     }
 }
