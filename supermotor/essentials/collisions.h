@@ -165,18 +165,14 @@ namespace supermotor
               break;
 
               case 2:
-                switch (current_collisions){
-                  case [0, 1]:
-                      new_player_pos[1] = current_obstacle.get_top_left_corner_y() - 1;
-                      break;
-                  case [1, 2]:
-                      new_player_pos[0] = current_obstacle.get_top_left_corner_x() + 1;
-                      break;
-                  case [2, 3]:
-                      new_player_pos[1] = current_obstacle.get_top_left_corner_y() + 1;
-                      break;
-                  case [0, 3]:
-                      new_player_pos[0] = current_obstacle.get_top_left_corner_x() - 1;
+                if (current_collisions == [0, 1]) {
+                  new_player_pos[1] = current_obstacle.get_top_left_corner_y() - 1;
+                } else if (current_collisions == [1, 2]) {
+                  new_player_pos[0] = current_obstacle.get_top_left_corner_x() + 1;
+                } else if (current_colisions == [2, 3]) {
+                  new_player_pos[1] = current_obstacle.get_top_left_corner_y() + 1;
+                } else {         // current_colisions == [0, 3]
+                  new_player_pos[0] = current_obstacle.get_top_left_corner_x() - 1;
                 }
 
               break;

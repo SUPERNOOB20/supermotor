@@ -1,5 +1,5 @@
-// Credits to Mike Shah  -  https://youtu.be/yZl9X47cHi8
-// g++ demo.cpp -O3 -o rgb_demo `pkg-config --libs --cflags sdl3`
+// Credits to Mike Shah for the boilerplating  -  https://youtu.be/yZl9X47cHi8
+// g++ platformer_example.cpp -O3 -o platformer_demo `pkg-config --libs --cflags sdl3`
 
 // .
 // .
@@ -8,20 +8,60 @@
 #include <SDL3/SDL.h>
 #include <string>
 #include <cassert>
+#include <vector>
 
 #define WINDOW_WIDTH   1280
 #define WINDOW_HEIGHT   720
 
+#define INERTIA 1.0f
 
-std::vector<SDL_Texture> your_textures_here;
+std::vector<SDL_Texture*> your_textures_here;
 std::vector<SDL_FRect> your_obstacles_here;
+
+double vertical_velocity = 0.0f;
+double horizontal_velocity = 0.0f;
+
+// Your player's texture resolution goes here.
+int player_texture_height = 45;
+int player_texture_width = 98;
+
+
+SDL_FRect Player{
+    .x = WINDOW_WIDTH  / 2.0f,
+    .y = WINDOW_HEIGHT  / 10.0f,
+    .w = player_texture_width,
+    .h = player_texture_height
+}
+
+
+SDL_FRect Obstacle1{
+    .x = 0,
+    .y = WINDOW_HEIGHT  / 1.15f,
+    .w = WINDOW_WIDTH,
+    .h = WINDOW_HEIGHT / 10
+}
+
+SDL_FRect Obstacle2{
+    .x = WINDOW_WIDTH  / 1.5f,
+    .y = WINDOW_WIDTH  / 2.0f,
+    .w = WINDOW_WIDTH  / 10.0f,
+    .h = WINDOW_HEIGHT / 10.0f
+}
+
+SDL_FRect Obstacle3{
+    .x = WINDOW_WIDTH  / 3.5f,
+    .y = WINDOW_WIDTH  / 2.0f,
+    .w = WINDOW_WIDTH  / 10.0f,
+    .h = WINDOW_HEIGHT / 10.0f
+}
+
 
 
 struct SDL_Application{
 
     SDL_Window* mWindow;
     SDL_Renderer* mRenderer;
-    SDL_Texture* mTexture;
+    SDL_Texture* playerTexture;
     
     bool running = true;
 
@@ -43,24 +83,22 @@ struct SDL_Application{
             SDL_SetRenderLogicalPresentation(mRenderer, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 	    }
 
-	    SDL_Surface* surface = SDL_LoadPNG("./your_file_here.png");
-	    if (surface == nullptr){
+
+	    SDL_Surface* player_surface = SDL_LoadPNG("./silly_thing.png");
+	    if (player_surface == nullptr){
 		    assert(0 && "ERROR: File not found :c");
 	    }
+        
+        playerTexture = SDL_CreateTextureFromSurface(mRenderer, player_surface);
+	    your_textures_here.push_back(playerTexture);
 
-	    std::vector<SDL_Texture> mTexture = SDL_CreateTextureFromSurface(mRenderer, surface);
+        SDL_DestroySurface(player_surface);
 
     }
 	// Destructor
 	~SDL_Application(){
 		SDL_Quit();
 	}
-
-
-
-	
-
-
 
 
 	
@@ -77,12 +115,35 @@ struct SDL_Application{
                 if (event.button.button == 41){          // 41 is the escape key       (you can remap it if you want :3)
                     SDL_Quit();
                 }
+
+                switch (event.button.button) {
+
+	            	case 79:
+	            		// Player moves to the right :3
+	            		horizontal_velocity += 0.05f;
+	            		break;
+	            		
+            		case 80:
+                       	// Player moves to the left :3
+            			horizontal_velocity -= 0.05f;
+    			}
             }
 		}
 	}
 
    
 	void Update(){
+
+        is_airborne(obstacles);
+
+        handle_collisions(previous_player_pos, current_player_pos, obstacles);
+        player_pos_x += vertical_velocity;
+
+        if (vertical_velocity < gravity) {
+            vertical_velocity = 0.0f;
+        } else if (vertical_velocity >= gravity) {
+            vertical_velocity -= gravity;
+        }
 	}
 
 
@@ -91,7 +152,9 @@ struct SDL_Application{
 		SDL_SetRenderDrawColor(mRenderer, 0xBB, 0xAA, 0xEE, 0xFF);
 		SDL_RenderClear(mRenderer);
 
-		SDL_RenderTexture(mRenderer, mTexture, nullptr, nullptr);
+        for (SDL_Texture texture : your_textures_here){
+    		SDL_RenderTexture(mRenderer, texture, nullptr, nullptr);
+        }
 
 		// draw other things here ...
 		
