@@ -45,11 +45,11 @@ bool is_airborne(){
 
     Uint32 your_obstacles_amount = your_obstacles_here.size();
     for (int i = 0; i < your_obstacles_amount; i++){
-        SDL_FRect current_obstacle = your_obstacles_here[i];
-        SDL_FRect dummy_current_obstacle = current_obstacle;
-        supermotor::dummy_current_obstacle.move_y(-1);  // Remember that our origin (0, 0) is the top-left corner of the screen.
+        supermotor::Rect current_obstacle(your_obstacles_here[i]);
+        supermotor::Rect dummy_current_obstacle(current_obstacle);
+        dummy_current_obstacle.move_y(-1);  // Remember that our origin (0, 0) is the top-left corner of the screen.
 
-        if ((supermotor::collidingVertices(Player, current_obstacle.size() = 0)) && (supermotor::collidingVertices(Player, dummy_current_obstacle.size() > 0))){ 
+        if (((supermotor::collidingVertices(Player, current_obstacle)).size() == 0) && ((supermotor::collidingVertices(Player, dummy_current_obstacle)).size() > 0)){ 
             res = false;
         }
     }
