@@ -62,6 +62,11 @@ SDL_FRect Obstacle3{
     .h = WINDOW_HEIGHT / 10.0f
 };
 
+
+
+
+
+
 // std::array<int, 2> previous_player_pos = {0, 0};
 // std::array<int, 2> current_player_pos = {0, 0};
 

@@ -313,17 +313,15 @@ namespace supermotor
     void handle_collisions(Rect previous_player_pos, Rect current_player_pos, std::vector<SDL_FRect> obstacles) { 
   
         std::vector<Rect> converted_obstacles = {};
-        Uint64 converted_obstacles_length = 0;
 
-        for (int i = 0; obstacles.size(); i++){
+        for (int i = 0; i < obstacles.size(); i++){
 
             Rect current_obstacle = convert_sdl_rect_to_supermotor_rect(obstacles[i]);
-
             converted_obstacles.push_back(current_obstacle);
-            converted_obstacles_length++;
-
         }
 
+        SDL_Log("obstacles.size(): %ld", obstacles.size());
+        SDL_Log("converted_obstacles.size(): %ld", converted_obstacles.size());
         assert (obstacles.size() && converted_obstacles.size());
 
         handle_collisions(previous_player_pos, current_player_pos, obstacles);

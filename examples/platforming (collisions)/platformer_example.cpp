@@ -205,6 +205,11 @@ struct SDL_Application{
 
 // Entry Point
 int main(int argc, char* argv[]){
+
+    your_obstacles_here.push_back(Obstacle1);
+    your_obstacles_here.push_back(Obstacle2);
+    your_obstacles_here.push_back(Obstacle3);
+
 	SDL_Application app("FPS test! Current FPS: ");
 	app.MainLoop();
 	return 0;
