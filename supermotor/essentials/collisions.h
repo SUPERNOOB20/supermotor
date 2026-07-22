@@ -320,6 +320,19 @@ namespace supermotor
     }
 
 
+    // Copies src_rect to dst_rect.
+    // Overwrites ("pisa") the given SDL_FRect
+    SDL_FRect* copy_supermotor_rect_to_sdl_rect(Rect* &src_rect, SDL_FRect* &dst_rect){    
+
+        dst_rect->x = src_rect->get_top_left_corner_x();
+        dst_rect->y = src_rect->get_top_left_corner_y();
+        dst_rect->w = src_rect->get_bottom_right_corner_x() - src_rect->get_top_left_corner_x();     // Distance between the right edge and the left   edge of src_rect.
+        dst_rect->h = src_rect->get_bottom_right_corner_y() - src_rect->get_top_left_corner_y();    //  Distance between the top   edge and the bottom edge of src_rect.
+
+        return dst_rect;
+    }
+
+
     // Vector version of Rect(sdl_rect).
     // If you want to use this for any other data structure, I recommend making this into a template...
     void handle_collisions(Rect previous_player_pos, Rect current_player_pos, std::vector<SDL_FRect> obstacles) { 

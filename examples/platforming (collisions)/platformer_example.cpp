@@ -30,6 +30,8 @@ void update_player_pos() {
     vertical_velocity_decay();      // You can use "float gravity" or "double gravity" as a parameter here if you want.
 
     supermotor::handle_collisions(Previous_player_pos, Current_player_pos, your_obstacles_here);
+
+    Player = supermotor::copy_supermotor_rect_to_sdl_rect(&Current_player_pos, &Player);
 }
 
 
@@ -154,7 +156,7 @@ struct SDL_Application{
 
 
         // SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-		SDL_RenderTexture(mRenderer, playerTexture, nullptr, &Player);      // Renders the player.
+		SDL_RenderTexture(mRenderer, playerTexture, nullptr, &Player);                // Renders the player.
 
         
         SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0xFF, 0xFF);
