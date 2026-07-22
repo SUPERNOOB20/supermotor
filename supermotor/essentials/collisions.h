@@ -1,6 +1,13 @@
+#ifndef COLLISIONS_HEADER_FILE
+#define COLLISIONS_HEADER_FILE
+
+
 #include <SDL3/SDL.h>
 #include <iostream>
 #include <array>
+
+#include <vector>
+#include <cassert>
 
 
 // See the attached drawing for more information.
@@ -67,6 +74,7 @@ namespace supermotor
             bottom_right_corner[1] = top_left_and_bottom_right_corners[1][1];
         }
 
+        // Converts SDL_FRect to supermotor::Rect  :3
         Rect(SDL_FRect sdl_rect)
         {
             top_left_corner[0] = sdl_rect.x;
@@ -192,7 +200,7 @@ namespace supermotor
 
     // This whole collision system works with the origin ((0, 0)) being the top-left corner of the screen (do not violate this invariant).
     // player_pos = [player_x, player_y]
-    void handle_collisions(Rect previous_player_pos[], Rect current_player_pos[], std::vector<Rect> obstacles) {
+    void handle_collisions(Rect previous_player_pos, Rect current_player_pos, std::vector<Rect> obstacles) {
 
 
         // Previously int new_player_pos[] = {current_player_pos->get_top_left_corner_x(), current_player_pos->get_top_left_corner_y()};
@@ -203,9 +211,8 @@ namespace supermotor
         // "For obstacle in obstacles":
         for (int i = 0; i < obstacles.size(); i++){
             Rect current_obstacle = obstacles[i];
-            int current_collisions[] = {};      // Array init.
-            current_collisions[] = collidingVertices(new_player_pos, current_obstacle);     // Implicit cast from to std::vector<int> to int[] (I hope it works...)
-            number_of_colliding_vertices = current_collisions.size();
+            std::vector<int> current_collisions = collidingVertices(new_player_pos, current_obstacle);     // Implicit cast from to std::vector<int> to int[] (I hope it works...)
+            unsigned short int number_of_colliding_vertices = current_collisions.size();
 
             switch(number_of_colliding_vertices) {
               case 1:
@@ -269,8 +276,9 @@ namespace supermotor
                         } else {
                             new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_right_corner_y() + 1);       //  "Snaps" the player below the obstacle.
                         }        
+                }
 
-              break;
+                break;
 
               case 2:
                 if ((current_collisions[0] == TOP[0]) && (current_collisions[1] == TOP[1])) {
@@ -283,14 +291,43 @@ namespace supermotor
                   new_player_pos.set_top_left_corner_x(current_obstacle.get_top_left_corner_x() - 1);
                 }
 
-              break;
+                break;
 
               default:       // number_of_colliding_vertices == 4  (when the player is inside an obstacle, or an obstacle is inside a player)
-                new_player_pos = previous_player_pos;   // Put the player back into a position where, presumably, no collisions were happening (if you want the player to die or suffer damage when a block is inside them, do damage/death hurtbox logic instead (NOT hitbox logic)).
-                }
+                new_player_pos = previous_player_pos;   // Put the player back into a position where, presumably, no collisions were happening (if you want the player to die or suffer damage when a block is inside them, do damage/death hurtbox logic instead (NOT hitbox logic)).      //      NO IDEA WHY * DOESN'T GO HERE AAAAAAAAAAAAAAAAAAAAAAAAAAAA
             }
 
-        current_player_pos = new_player_pos;
+        current_player_pos = &new_player_pos;
         return;
     }
+
+    Rect convert_sdl_rect_to_supermotor_rect(SDL_Rect my_rect){
+        Rect converted_rect(my_rect);   // Calls "Rect(sdl_rect)".
+        return converted_rect;
+    }
+
+
+    // Vector version of Rect(sdl_rect).
+    // If you want to use this for any other data structure, I recommend making this into a template...
+    void handle_collisions(Rect previous_player_pos, Rect current_player_pos, std::vector<SDL_Rect> obstacles) { 
+  
+        std::vector<Rect> converted_obstacles = {};
+        Uint64 converted_obstacles_length = 0;
+
+        for (int i = 0; obstacles.size(); i++){
+            current_obstacle;
+            convert_sdl_rect_to_supermotor_rect(obstacles[i]);
+
+            converted_obstacles.insert(converted_obstacles.begin(), converted_obstacles_length + 1);        // Credits to https://stackoverflow.com/a/48251347/30458314
+            converted_obstacles_length++;
+        }
+
+        assert (obstacles.size() && converted_obstacles.size());
+
+        handle_collisions(previous_player_pos, current_player_pos, obstacles);
+    }
 }
+
+
+
+#endif

@@ -36,8 +36,8 @@ int player_texture_width = 98;
 SDL_FRect Player{
     .x = WINDOW_WIDTH  / 2.0f,
     .y = WINDOW_HEIGHT  / 10.0f,
-    .w = player_texture_width,
-    .h = player_texture_height
+    .w = (float) player_texture_width,
+    .h = (float) player_texture_height
 };
 
 
@@ -62,8 +62,26 @@ SDL_FRect Obstacle3{
     .h = WINDOW_HEIGHT / 10.0f
 };
 
-std::array<int, 2> previous_player_pos = {0, 0};
-std::array<int, 2> current_player_pos = {0, 0};
+// std::array<int, 2> previous_player_pos = {0, 0};
+// std::array<int, 2> current_player_pos = {0, 0};
+
+SDL_FRect Dummy_previous_player_pos{
+    .x = WINDOW_WIDTH  / 2.0f,
+    .y = WINDOW_HEIGHT  / 10.0f,
+    .w = (float) player_texture_width,
+    .h = (float) player_texture_height
+};
+supermotor::Rect Previous_player_pos(Dummy_previous_player_pos);
+
+
+SDL_FRect Dummy_current_player_pos{
+    .x = WINDOW_WIDTH  / 2.0f,
+    .y = WINDOW_HEIGHT  / 10.0f,
+    .w = (float) player_texture_width,
+    .h = (float) player_texture_height
+};
+supermotor::Rect Current_player_pos(Dummy_current_player_pos);
+
 
 
 // Function declaration.

@@ -19,17 +19,17 @@ void vertical_velocity_decay() {
 
 void update_player_pos() {
 
-    previous_player_pos = current_player_pos;        // previous_player_pos <--- current_player_pos
+    Previous_player_pos = Current_player_pos;        // Previous_player_pos <--- Current_player_pos
 
 
 
-    // From here on... current_player_pos <--- new_player_pos
+    // From here on... Current_player_pos <--- New_player_pos
 
     Player.x += vertical_velocity;
 
     vertical_velocity_decay();      // You can use "float gravity" or "double gravity" as a parameter here if you want.
 
-    supermotor::handle_collisions(previous_player_pos, current_player_pos, obstacles);
+    supermotor::handle_collisions(Previous_player_pos, Current_player_pos, your_obstacles_here);
 }
 
 
@@ -45,11 +45,11 @@ bool is_airborne(){
 
     Uint32 your_obstacles_amount = your_obstacles_here.size();
     for (int i = 0; i < your_obstacles_amount; i++){
-        current_obstacle = your_obstacles_here[i];
-        dummy_current_obstacle = current_obstacle;
+        SDL_FRect current_obstacle = your_obstacles_here[i];
+        SDL_FRect dummy_current_obstacle = current_obstacle;
         supermotor::dummy_current_obstacle.move_y(-1);  // Remember that our origin (0, 0) is the top-left corner of the screen.
 
-        if ((supermotor::collidingVertices(Player, current_obstacle).size = 0) && (supermotor::collidingVertices(Player, dummy_current_obstacle).size > 0)){ 
+        if ((supermotor::collidingVertices(Player, current_obstacle.size() = 0)) && (supermotor::collidingVertices(Player, dummy_current_obstacle.size() > 0))){ 
             res = false;
         }
     }
@@ -91,7 +91,7 @@ struct SDL_Application{
 
 	    SDL_Surface* player_surface = SDL_LoadPNG("./silly_thing.png");
 	    if (player_surface == nullptr){
-		    assert(0 && "ERROR: File not found :c");
+		    assert (0 && "ERROR: File not found :c");
 	    }
         
         playerTexture = SDL_CreateTextureFromSurface(mRenderer, player_surface);
