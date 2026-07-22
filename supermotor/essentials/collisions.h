@@ -299,9 +299,10 @@ namespace supermotor
 
         current_player_pos = &new_player_pos;
         return;
+        }
     }
 
-    Rect convert_sdl_rect_to_supermotor_rect(SDL_Rect my_rect){
+    Rect convert_sdl_rect_to_supermotor_rect(SDL_FRect my_rect){
         Rect converted_rect(my_rect);   // Calls "Rect(sdl_rect)".
         return converted_rect;
     }
@@ -309,17 +310,18 @@ namespace supermotor
 
     // Vector version of Rect(sdl_rect).
     // If you want to use this for any other data structure, I recommend making this into a template...
-    void handle_collisions(Rect previous_player_pos, Rect current_player_pos, std::vector<SDL_Rect> obstacles) { 
+    void handle_collisions(Rect previous_player_pos, Rect current_player_pos, std::vector<SDL_FRect> obstacles) { 
   
         std::vector<Rect> converted_obstacles = {};
         Uint64 converted_obstacles_length = 0;
 
         for (int i = 0; obstacles.size(); i++){
-            current_obstacle;
-            convert_sdl_rect_to_supermotor_rect(obstacles[i]);
 
-            converted_obstacles.insert(converted_obstacles.begin(), converted_obstacles_length + 1);        // Credits to https://stackoverflow.com/a/48251347/30458314
+            Rect current_obstacle = convert_sdl_rect_to_supermotor_rect(obstacles[i]);
+
+            converted_obstacles.push_back(current_obstacle);
             converted_obstacles_length++;
+
         }
 
         assert (obstacles.size() && converted_obstacles.size());
