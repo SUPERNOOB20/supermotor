@@ -22,47 +22,62 @@
 // #define GRAVITY 1.0f
 float gravity = 1.0f;
 
-std::vector<SDL_Texture*> your_textures_here;
+// std::vector<SDL_Texture*> your_textures_here;
 std::vector<SDL_FRect> your_obstacles_here;
 
 double vertical_velocity = 0.0f;
 double horizontal_velocity = 0.0f;
 
 // Your player's texture resolution goes here.
-int player_texture_height = 45;
-int player_texture_width = 98;
+int player_texture_width = 45;
+int player_texture_height = 98;
 
 
 SDL_FRect Player{
-    .x = WINDOW_WIDTH  / 2.0f,
-    .y = WINDOW_HEIGHT  / 10.0f,
-    .w = (float) player_texture_width,
-    .h = (float) player_texture_height
+    .x = ((float) WINDOW_WIDTH)  / 2.0f,
+    .y = ((float) WINDOW_HEIGHT)  / 2.0f,
+    .w = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_width)),          // WINDOW_WIDTH / WINDOW_HEIGHT = ratio
+    .h = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height))
+};
+
+
+SDL_FRect Background{
+    .x = 0.0f,
+    .y = 0.0f,
+    .w = WINDOW_WIDTH,
+    .h = WINDOW_HEIGHT
 };
 
 
 SDL_FRect Obstacle1{
     .x = 0,
-    .y = WINDOW_HEIGHT  / 1.15f,
+    .y = WINDOW_HEIGHT  / 1.4f,
     .w = WINDOW_WIDTH,
     .h = WINDOW_HEIGHT / 10
 };
 
 SDL_FRect Obstacle2{
-    .x = WINDOW_WIDTH  / 1.5f,
-    .y = WINDOW_WIDTH  / 2.0f,
+    .x = WINDOW_WIDTH  / 3.5f,
+    .y = WINDOW_HEIGHT  / 5.0f,
     .w = WINDOW_WIDTH  / 10.0f,
-    .h = WINDOW_HEIGHT / 10.0f
+    .h = WINDOW_HEIGHT / 4.0f
 };
+
 
 SDL_FRect Obstacle3{
-    .x = WINDOW_WIDTH  / 3.5f,
-    .y = WINDOW_WIDTH  / 2.0f,
+    .x = WINDOW_WIDTH  / 1.5f,
+    .y = WINDOW_HEIGHT  / 1.75f,
     .w = WINDOW_WIDTH  / 10.0f,
-    .h = WINDOW_HEIGHT / 10.0f
+    .h = WINDOW_HEIGHT / 5.0f
 };
 
 
+SDL_FRect Obstacle4{
+    .x = 0,
+    .y = WINDOW_HEIGHT  / 6.0f,
+    .w = WINDOW_WIDTH,
+    .h = WINDOW_HEIGHT / 10
+};
 
 
 

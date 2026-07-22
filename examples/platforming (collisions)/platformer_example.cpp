@@ -95,7 +95,6 @@ struct SDL_Application{
 	    }
         
         playerTexture = SDL_CreateTextureFromSurface(mRenderer, player_surface);
-	    your_textures_here.push_back(playerTexture);
 
         SDL_DestroySurface(player_surface);
 
@@ -144,30 +143,26 @@ struct SDL_Application{
         update_player_pos();
 	}
 
+    
 
 	void Render(){
-
-		SDL_SetRenderDrawColor(mRenderer, 0xBB, 0xAA, 0xEE, 0xFF);
+		SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0x00, 0xFF);            // Pro tip: Use SDL_SetRenderDrawColor with black (or don't use it at all) before SDL_RenderClear if you're on LETTERBOX logical presentation (which we are)
 		SDL_RenderClear(mRenderer);
 
-        /* Why is foreach so buggy in C++...? x.x
-           You can fix it if you want, but I'd rather save myself the struggle. Let's do it with a good old for loop instead.
+		SDL_SetRenderDrawColor(mRenderer, 0xBB, 0xAA, 0xEE, 0xFF);
+        SDL_RenderFillRect(mRenderer, &Background);
 
-        for (SDL_Texture* texture : your_textures_here){
-    		SDL_RenderTexture(mRenderer, texture, nullptr, nullptr);
 
-            // SDL_SetTextureScaleMode(mTexture, SDL_SCALEMODE_NEAREST);        // For pixel-art textures (no interpolation or antialiasing).
-            SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_LINEAR);            // For high definition textures (features interpolation and antialiasing).
+        // SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+		SDL_RenderTexture(mRenderer, playerTexture, nullptr, &Player);      // Renders the player.
+
+        
+        SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0xFF, 0xFF);
+        Uint32 your_obstacles_amount = your_obstacles_here.size();
+        for (int i = 0; i < your_obstacles_amount; i++){
+    		SDL_RenderFillRect(mRenderer, &your_obstacles_here[i]);                           // Renders the obstacles.
         }
-        */
-        Uint32 your_textures_amount = your_textures_here.size();
-        for (int i = 0; i < your_textures_amount; i++){
-    		SDL_RenderTexture(mRenderer, your_textures_here[i], nullptr, nullptr);
-
-            // SDL_SetTextureScaleMode(your_textures_here[i], SDL_SCALEMODE_NEAREST);        // For pixel-art textures (no interpolation or antialiasing).
-            SDL_SetTextureScaleMode(your_textures_here[i], SDL_SCALEMODE_LINEAR);            // For high definition textures (features interpolation and antialiasing).
-        }
-
+        
 
 		// draw other things here ...		
 
@@ -212,6 +207,12 @@ int main(int argc, char* argv[]){
     your_obstacles_here.push_back(Obstacle1);
     your_obstacles_here.push_back(Obstacle2);
     your_obstacles_here.push_back(Obstacle3);
+    your_obstacles_here.push_back(Obstacle4);
+
+    // SDL_Log("Player.x: %f", Player.x);
+    // SDL_Log("Player.y: %f", Player.y);
+    // SDL_Log("Player.w: %f", Player.w);
+    // SDL_Log("Player.h: %f", Player.h);
 
 	SDL_Application app("FPS test! Current FPS: ");
 	app.MainLoop();
