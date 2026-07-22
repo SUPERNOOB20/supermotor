@@ -53,6 +53,8 @@ namespace supermotor
             top_left_corner[1] = og_rect->get_top_left_corner_y();
             bottom_right_corner[0] = og_rect->get_bottom_right_corner_x();
             bottom_right_corner[1] = og_rect->get_bottom_right_corner_y();          
+
+            SDL_Log("%s", "Usé el constructor #1");
         }
         
 
@@ -64,6 +66,8 @@ namespace supermotor
             top_left_corner[1] = p1[1];
             bottom_right_corner[0] = p2[0];
             bottom_right_corner[1] = p2[1];
+
+            SDL_Log("%s", "Usé el constructor #2");
         }
 
         Rect(std::array<std::array<int, 2>, 2> top_left_and_bottom_right_corners)
@@ -72,6 +76,8 @@ namespace supermotor
             top_left_corner[1] = top_left_and_bottom_right_corners[0][1];
             bottom_right_corner[0] = top_left_and_bottom_right_corners[1][0];
             bottom_right_corner[1] = top_left_and_bottom_right_corners[1][1];
+
+            SDL_Log("%s", "Usé el constructor #3");
         }
 
         // Converts SDL_FRect to supermotor::Rect  :3
@@ -81,6 +87,8 @@ namespace supermotor
             top_left_corner[1] = sdl_rect.y;
             bottom_right_corner[0] = sdl_rect.x + sdl_rect.w;
             bottom_right_corner[1] = sdl_rect.y + sdl_rect.h;
+
+            SDL_Log("%s", "Usé el constructor #4");
         }
 
 
@@ -169,6 +177,10 @@ namespace supermotor
             top_left_corner[1]     += amount;
             bottom_right_corner[1] += amount;
         }
+
+
+        // (Explicit) destructor
+        ~Rect(){}
 
     };
 
@@ -297,7 +309,7 @@ namespace supermotor
                 new_player_pos = previous_player_pos;   // Put the player back into a position where, presumably, no collisions were happening (if you want the player to die or suffer damage when a block is inside them, do damage/death hurtbox logic instead (NOT hitbox logic)).      //      NO IDEA WHY * DOESN'T GO HERE AAAAAAAAAAAAAAAAAAAAAAAAAAAA
             }
 
-        current_player_pos = &new_player_pos;
+        current_player_pos = new_player_pos;
         return;
         }
     }
@@ -324,7 +336,7 @@ namespace supermotor
         SDL_Log("converted_obstacles.size(): %ld", converted_obstacles.size());
         assert (obstacles.size() && converted_obstacles.size());
 
-        handle_collisions(previous_player_pos, current_player_pos, obstacles);
+        handle_collisions(previous_player_pos, current_player_pos, converted_obstacles);
     }
 }
 
