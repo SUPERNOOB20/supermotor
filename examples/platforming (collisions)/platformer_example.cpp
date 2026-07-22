@@ -177,8 +177,8 @@ struct SDL_Application{
 
     // Every tick is one iteration of the game loop.
 	void Tick(){
-        static Uint64 frame = 0;
-        SDL_Log("current_frame: %ld", frame);
+        // static Uint64 frame = 0;
+        // SDL_Log("current_frame: %ld", frame);
 
 		Input();
 		Update();

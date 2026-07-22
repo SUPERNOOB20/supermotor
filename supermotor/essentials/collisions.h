@@ -54,7 +54,7 @@ namespace supermotor
             bottom_right_corner[0] = og_rect->get_bottom_right_corner_x();
             bottom_right_corner[1] = og_rect->get_bottom_right_corner_y();          
 
-            SDL_Log("%s", "Usé el constructor #1");
+            // SDL_Log("%s", "Rect's Constructor #1 has been used");
         }
         
 
@@ -67,7 +67,7 @@ namespace supermotor
             bottom_right_corner[0] = p2[0];
             bottom_right_corner[1] = p2[1];
 
-            SDL_Log("%s", "Usé el constructor #2");
+            // SDL_Log("%s", "Rect's Constructor #2 has been used");
         }
 
         Rect(std::array<std::array<int, 2>, 2> top_left_and_bottom_right_corners)
@@ -77,7 +77,7 @@ namespace supermotor
             bottom_right_corner[0] = top_left_and_bottom_right_corners[1][0];
             bottom_right_corner[1] = top_left_and_bottom_right_corners[1][1];
 
-            SDL_Log("%s", "Usé el constructor #3");
+            // SDL_Log("%s", "Rect's Constructor #3 has been used");
         }
 
         // Converts SDL_FRect to supermotor::Rect  :3
@@ -88,7 +88,7 @@ namespace supermotor
             bottom_right_corner[0] = sdl_rect.x + sdl_rect.w;
             bottom_right_corner[1] = sdl_rect.y + sdl_rect.h;
 
-            SDL_Log("%s", "Usé el constructor #4");
+            // SDL_Log("%s", "Rect's Constructor #4 has been used");
         }
 
 
@@ -332,8 +332,9 @@ namespace supermotor
             converted_obstacles.push_back(current_obstacle);
         }
 
-        SDL_Log("obstacles.size(): %ld", obstacles.size());
-        SDL_Log("converted_obstacles.size(): %ld", converted_obstacles.size());
+
+        // SDL_Log("obstacles.size(): %ld", obstacles.size());
+        // SDL_Log("converted_obstacles.size(): %ld", converted_obstacles.size());
         assert (obstacles.size() && converted_obstacles.size());
 
         handle_collisions(previous_player_pos, current_player_pos, converted_obstacles);
