@@ -7,7 +7,7 @@
 
 #include "platformer_example.h"
 
-
+static Uint64 frame = 0;
 
 
 bool is_airborne = false;
@@ -21,8 +21,8 @@ const bool* keyboardState = SDL_GetKeyboardState(nullptr);   // Reminder for sel
 // and          std::array <int, 2> current_player_pos = {0, 0};
 //
 // Should be pretty self explanatory:
-// If there is any (currently active) obstacle for which the player would collide
-// if the obstacle was one pixel above, then the player is on the ground.
+// If there are no current collisions, then the player is airborne.
+// TODO: Include grounded check too.
 bool check_airborne(){
 
     bool res = false;
@@ -59,7 +59,7 @@ void process_vertical_movement(){
     // Up arrow key.
     if (keyboardState[SDL_SCANCODE_UP]) {   
 		// Player moves to the right :3
-		vertical_velocity = -50.0f;
+		vertical_velocity = -10.0f;
     }
 }
 
@@ -238,12 +238,19 @@ struct SDL_Application{
 
     // Every tick is one iteration of the game loop.
 	void Tick(){
-        // static Uint64 frame = 0;
-        // SDL_Log("current_frame: %ld", frame);
+
+        SDL_Log("\n");
+        SDL_Log("current_frame: %ld", frame);
+        if (frame > 34){
+            SDL_Quit();
+            exit(0);
+        }
 
 		Input();
 		Update();
 		Render();
+
+        frame++;
 	}
 
 	void MainLoop(){

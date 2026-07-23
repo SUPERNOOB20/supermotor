@@ -13,9 +13,9 @@
 
 // See the attached drawing for more information.
 int TOP[] = {0, 1};
-int RIGHT[] = {1, 2};
+int RIGHT[] = {1, 3};
 int BOTTOM[] = {2, 3};
-// int LEFT[] = {0, 3};
+// int LEFT[] = {0, 2};
 
 
 
@@ -111,6 +111,9 @@ namespace supermotor
         int get_bottom_left_corner_x()  { return top_left_corner[0]; }
         int get_bottom_left_corner_y()  { return bottom_right_corner[1]; }
 
+
+        // Look at the attached visualization for more info...
+        //
         // std::array<std::array<int, 2>, 4>   get_all_corners()   { return {{top_left_corner[0], top_left_corner[1]}, {get_top_right_corner_x(), get_top_right_corner_y()}, {bottom_right_corner[0], bottom_right_corner[1]}, {get_bottom_left_corner_x(), get_bottom_left_corner_y()}}; }
         // std::array<std::array<int, 2>, 4>   get_all_corners()   { return res{{{top_left_corner[0], top_left_corner[1]}, {get_top_right_corner_x(), get_top_right_corner_y()}, {bottom_right_corner[0], bottom_right_corner[1]}, {get_bottom_left_corner_x(), get_bottom_left_corner_y()}}}; }
         std::array<std::array<int, 2>, 4>   get_all_corners()   { return {{{top_left_corner[0], top_left_corner[1]}, {get_top_right_corner_x(), get_top_right_corner_y()}, {get_bottom_left_corner_x(), get_bottom_left_corner_y()}, {bottom_right_corner[0], bottom_right_corner[1]}}}; }
@@ -201,46 +204,21 @@ namespace supermotor
         std::vector<int> res;      // If you want to further optimise collisions, changing std::vector for a resizable array would be a good idea ":3
 
         std::array<std::array<int, 2>, 4> a_corners = a.get_all_corners();
-        std::array<std::array<int, 2>, 4> b_corners = b.get_all_corners();
+        // std::array<std::array<int, 2>, 4> b_corners = b.get_all_corners();
 
+        int b_x = b.get_top_left_corner_x();
+        int b_y = b.get_top_left_corner_y();
 
-        // Checks the whole player against one obstacle corner at a time (partial clippings of 1 corner).
+        // Checks the whole obstacle against one player corner at a time (partial clippings of 1 corner).
         for (int corner = 0; corner < 4; corner++) {
+            int a_x = a_corners[corner][0];
+            int a_y = a_corners[corner][1];
 
-            if ((a.get_top_left_corner_x() < b_corners[corner][0]) && (a.get_top_left_corner_y() < b_corners[corner][1]) && (b_corners[corner][0] < a.get_bottom_right_corner_x()) && (b_corners[corner][1]) < a.get_bottom_right_corner_y()) {
+            if ((a_x < b_x) && (a_y < b_y) && (b_x < a_x) && (b_y < a_y)) {
                 res.push_back(corner);
             }
         }
 
-        if (res.size() == 0){
-            // Checks the whole obstacle against one player corner at a time (partial clippings of 1 corner).
-            for (int corner = 0; corner < 4; corner++) {
-
-                if ((b.get_top_left_corner_x() < a_corners[corner][0]) && (b.get_top_left_corner_y() < a_corners[corner][1]) && (a_corners[corner][0] < b.get_bottom_right_corner_x()) && (a_corners[corner][1]) < b.get_bottom_right_corner_y()) {
-                    res.push_back(corner);
-                    // SDL_Log("b");
-                }
-            }
-        }
-
-
-
-
-        /*
-        if (res.size() == 0){
-            // Checks the whole obstacle against the whole player (full full clippings of 4 corners).
-
-            bool player_is_inside_obstacle = ((a.get_top_left_corner_x() > b.get_top_left_corner_x()) && (a.get_top_left_corner_y() > b.get_top_left_corner_y()) && (a.get_bottom_right_corner_x() < b.get_bottom_right_corner_x()) && (a.get_bottom_right_corner_y() < b.get_bottom_right_corner_y()));
-            bool obstacle_is_inside_player = ((a.get_top_left_corner_x() <= b.get_top_left_corner_x()) && (a.get_top_left_corner_y() <= b.get_top_left_corner_y()) && (a.get_bottom_right_corner_x() >= b.get_bottom_right_corner_x()) && (a.get_bottom_right_corner_y() >= b.get_bottom_right_corner_y()));
-
-            if ( (player_is_inside_obstacle) || (obstacle_is_inside_player) ) {
-                res.push_back(0);
-                res.push_back(1);
-                res.push_back(2);
-                res.push_back(3);
-            }
-        }
-        */
 
         return res;
     }
