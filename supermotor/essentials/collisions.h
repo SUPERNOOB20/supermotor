@@ -214,24 +214,31 @@ namespace supermotor
 
             if ((a.get_top_left_corner_x() < b_corners[corner][0]) && (a.get_top_left_corner_y() < b_corners[corner][1]) && (b_corners[corner][0] < a.get_bottom_right_corner_x()) && (b_corners[corner][1]) < a.get_bottom_right_corner_y()) {
                 res.push_back(corner);
-                SDL_Log("b");
+                // SDL_Log("b");
             }
         }
 
-
-        // Yet to implement...
         if (res.size() == 0){
-
+            // Checks the whole obstacle against one player corner at a time (partial clippings of 1 corner).
             for (int corner = 0; corner < 4; corner++) {
-                // Checks the whole obstacle against one player corner at a time (full clippings of 2 corners).
-                if (b.get_top_left_corner_x() <= a.get_top_left_corner.x()) {
-                    if (bottom_)
-                } else {    
+                // SDL_Log("b_corners[corner].x: %d", b_corners[corner][0]);
+                // SDL_Log("b_corners[corner].y: %d", b_corners[corner][1]);
+                // SDL_Log("a.get_top_left_corner_x() %d", a.get_top_left_corner_x());
+                // SDL_Log("a.get_top_left_corner_y() %d", a.get_top_left_corner_y());
+                // SDL_Log("a.get_bottom_right_corner_x() %d", a.get_bottom_right_corner_x());
+                // SDL_Log("a.get_bottom_right_corner_y() %d", a.get_bottom_right_corner_y());
 
+                if ((b.get_top_left_corner_x() < a_corners[corner][0]) && (b.get_top_left_corner_y() < a_corners[corner][1]) && (a_corners[corner][0] < b.get_bottom_right_corner_x()) && (a_corners[corner][1]) < b.get_bottom_right_corner_y()) {
+                    res.push_back(corner);
+                    // SDL_Log("b");
                 }
             }
         }
 
+
+
+
+        /*
         if (res.size() == 0){
             // Checks the whole obstacle against the whole player (full full clippings of 4 corners).
 
@@ -245,6 +252,7 @@ namespace supermotor
                 res.push_back(3);
             }
         }
+        */
 
         return res;
     }
