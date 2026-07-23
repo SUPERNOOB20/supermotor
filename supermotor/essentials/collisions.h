@@ -264,7 +264,11 @@ namespace supermotor
             std::vector<int> current_collisions = collidingVertices(new_player_pos, current_obstacle);     // Implicit cast from to std::vector<int> to int[] (I hope it works...)
             unsigned short int number_of_colliding_vertices = current_collisions.size();
 
+            SDL_Log("number_of_colliding_vertices: %d", number_of_colliding_vertices);
+
             switch(number_of_colliding_vertices) {
+              case 0:
+                break;
               case 1:
 
                 int horizontal_clip_distance; 
@@ -348,6 +352,7 @@ namespace supermotor
                 break;
 
               default:       // number_of_colliding_vertices == 4  (when the player is inside an obstacle, or an obstacle is inside a player)
+                // SDL_Log("rip");
                 new_player_pos = previous_player_pos;   // Put the player back into a position where, presumably, no collisions were happening (if you want the player to die or suffer damage when a block is inside them, do damage/death hurtbox logic instead (NOT hitbox logic)).      //      NO IDEA WHY * DOESN'T GO HERE AAAAAAAAAAAAAAAAAAAAAAAAAAAA
             }
 
@@ -357,7 +362,7 @@ namespace supermotor
         }
 
 
-        // SDL_Log("Current_player_pos #1: %d", current_player_pos.get_top_left_corner_y());
+        SDL_Log("Current_player_pos #1: %d", current_player_pos.get_top_left_corner_y());
         return current_player_pos;  
     }
 

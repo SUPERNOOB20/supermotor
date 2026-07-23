@@ -59,7 +59,7 @@ void process_vertical_movement(){
     // Up arrow key.
     if (keyboardState[SDL_SCANCODE_UP]) {   
 		// Player moves to the right :3
-		vertical_velocity = -10.0f;
+		vertical_velocity = -50.0f;
     }
 }
 
@@ -113,12 +113,13 @@ void update_player_pos() {
 
     vertical_velocity_decay();      // You can refactor this to use "float gravity" or "double gravity" as a parameter here if you want.
 
-    // SDL_Log("Before: %d", Current_player_pos.get_top_left_corner_y());
+    SDL_Log("\n");
+    SDL_Log("Before: %d", Current_player_pos.get_top_left_corner_y());
     Current_player_pos = supermotor::handle_collisions(Previous_player_pos, Current_player_pos, your_obstacles_here);
-    // SDL_Log("After: %d", Current_player_pos.get_top_left_corner_y());
+    SDL_Log("After: %d", Current_player_pos.get_top_left_corner_y());
 
     Player = supermotor::copy_supermotor_rect_to_sdl_rect(Current_player_pos, Player);
-    // SDL_Log("Current_player_pos_#2: %f", Player.y);
+    SDL_Log("Current_player_pos_#2: %f", Player.y);
 }
 
 
