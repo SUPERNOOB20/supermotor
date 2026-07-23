@@ -200,33 +200,21 @@ namespace supermotor
 
         std::vector<int> res;      // If you want to further optimise collisions, changing std::vector for a resizable array would be a good idea ":3
 
+        std::array<std::array<int, 2>, 4> a_corners = a.get_all_corners();
         std::array<std::array<int, 2>, 4> b_corners = b.get_all_corners();
 
 
         // Checks the whole player against one obstacle corner at a time (partial clippings of 1 corner).
         for (int corner = 0; corner < 4; corner++) {
-            // SDL_Log("b_corners[corner].x: %d", b_corners[corner][0]);
-            // SDL_Log("b_corners[corner].y: %d", b_corners[corner][1]);
-            // SDL_Log("a.get_top_left_corner_x() %d", a.get_top_left_corner_x());
-            // SDL_Log("a.get_top_left_corner_y() %d", a.get_top_left_corner_y());
-            // SDL_Log("a.get_bottom_right_corner_x() %d", a.get_bottom_right_corner_x());
-            // SDL_Log("a.get_bottom_right_corner_y() %d", a.get_bottom_right_corner_y());
 
             if ((a.get_top_left_corner_x() < b_corners[corner][0]) && (a.get_top_left_corner_y() < b_corners[corner][1]) && (b_corners[corner][0] < a.get_bottom_right_corner_x()) && (b_corners[corner][1]) < a.get_bottom_right_corner_y()) {
                 res.push_back(corner);
-                // SDL_Log("b");
             }
         }
 
         if (res.size() == 0){
             // Checks the whole obstacle against one player corner at a time (partial clippings of 1 corner).
             for (int corner = 0; corner < 4; corner++) {
-                // SDL_Log("b_corners[corner].x: %d", b_corners[corner][0]);
-                // SDL_Log("b_corners[corner].y: %d", b_corners[corner][1]);
-                // SDL_Log("a.get_top_left_corner_x() %d", a.get_top_left_corner_x());
-                // SDL_Log("a.get_top_left_corner_y() %d", a.get_top_left_corner_y());
-                // SDL_Log("a.get_bottom_right_corner_x() %d", a.get_bottom_right_corner_x());
-                // SDL_Log("a.get_bottom_right_corner_y() %d", a.get_bottom_right_corner_y());
 
                 if ((b.get_top_left_corner_x() < a_corners[corner][0]) && (b.get_top_left_corner_y() < a_corners[corner][1]) && (a_corners[corner][0] < b.get_bottom_right_corner_x()) && (a_corners[corner][1]) < b.get_bottom_right_corner_y()) {
                     res.push_back(corner);
@@ -261,8 +249,9 @@ namespace supermotor
 
     // This whole collision system works with the origin ((0, 0)) being the top-left corner of the screen (do not violate this invariant).
     // player_pos = [player_x, player_y]
-    void handle_collisions(Rect previous_player_pos, Rect current_player_pos, std::vector<Rect> obstacles) {
+    Rect handle_collisions(Rect previous_player_pos, Rect cur_player_pos, std::vector<Rect> obstacles) {
 
+        Rect current_player_pos(cur_player_pos);
 
         // Previously int new_player_pos[] = {current_player_pos->get_top_left_corner_x(), current_player_pos->get_top_left_corner_y()};
         // This is a much better approach, with copy constructors:
@@ -342,7 +331,11 @@ namespace supermotor
                 break;
 
               case 2:
+
+                // SDL_Log("trespassing...");
+
                 if ((current_collisions[0] == TOP[0]) && (current_collisions[1] == TOP[1])) {
+                  // SDL_Log("floor...");
                   new_player_pos.set_top_left_corner_y(current_obstacle.get_top_left_corner_y() - 1);
                 } else if ((current_collisions[0] == RIGHT[0]) && (current_collisions[1] == RIGHT[1])) {
                   new_player_pos.set_top_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);
@@ -358,10 +351,17 @@ namespace supermotor
                 new_player_pos = previous_player_pos;   // Put the player back into a position where, presumably, no collisions were happening (if you want the player to die or suffer damage when a block is inside them, do damage/death hurtbox logic instead (NOT hitbox logic)).      //      NO IDEA WHY * DOESN'T GO HERE AAAAAAAAAAAAAAAAAAAAAAAAAAAA
             }
 
-        current_player_pos = new_player_pos;
-        return;
+
+            // Updates player pos for the rest of the collision checking.        
+            current_player_pos = new_player_pos;
         }
+
+
+        // SDL_Log("Current_player_pos #1: %d", current_player_pos.get_top_left_corner_y());
+        return current_player_pos;  
     }
+
+
 
     Rect convert_sdl_rect_to_supermotor_rect(SDL_FRect my_rect){
         Rect converted_rect(my_rect);   // Calls "Rect(sdl_rect)".
@@ -391,7 +391,7 @@ namespace supermotor
 
     // Vector version of Rect(sdl_rect).
     // If you want to use this for any other data structure, I recommend making this into a template...
-    void handle_collisions(Rect previous_player_pos, Rect current_player_pos, std::vector<SDL_FRect> obstacles) { 
+    Rect handle_collisions(Rect previous_player_pos, Rect current_player_pos, std::vector<SDL_FRect> obstacles) { 
   
         std::vector<Rect> converted_obstacles = {};
 
@@ -406,7 +406,7 @@ namespace supermotor
         // SDL_Log("converted_obstacles.size(): %ld", converted_obstacles.size());
         assert (obstacles.size() && converted_obstacles.size());
 
-        handle_collisions(previous_player_pos, current_player_pos, converted_obstacles);
+        return handle_collisions(previous_player_pos, current_player_pos, converted_obstacles);
     }
 }
 

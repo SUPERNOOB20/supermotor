@@ -25,18 +25,15 @@ const bool* keyboardState = SDL_GetKeyboardState(nullptr);   // Reminder for sel
 // if the obstacle was one pixel above, then the player is on the ground.
 bool check_airborne(){
 
-    bool res = true;
+    bool res = false;
     
     Uint32 your_obstacles_amount = your_obstacles_here.size();
 
     for (int i = 0; i < your_obstacles_amount; i++){
-        supermotor::Rect current_obstacle(your_obstacles_here[i]);
-        supermotor::Rect dummy_current_obstacle(current_obstacle);
-        dummy_current_obstacle.move_y(-1);  // Remember that our origin (0, 0) is the top-left corner of the screen.
 
-        if (((supermotor::collidingVertices(Player, current_obstacle)).size() == 0) && ((supermotor::collidingVertices(Player, dummy_current_obstacle)).size() > 0)){ 
-            SDL_Log("GROUNDED");
-            res = false;
+        if ((supermotor::collidingVertices(Player, your_obstacles_here[i])).size() == 0){       // your_obstacles_here[i] is the current_obstacle.
+            // SDL_Log("is airborne: true");
+            res = true;
         }
     }
 
@@ -117,10 +114,11 @@ void update_player_pos() {
     vertical_velocity_decay();      // You can refactor this to use "float gravity" or "double gravity" as a parameter here if you want.
 
     // SDL_Log("Before: %d", Current_player_pos.get_top_left_corner_y());
-    supermotor::handle_collisions(Previous_player_pos, Current_player_pos, your_obstacles_here);
+    Current_player_pos = supermotor::handle_collisions(Previous_player_pos, Current_player_pos, your_obstacles_here);
     // SDL_Log("After: %d", Current_player_pos.get_top_left_corner_y());
 
     Player = supermotor::copy_supermotor_rect_to_sdl_rect(Current_player_pos, Player);
+    // SDL_Log("Current_player_pos_#2: %f", Player.y);
 }
 
 
