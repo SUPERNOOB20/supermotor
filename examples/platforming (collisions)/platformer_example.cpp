@@ -9,30 +9,12 @@
 
 
 
-void vertical_velocity_decay() {
-    if (vertical_velocity < gravity) {
-        vertical_velocity = 0.0f;
-    } else if (vertical_velocity >= gravity) {
-        vertical_velocity -= gravity;
-    }
-}
 
-void update_player_pos() {
+bool is_airborne = false;
 
-    Previous_player_pos = Current_player_pos;        // Previous_player_pos <--- Current_player_pos
+const bool* keyboardState = SDL_GetKeyboardState(nullptr);   // Reminder for self: We use NULL in C, and we use nullptr in C++
 
 
-
-    // From here on... Current_player_pos <--- New_player_pos
-
-    Player.x += vertical_velocity;
-
-    vertical_velocity_decay();      // You can use "float gravity" or "double gravity" as a parameter here if you want.
-
-    supermotor::handle_collisions(Previous_player_pos, Current_player_pos, your_obstacles_here);
-
-    Player = supermotor::copy_supermotor_rect_to_sdl_rect(&Current_player_pos, &Player);
-}
 
 
 // consumes     std::vector<SDL_FRect> your_obstacles_here
@@ -41,22 +23,104 @@ void update_player_pos() {
 // Should be pretty self explanatory:
 // If there is any (currently active) obstacle for which the player would collide
 // if the obstacle was one pixel above, then the player is on the ground.
-bool is_airborne(){
+bool check_airborne(){
 
     bool res = true;
-
+    
     Uint32 your_obstacles_amount = your_obstacles_here.size();
+
     for (int i = 0; i < your_obstacles_amount; i++){
         supermotor::Rect current_obstacle(your_obstacles_here[i]);
         supermotor::Rect dummy_current_obstacle(current_obstacle);
         dummy_current_obstacle.move_y(-1);  // Remember that our origin (0, 0) is the top-left corner of the screen.
 
         if (((supermotor::collidingVertices(Player, current_obstacle)).size() == 0) && ((supermotor::collidingVertices(Player, dummy_current_obstacle)).size() > 0)){ 
+            SDL_Log("GROUNDED");
             res = false;
         }
     }
 
     return res;
+}
+
+
+void vertical_velocity_decay() {
+    if (is_airborne){
+        vertical_velocity += gravity;
+    } else {
+        vertical_velocity = 0.0f;
+    }
+}
+
+
+
+
+// See https://wiki.libsdl.org/SDL3/BestKeyboardPractices and https://wiki.libsdl.org/SDL3/SDL_Scancode
+void process_vertical_movement(){
+
+
+    // Up arrow key.
+    if (keyboardState[SDL_SCANCODE_UP]) {   
+		// Player moves to the right :3
+		vertical_velocity = -10.0f;
+    }
+}
+
+
+
+
+
+
+void process_horizontal_movement(){
+
+
+    // Left arrow key.
+    if (keyboardState[SDL_SCANCODE_LEFT]) {
+		// Player moves to the right :3
+		horizontal_velocity -= 15.0f;
+    }
+
+
+    // Down arrow key.
+    if (keyboardState[SDL_SCANCODE_RIGHT]) {
+       	// Player moves to the left :3
+		horizontal_velocity += 15.0f;
+	}
+}
+
+
+
+
+
+
+
+
+void update_player_pos() {
+
+    // Stores player pos from the previous frame (for collision handling purposes).
+    Previous_player_pos = Current_player_pos;        // Previous_player_pos <--- Current_player_pos
+
+
+
+
+    // From here on... Current_player_pos <--- New_player_pos
+
+    process_vertical_movement();
+    process_horizontal_movement();
+
+    Current_player_pos.move_x(horizontal_velocity);
+    Current_player_pos.move_y(vertical_velocity);
+
+    horizontal_velocity = 0;
+    // vertical_velocity = 0;
+
+    vertical_velocity_decay();      // You can refactor this to use "float gravity" or "double gravity" as a parameter here if you want.
+
+    // SDL_Log("Before: %d", Current_player_pos.get_top_left_corner_y());
+    supermotor::handle_collisions(Previous_player_pos, Current_player_pos, your_obstacles_here);
+    // SDL_Log("After: %d", Current_player_pos.get_top_left_corner_y());
+
+    Player = supermotor::copy_supermotor_rect_to_sdl_rect(Current_player_pos, Player);
 }
 
 
@@ -122,17 +186,18 @@ struct SDL_Application{
                     SDL_Quit();
                 }
 
-                switch (event.button.button) {
+                if (event.button.button == 7){          // 41 is the D key       (you can remap it if you want :3)
+                    
+                    
+                    SDL_Log("Player.x: %f", Player.x);
+                    SDL_Log("Player.y: %f", Player.y);
+                    SDL_Log("Player.w: %f", Player.w);
+                    SDL_Log("Player.h: %f", Player.h);
+                    
 
-	            	case 79:
-	            		// Player moves to the right :3
-	            		horizontal_velocity += 0.05f;
-	            		break;
-	            		
-            		case 80:
-                       	// Player moves to the left :3
-            			horizontal_velocity -= 0.05f;
-    			}
+                    SDL_Log("Horizontal velocity: %f", horizontal_velocity);
+                    SDL_Log("Vertical velocity: %f", vertical_velocity);
+                }
             }
 		}
 	}
@@ -140,7 +205,7 @@ struct SDL_Application{
    
 	void Update(){
 
-        is_airborne();
+        is_airborne = check_airborne();
 
         update_player_pos();
 	}
@@ -191,6 +256,9 @@ struct SDL_Application{
 			fps++;
 
 			Uint64 deltaTime = SDL_GetTicks() - currentTick;
+            if (deltaTime < 16.6){
+                SDL_Delay(16.6 - deltaTime);
+            }
 			if (currentTick > lastTime + 1000) {
 				lastTime = currentTick;
 				std::string title;
@@ -211,10 +279,10 @@ int main(int argc, char* argv[]){
     your_obstacles_here.push_back(Obstacle3);
     your_obstacles_here.push_back(Obstacle4);
 
-    // SDL_Log("Player.x: %f", Player.x);
-    // SDL_Log("Player.y: %f", Player.y);
-    // SDL_Log("Player.w: %f", Player.w);
-    // SDL_Log("Player.h: %f", Player.h);
+    SDL_Log("Player.x: %f", Player.x);
+    SDL_Log("Player.y: %f", Player.y);
+    SDL_Log("Player.w: %f", Player.w);
+    SDL_Log("Player.h: %f", Player.h);
 
 	SDL_Application app("FPS test! Current FPS: ");
 	app.MainLoop();

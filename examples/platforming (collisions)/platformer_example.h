@@ -87,18 +87,18 @@ SDL_FRect Obstacle4{
 
 SDL_FRect Dummy_previous_player_pos{
     .x = WINDOW_WIDTH  / 2.0f,
-    .y = WINDOW_HEIGHT  / 10.0f,
-    .w = (float) player_texture_width,
-    .h = (float) player_texture_height
+    .y = WINDOW_HEIGHT  / 2.0f,
+    .w = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_width)),          // WINDOW_WIDTH / WINDOW_HEIGHT = ratio
+    .h = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height))
 };
 supermotor::Rect Previous_player_pos(Dummy_previous_player_pos);
 
 
 SDL_FRect Dummy_current_player_pos{
     .x = WINDOW_WIDTH  / 2.0f,
-    .y = WINDOW_HEIGHT  / 10.0f,
-    .w = (float) player_texture_width,
-    .h = (float) player_texture_height
+    .y = WINDOW_HEIGHT  / 2.0f,
+    .w = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_width)),          // WINDOW_WIDTH / WINDOW_HEIGHT = ratio
+    .h = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height))
 };
 supermotor::Rect Current_player_pos(Dummy_current_player_pos);
 

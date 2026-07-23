@@ -10,6 +10,7 @@
 #include <cassert>
 
 
+
 // See the attached drawing for more information.
 int TOP[] = {0, 1};
 int RIGHT[] = {1, 2};
@@ -101,8 +102,8 @@ namespace supermotor
         int get_top_left_corner_x()     { return top_left_corner[0]; }
         int get_top_left_corner_y()     { return top_left_corner[1]; }
 
-        int get_bottom_right_corner_x() { return top_left_corner[0]; }
-        int get_bottom_right_corner_y() { return top_left_corner[1]; }
+        int get_bottom_right_corner_x() { return bottom_right_corner[0]; }
+        int get_bottom_right_corner_y() { return bottom_right_corner[1]; }
 
         int get_top_right_corner_x()    { return bottom_right_corner[0]; } 
         int get_top_right_corner_y()    { return top_left_corner[1]; }
@@ -112,58 +113,11 @@ namespace supermotor
 
         // std::array<std::array<int, 2>, 4>   get_all_corners()   { return {{top_left_corner[0], top_left_corner[1]}, {get_top_right_corner_x(), get_top_right_corner_y()}, {bottom_right_corner[0], bottom_right_corner[1]}, {get_bottom_left_corner_x(), get_bottom_left_corner_y()}}; }
         // std::array<std::array<int, 2>, 4>   get_all_corners()   { return res{{{top_left_corner[0], top_left_corner[1]}, {get_top_right_corner_x(), get_top_right_corner_y()}, {bottom_right_corner[0], bottom_right_corner[1]}, {get_bottom_left_corner_x(), get_bottom_left_corner_y()}}}; }
-        std::array<std::array<int, 2>, 4>   get_all_corners()   { return {{{top_left_corner[0], top_left_corner[1]}, {get_top_right_corner_x(), get_top_right_corner_y()}, {bottom_right_corner[0], bottom_right_corner[1]}, {get_bottom_left_corner_x(), get_bottom_left_corner_y()}}}; }
+        std::array<std::array<int, 2>, 4>   get_all_corners()   { return {{{top_left_corner[0], top_left_corner[1]}, {get_top_right_corner_x(), get_top_right_corner_y()}, {get_bottom_left_corner_x(), get_bottom_left_corner_y()}, {bottom_right_corner[0], bottom_right_corner[1]}}}; }
 
 
         //  vvvv  Setters  vvvv
 
-        void set_top_left_corner_x(int new_x_value) {
-            int delta_x = top_left_corner[0] - new_x_value;       // delta_x = current_x_pos - new_x_pos;
-            top_left_corner[0]       =  new_x_value;
-            bottom_right_corner[0]  +=  delta_x;
-        }
-
-        void set_top_left_corner_y(int new_y_value) {
-            int delta_y = top_left_corner[1] - new_y_value;       // delta_x = current_x_pos - new_x_pos;
-            top_left_corner[1]       =  new_y_value;
-            bottom_right_corner[1]  +=  delta_y;
-        }
-
-        void set_bottom_right_corner_x(int new_x_value) {
-            int delta_x = bottom_right_corner[0] - new_x_value;       // delta_x = current_x_pos - new_x_pos;
-            bottom_right_corner[0]    =  new_x_value;
-            top_left_corner[0]       +=  delta_x;
-        }
-
-        void set_bottom_right_corner_y(int new_y_value) {
-            int delta_y = bottom_right_corner[1] - new_y_value;       // delta_x = current_x_pos - new_x_pos;
-            bottom_right_corner[1]    =  new_y_value;
-            top_left_corner[1]       +=  delta_y;
-        }
-
-        void set_top_right_corner_x(int new_x_value) {
-            int delta_x = get_top_left_corner_x() - new_x_value;
-            top_left_corner[0]     += delta_x;
-            bottom_right_corner[0] += delta_x;
-        }
-
-        void set_top_right_corner_y(int new_y_value) {
-            int delta_y = get_top_left_corner_y() - new_y_value;
-            top_left_corner[1]     += delta_y;
-            bottom_right_corner[1] += delta_y;
-        }
-
-        void set_bottom_left_corner_x(int new_x_value) {
-            int delta_x = get_bottom_left_corner_x() - new_x_value;
-            top_left_corner[0]     += delta_x;
-            bottom_right_corner[0] += delta_x;
-        }
-
-        void set_bottom_left_corner_y(int new_y_value) {
-            int delta_y = get_bottom_left_corner_y() - new_y_value;
-            top_left_corner[1]     += delta_y;
-            bottom_right_corner[1] += delta_y;
-        }
 
 
         // Shifts your Rect by x pixels.
@@ -178,6 +132,53 @@ namespace supermotor
             bottom_right_corner[1] += amount;
         }
 
+        // Shifts your Rect by x, y pixels.
+        void move_xy(int amount_x, int amount_y){
+            move_x(amount_x);
+            move_y(amount_y);
+        }
+
+
+        void set_top_left_corner_x(int new_x_value) {
+            int delta_x = new_x_value - top_left_corner[0];       // delta_x = new_x_pos - current_x_pos;
+            move_x(delta_x);
+        }
+
+        void set_top_left_corner_y(int new_y_value) {
+            int delta_y = new_y_value - top_left_corner[1];       // delta_y = new_y_pos - current_y_pos;
+            move_y(delta_y);
+        }
+
+        void set_bottom_right_corner_x(int new_x_value) {
+            int delta_x = new_x_value - bottom_right_corner[0];       // delta_x = new_x_pos - current_x_pos;
+            move_x(delta_x);
+        }
+
+        void set_bottom_right_corner_y(int new_y_value) {
+            int delta_y =  new_y_value - bottom_right_corner[1];       // delta_y = new_y_pos - current_y_pos;
+            move_y(delta_y);
+        }
+
+        void set_top_right_corner_x(int new_x_value) {
+            int delta_x = new_x_value - get_top_right_corner_x();
+            move_x(delta_x);
+        }
+
+        void set_top_right_corner_y(int new_y_value) {
+            int delta_y = new_y_value - get_top_right_corner_y();
+            move_y(delta_y);
+        }
+
+        void set_bottom_left_corner_x(int new_x_value) {
+            int delta_x = new_x_value - get_bottom_left_corner_x();
+            move_x(delta_x);
+        }
+
+        void set_bottom_left_corner_y(int new_y_value) {
+            int delta_y = new_y_value - get_bottom_left_corner_y();
+            move_y(delta_y);
+        }
+
 
         // (Explicit) destructor
         ~Rect(){}
@@ -186,7 +187,9 @@ namespace supermotor
 
 
 
-
+    // a represents the player.
+    // b represents an obstacle.
+    //
     // Returns which vertices (0, 1, 2, or 3) collide between the two rectangles.
     // (the output will have 0, 1, 2, or 4 length).
     //
@@ -199,12 +202,50 @@ namespace supermotor
 
         std::array<std::array<int, 2>, 4> b_corners = b.get_all_corners();
 
+
+        // Checks the whole player against one obstacle corner at a time (partial clippings of 1 corner).
         for (int corner = 0; corner < 4; corner++) {
-            if ((a.get_top_left_corner_x() < b_corners[corner][0]) && (a.get_top_left_corner_y() < b_corners[corner][1]) && (b_corners[corner][0] < a.get_top_right_corner_x()) && (b_corners[corner][1]) < a.get_top_right_corner_y()) {
+            // SDL_Log("b_corners[corner].x: %d", b_corners[corner][0]);
+            // SDL_Log("b_corners[corner].y: %d", b_corners[corner][1]);
+            // SDL_Log("a.get_top_left_corner_x() %d", a.get_top_left_corner_x());
+            // SDL_Log("a.get_top_left_corner_y() %d", a.get_top_left_corner_y());
+            // SDL_Log("a.get_bottom_right_corner_x() %d", a.get_bottom_right_corner_x());
+            // SDL_Log("a.get_bottom_right_corner_y() %d", a.get_bottom_right_corner_y());
+
+            if ((a.get_top_left_corner_x() < b_corners[corner][0]) && (a.get_top_left_corner_y() < b_corners[corner][1]) && (b_corners[corner][0] < a.get_bottom_right_corner_x()) && (b_corners[corner][1]) < a.get_bottom_right_corner_y()) {
                 res.push_back(corner);
+                SDL_Log("b");
             }
         }
-        
+
+
+        // Yet to implement...
+        if (res.size() == 0){
+
+            for (int corner = 0; corner < 4; corner++) {
+                // Checks the whole obstacle against one player corner at a time (full clippings of 2 corners).
+                if (b.get_top_left_corner_x() <= a.get_top_left_corner.x()) {
+                    if (bottom_)
+                } else {    
+
+                }
+            }
+        }
+
+        if (res.size() == 0){
+            // Checks the whole obstacle against the whole player (full full clippings of 4 corners).
+
+            bool player_is_inside_obstacle = ((a.get_top_left_corner_x() > b.get_top_left_corner_x()) && (a.get_top_left_corner_y() > b.get_top_left_corner_y()) && (a.get_bottom_right_corner_x() < b.get_bottom_right_corner_x()) && (a.get_bottom_right_corner_y() < b.get_bottom_right_corner_y()));
+            bool obstacle_is_inside_player = ((a.get_top_left_corner_x() <= b.get_top_left_corner_x()) && (a.get_top_left_corner_y() <= b.get_top_left_corner_y()) && (a.get_bottom_right_corner_x() >= b.get_bottom_right_corner_x()) && (a.get_bottom_right_corner_y() >= b.get_bottom_right_corner_y()));
+
+            if ( (player_is_inside_obstacle) || (obstacle_is_inside_player) ) {
+                res.push_back(0);
+                res.push_back(1);
+                res.push_back(2);
+                res.push_back(3);
+            }
+        }
+
         return res;
     }
 
@@ -322,13 +363,20 @@ namespace supermotor
 
     // Copies src_rect to dst_rect.
     // Overwrites ("pisa") the given SDL_FRect
-    SDL_FRect* copy_supermotor_rect_to_sdl_rect(Rect* &src_rect, SDL_FRect* &dst_rect){    
+    //
+    // I tried to get this to work with pointers but I couldn't :c
+    // If you want to optimise this function further, you can try to implement pointers for it (i.e passing Rect* and SDL_FRect* here instead of Rect and SDL_FRect e.e).
+    SDL_FRect copy_supermotor_rect_to_sdl_rect(Rect src_rect, SDL_FRect dst_rect){    
 
-        dst_rect->x = src_rect->get_top_left_corner_x();
-        dst_rect->y = src_rect->get_top_left_corner_y();
-        dst_rect->w = src_rect->get_bottom_right_corner_x() - src_rect->get_top_left_corner_x();     // Distance between the right edge and the left   edge of src_rect.
-        dst_rect->h = src_rect->get_bottom_right_corner_y() - src_rect->get_top_left_corner_y();    //  Distance between the top   edge and the bottom edge of src_rect.
+        // SDL_Log("src_rect.get_top_left_corner_x = %d", src_rect.get_top_left_corner_x());
+        // SDL_Log("src_rect.get_bottom_right_corner_x = %d", src_rect.get_bottom_right_corner_x());
 
+        dst_rect.x = src_rect.get_top_left_corner_x();
+        dst_rect.y = src_rect.get_top_left_corner_y();
+        dst_rect.w = src_rect.get_bottom_right_corner_x() - src_rect.get_top_left_corner_x();     // Distance between the right edge and the left   edge of src_rect.
+        dst_rect.h = src_rect.get_bottom_right_corner_y() - src_rect.get_top_left_corner_y();    //  Distance between the top   edge and the bottom edge of src_rect.
+
+        
         return dst_rect;
     }
 
