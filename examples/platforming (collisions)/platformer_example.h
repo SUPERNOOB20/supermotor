@@ -1,3 +1,8 @@
+#ifndef PLATFORMER_EXAMPLE_HEADER_FILE
+#define PLATFORMER_EXAMPLE_HEADER_FILE
+
+
+
 // Usually you use header files to:
 // 1) Declare functions (declare function requirements/specification/arity/etc.) (GOOD habit)
 // or...
@@ -19,8 +24,7 @@
 #define WINDOW_HEIGHT   720
 
 
-// #define GRAVITY 1.0f
-float gravity = 1.0f;
+
 
 // std::vector<SDL_Texture*> your_textures_here;
 std::vector<SDL_FRect> your_obstacles_here;
@@ -53,7 +57,7 @@ SDL_FRect Obstacle1{
     .x = 0,
     .y = WINDOW_HEIGHT  / 1.4f,
     .w = WINDOW_WIDTH,
-    .h = WINDOW_HEIGHT / 10
+    .h = WINDOW_HEIGHT / 2
 };
 
 SDL_FRect Obstacle2{
@@ -108,3 +112,8 @@ supermotor::Rect Current_player_pos(Dummy_current_player_pos);
 // vertical_velocity_decay();
 // update_player_pos();
 // is_airborne();
+
+
+
+
+#endif

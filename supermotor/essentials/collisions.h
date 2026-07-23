@@ -12,10 +12,11 @@
 
 
 // See the attached drawing for more information.
-int TOP[] = {0, 1};
-int RIGHT[] = {1, 3};
-int BOTTOM[] = {2, 3};
-// int LEFT[] = {0, 2};
+// These are the player's and NOT the obstacle's.
+int TOP[] = {2, 3};
+int RIGHT[] = {0, 2};
+int BOTTOM[] = {0, 1};
+int LEFT[] = {1, 3};
 
 
 
@@ -206,15 +207,18 @@ namespace supermotor
         std::array<std::array<int, 2>, 4> a_corners = a.get_all_corners();
         // std::array<std::array<int, 2>, 4> b_corners = b.get_all_corners();
 
-        int b_x = b.get_top_left_corner_x();
-        int b_y = b.get_top_left_corner_y();
+        int b_x1 = b.get_top_left_corner_x();
+        int b_y1 = b.get_top_left_corner_y();
+
+        int b_x2 = b.get_bottom_right_corner_x();
+        int b_y2 = b.get_bottom_right_corner_y();
 
         // Checks the whole obstacle against one player corner at a time (partial clippings of 1 corner).
         for (int corner = 0; corner < 4; corner++) {
             int a_x = a_corners[corner][0];
             int a_y = a_corners[corner][1];
 
-            if ((a_x < b_x) && (a_y < b_y) && (b_x < a_x) && (b_y < a_y)) {
+            if ((a_x < b_x2) && (a_y < b_y2) && (b_x1 < a_x) && (b_y1 < a_y)) {
                 res.push_back(corner);
             }
         }
@@ -242,7 +246,15 @@ namespace supermotor
             std::vector<int> current_collisions = collidingVertices(new_player_pos, current_obstacle);     // Implicit cast from to std::vector<int> to int[] (I hope it works...)
             unsigned short int number_of_colliding_vertices = current_collisions.size();
 
-            SDL_Log("number_of_colliding_vertices: %d", number_of_colliding_vertices);
+            /*
+            if (number_of_colliding_vertices != 0){
+                SDL_Log("\n");
+                SDL_Log("number_of_colliding_vertices: %d", number_of_colliding_vertices);
+                for (int i = 0; i < number_of_colliding_vertices; i++){
+                    SDL_Log("current_collisions[i]: %d", current_collisions[i]);
+                }
+            }
+            */
 
             switch(number_of_colliding_vertices) {
               case 0:
@@ -314,23 +326,22 @@ namespace supermotor
 
               case 2:
 
+                // CAREFUL: I am still referring to the player and not the obstacle.
                 // SDL_Log("trespassing...");
 
-                if ((current_collisions[0] == TOP[0]) && (current_collisions[1] == TOP[1])) {
-                  // SDL_Log("floor...");
-                  new_player_pos.set_top_left_corner_y(current_obstacle.get_top_left_corner_y() - 1);
-                } else if ((current_collisions[0] == RIGHT[0]) && (current_collisions[1] == RIGHT[1])) {
-                  new_player_pos.set_top_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);
-                } else if ((current_collisions[0] == BOTTOM[0]) && (current_collisions[1] == BOTTOM[1])) {
-                  new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);
-                } else {         // ((current_collisions[0] == LEFT[0]) && (current_collisions[1] == LEFT[1]))
-                  new_player_pos.set_top_left_corner_x(current_obstacle.get_top_left_corner_x() - 1);
+                if ((current_collisions[0] == BOTTOM[0]) && (current_collisions[1] == BOTTOM[1])) {
+                  new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);                            // SDL_Log("ceiling...");
+                } else if ((current_collisions[0] == LEFT[0]) && (current_collisions[1] == LEFT[1])) {                  
+                  new_player_pos.set_top_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);                          // SDL_Log("right wall...");
+                } else if ((current_collisions[0] == TOP[0]) && (current_collisions[1] == TOP[1])) {
+                  new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_left_corner_y() - 1);                       // SDL_Log("floor...");
+                } else {         // ((current_collisions[0] == RIGHT[0]) && (current_collisions[1] == RIGHT[1]))
+                  new_player_pos.set_top_right_corner_x(current_obstacle.get_top_left_corner_x() - 1);                         // SDL_Log("left wall...");
                 }
 
                 break;
 
               default:       // number_of_colliding_vertices == 4  (when the player is inside an obstacle, or an obstacle is inside a player)
-                // SDL_Log("rip");
                 new_player_pos = previous_player_pos;   // Put the player back into a position where, presumably, no collisions were happening (if you want the player to die or suffer damage when a block is inside them, do damage/death hurtbox logic instead (NOT hitbox logic)).      //      NO IDEA WHY * DOESN'T GO HERE AAAAAAAAAAAAAAAAAAAAAAAAAAAA
             }
 
@@ -340,7 +351,6 @@ namespace supermotor
         }
 
 
-        SDL_Log("Current_player_pos #1: %d", current_player_pos.get_top_left_corner_y());
         return current_player_pos;  
     }
 
@@ -358,9 +368,6 @@ namespace supermotor
     // I tried to get this to work with pointers but I couldn't :c
     // If you want to optimise this function further, you can try to implement pointers for it (i.e passing Rect* and SDL_FRect* here instead of Rect and SDL_FRect e.e).
     SDL_FRect copy_supermotor_rect_to_sdl_rect(Rect src_rect, SDL_FRect dst_rect){    
-
-        // SDL_Log("src_rect.get_top_left_corner_x = %d", src_rect.get_top_left_corner_x());
-        // SDL_Log("src_rect.get_bottom_right_corner_x = %d", src_rect.get_bottom_right_corner_x());
 
         dst_rect.x = src_rect.get_top_left_corner_x();
         dst_rect.y = src_rect.get_top_left_corner_y();
