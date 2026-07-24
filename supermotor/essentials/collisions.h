@@ -11,12 +11,15 @@
 
 
 
+
 // See the attached drawing for more information.
 // These are the player's and NOT the obstacle's.
 int TOP[] = {2, 3};
 int RIGHT[] = {0, 2};
 int BOTTOM[] = {0, 1};
 int LEFT[] = {1, 3};
+
+
 
 
 
@@ -237,7 +240,6 @@ namespace supermotor
 
 
     // This whole collision system works with the origin ((0, 0)) being the top-left corner of the screen (do not violate this invariant).
-    // player_pos = [player_x, player_y]
     Rect handle_collisions(Rect previous_player_pos, Rect cur_player_pos, std::vector<Rect> obstacles) {
 
         Rect current_player_pos(cur_player_pos);
@@ -264,70 +266,83 @@ namespace supermotor
             */
 
             switch(number_of_colliding_vertices) {
-              case 0:
+              case 0:                                   // No collisions! We're golden, keep the game going like nothing happened.
                 break;
-              case 1:
+              case 1:                               // What we have to do in this case is check if the player was above the obstacle or not during the last frame. "above" and "below" will change based on each of the 4 corner scenarios:
+                
+                int a_y;
+                int b_y;
 
-                int horizontal_clip_distance; 
-                int vertical_clip_distance;
 
 
                 // Here's something interesting if you want to improve this code further:
                 // Player's snapped corner is always the opposite as the block's colliding corner 
                 // (look at a visualization if it's not entirely obvious to you :3)
                 switch (current_collisions[0]){
-                    case 3:                   // Player has crashed into the bottom right? corner of the obstacle.
-                    
-                        horizontal_clip_distance  = new_player_pos.get_top_left_corner_x() - current_obstacle.get_top_left_corner_x();
-                        vertical_clip_distance    = new_player_pos.get_top_left_corner_y() - current_obstacle.get_top_left_corner_y();        
+                    case 0:                   // Player has crashed into the bottom right corner of the obstacle.
+      
+                        SDL_Log("0");                      
 
-                        if (horizontal_clip_distance < vertical_clip_distance) {
-                            new_player_pos.set_bottom_right_corner_x(current_obstacle.get_top_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
+                        a_y = previous_player_pos.get_top_left_corner_y();
+                        b_y = current_obstacle.get_bottom_right_corner_y();
+
+                        if (a_y < b_y) {
+                            new_player_pos.set_top_left_corner_x(current_obstacle.get_bottom_right_corner_x() - 1);       //  "Snaps" the player to the right of the obstacle.
                         } else {
-                            new_player_pos.set_bottom_right_corner_y(current_obstacle.get_top_left_corner_y() - 1);       //  "Snaps" the player above the obstacle.
+                            new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_right_corner_y() - 1);       //  "Snaps" the player below the obstacle.
                         }
 
                         break;
 
-                    case 2:           // Player has crashed into the bottom left? corner of the obstacle.
+                    case 1:           // Player has crashed into the bottom left corner of the obstacle.
 
-                        horizontal_clip_distance  = new_player_pos.get_top_right_corner_x() - current_obstacle.get_top_right_corner_x();
-                        vertical_clip_distance    = new_player_pos.get_top_right_corner_y() - current_obstacle.get_top_right_corner_y();        
+                        SDL_Log("1");        
 
-                        if (horizontal_clip_distance < vertical_clip_distance) {
+                        a_y = previous_player_pos.get_top_right_corner_y();
+                        b_y = current_obstacle.get_bottom_left_corner_y();
+      
+
+                        if (a_y < b_y) {
+                            new_player_pos.set_top_right_corner_x(current_obstacle.get_bottom_left_corner_x() + 1);       //  "Snaps" the player to the left of the obstacle.
+                            // SDL_Log("a");
+                        } else {
+                            new_player_pos.set_top_right_corner_y(current_obstacle.get_bottom_left_corner_y() - 1);       //  "Snaps" the player below the obstacle.
+                            // SDL_Log("o");
+                        }
+
+                        break;
+
+
+                    case 2:           // Player has crashed into the top right corner of the obstacle.
+
+                        SDL_Log("2");        
+    
+                        a_y = previous_player_pos.get_bottom_left_corner_y();
+                        b_y = current_obstacle.get_top_right_corner_y();
+
+                        if (a_y > b_y) {
                             new_player_pos.set_bottom_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
                         } else {
-                            new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_right_corner_y() - 1);       //  "Snaps" the player above the obstacle.
-                        }
+                            new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_right_corner_y() + 1);       //  "Snaps" the player above the obstacle.
+                        }        
+
 
                         break;
 
 
-                    case 1:           // Player has crashed into the top right? corner of the obstacle.
+                    case 3:        // Player has crashed into the top left corner of the obstacle.
 
-                        // SDL_Log("aaaaa");        
+                        SDL_Log("3");        
     
-                        horizontal_clip_distance  = new_player_pos.get_bottom_left_corner_x() - current_obstacle.get_bottom_left_corner_x();
-                        vertical_clip_distance    = new_player_pos.get_bottom_left_corner_y() - current_obstacle.get_bottom_left_corner_y();        
+                        a_y = previous_player_pos.get_bottom_right_corner_y();
+                        b_y = current_obstacle.get_top_left_corner_y();
 
-                        if (horizontal_clip_distance < vertical_clip_distance) {
-                            new_player_pos.set_top_right_corner_x(current_obstacle.get_bottom_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
+                        if (a_y > b_y) {
+                            new_player_pos.set_bottom_right_corner_x(current_obstacle.get_top_left_corner_x() + 1);       //  "Snaps" the player to the left of the obstacle.
+                            SDL_Log("a");
                         } else {
-                            new_player_pos.set_top_right_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);       //  "Snaps" the player below the obstacle.
-                        }
-
-                        break;
-
-
-                    case 0:        // Player has crashed into the top left? corner of the obstacle.
-                    
-                        horizontal_clip_distance  = new_player_pos.get_bottom_right_corner_x() - current_obstacle.get_bottom_right_corner_x();
-                        vertical_clip_distance    = new_player_pos.get_bottom_right_corner_y() - current_obstacle.get_bottom_right_corner_y();
-
-                        if (horizontal_clip_distance < vertical_clip_distance) {
-                            new_player_pos.set_top_left_corner_x(current_obstacle.get_bottom_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
-                        } else {
-                            new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_right_corner_y() + 1);       //  "Snaps" the player below the obstacle.
+                            new_player_pos.set_bottom_right_corner_y(current_obstacle.get_top_left_corner_y() + 1);       //  "Snaps" the player above the obstacle.
+                            SDL_Log("o");
                         }        
                 }
 
