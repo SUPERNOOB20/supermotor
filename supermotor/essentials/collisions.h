@@ -255,15 +255,6 @@ namespace supermotor
             std::vector<int> current_collisions = collidingVertices(new_player_pos, current_obstacle);     // Implicit cast from to std::vector<int> to int[] (I hope it works...)
             unsigned short int number_of_colliding_vertices = current_collisions.size();
 
-            /*
-            if (number_of_colliding_vertices != 0){
-                SDL_Log("\n");
-                SDL_Log("number_of_colliding_vertices: %d", number_of_colliding_vertices);
-                for (int i = 0; i < number_of_colliding_vertices; i++){
-                    SDL_Log("current_collisions[i]: %d", current_collisions[i]);
-                }
-            }
-            */
 
             switch(number_of_colliding_vertices) {
               case 0:                                   // No collisions! We're golden, keep the game going like nothing happened.
@@ -287,9 +278,9 @@ namespace supermotor
                         b_y = current_obstacle.get_bottom_right_corner_y();
 
                         if (a_y < b_y) {
-                            new_player_pos.set_top_left_corner_x(current_obstacle.get_bottom_right_corner_x() - 1);       //  "Snaps" the player to the right of the obstacle.
+                            new_player_pos.set_top_left_corner_x(current_obstacle.get_bottom_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
                         } else {
-                            new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_right_corner_y() - 1);       //  "Snaps" the player below the obstacle.
+                            new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_right_corner_y() + 1);       //  "Snaps" the player below the obstacle.
                         }
 
                         break;
@@ -303,10 +294,10 @@ namespace supermotor
       
 
                         if (a_y < b_y) {
-                            new_player_pos.set_top_right_corner_x(current_obstacle.get_bottom_left_corner_x() + 1);       //  "Snaps" the player to the left of the obstacle.
+                            new_player_pos.set_top_right_corner_x(current_obstacle.get_bottom_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
                             // SDL_Log("a");
                         } else {
-                            new_player_pos.set_top_right_corner_y(current_obstacle.get_bottom_left_corner_y() - 1);       //  "Snaps" the player below the obstacle.
+                            new_player_pos.set_top_right_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);       //  "Snaps" the player below the obstacle.
                             // SDL_Log("o");
                         }
 
@@ -323,7 +314,7 @@ namespace supermotor
                         if (a_y > b_y) {
                             new_player_pos.set_bottom_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
                         } else {
-                            new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_right_corner_y() + 1);       //  "Snaps" the player above the obstacle.
+                            new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_right_corner_y() - 1);       //  "Snaps" the player above the obstacle.
                         }        
 
 
@@ -338,11 +329,12 @@ namespace supermotor
                         b_y = current_obstacle.get_top_left_corner_y();
 
                         if (a_y > b_y) {
-                            new_player_pos.set_bottom_right_corner_x(current_obstacle.get_top_left_corner_x() + 1);       //  "Snaps" the player to the left of the obstacle.
-                            SDL_Log("a");
+                            SDL_Log("prev: %d", a_y);
+                            SDL_Log("cur: %d", current_player_pos.get_bottom_right_corner_y());
+
+                            new_player_pos.set_bottom_right_corner_x(current_obstacle.get_top_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
                         } else {
-                            new_player_pos.set_bottom_right_corner_y(current_obstacle.get_top_left_corner_y() + 1);       //  "Snaps" the player above the obstacle.
-                            SDL_Log("o");
+                            new_player_pos.set_bottom_right_corner_y(current_obstacle.get_top_left_corner_y() - 1);       //  "Snaps" the player above the obstacle.
                         }        
                 }
 
@@ -357,7 +349,6 @@ namespace supermotor
                   new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);                            // SDL_Log("ceiling...");
                 } else if ((current_collisions[0] == LEFT[0]) && (current_collisions[1] == LEFT[1])) {                  
                   new_player_pos.set_top_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);                          // SDL_Log("right wall...");
-                  SDL_Log("Noooooooooo");
                 } else if ((current_collisions[0] == TOP[0]) && (current_collisions[1] == TOP[1])) {
                   new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_left_corner_y() - 1);                       // SDL_Log("floor...");
                 } else {         // ((current_collisions[0] == RIGHT[0]) && (current_collisions[1] == RIGHT[1]))
@@ -374,10 +365,10 @@ namespace supermotor
 
 
             // Updates player pos for the rest of the collision checking.        
-            current_player_pos = new_player_pos;
+            // current_player_pos = new_player_pos;
         }
 
-
+        current_player_pos = new_player_pos;
         return current_player_pos;  
     }
 
