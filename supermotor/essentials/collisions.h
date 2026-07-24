@@ -128,6 +128,13 @@ namespace supermotor
         void move_x(int amount){
             top_left_corner[0]     += amount;
             bottom_right_corner[0] += amount;
+
+            /*
+            if (amount != 0){
+                SDL_Log("amount: %d", amount);
+            }
+            */
+
         }
 
         // Shifts your Rect by y pixels.
@@ -269,26 +276,26 @@ namespace supermotor
                 // Player's snapped corner is always the opposite as the block's colliding corner 
                 // (look at a visualization if it's not entirely obvious to you :3)
                 switch (current_collisions[0]){
-                    case 0:                   // Player has crashed into the top left corner of the obstacle.
+                    case 3:                   // Player has crashed into the bottom right? corner of the obstacle.
                     
                         horizontal_clip_distance  = new_player_pos.get_top_left_corner_x() - current_obstacle.get_top_left_corner_x();
                         vertical_clip_distance    = new_player_pos.get_top_left_corner_y() - current_obstacle.get_top_left_corner_y();        
 
                         if (horizontal_clip_distance < vertical_clip_distance) {
-                            new_player_pos.set_bottom_right_corner_y(current_obstacle.get_top_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
+                            new_player_pos.set_bottom_right_corner_x(current_obstacle.get_top_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
                         } else {
                             new_player_pos.set_bottom_right_corner_y(current_obstacle.get_top_left_corner_y() - 1);       //  "Snaps" the player above the obstacle.
                         }
 
                         break;
 
-                    case 1:           // Player has crashed into the top right corner of the obstacle.
+                    case 2:           // Player has crashed into the bottom left? corner of the obstacle.
 
                         horizontal_clip_distance  = new_player_pos.get_top_right_corner_x() - current_obstacle.get_top_right_corner_x();
                         vertical_clip_distance    = new_player_pos.get_top_right_corner_y() - current_obstacle.get_top_right_corner_y();        
 
                         if (horizontal_clip_distance < vertical_clip_distance) {
-                            new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
+                            new_player_pos.set_bottom_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
                         } else {
                             new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_right_corner_y() - 1);       //  "Snaps" the player above the obstacle.
                         }
@@ -296,13 +303,15 @@ namespace supermotor
                         break;
 
 
-                    case 2:           // Player has crashed into the bottom left corner of the obstacle.
+                    case 1:           // Player has crashed into the top right? corner of the obstacle.
 
+                        // SDL_Log("aaaaa");        
+    
                         horizontal_clip_distance  = new_player_pos.get_bottom_left_corner_x() - current_obstacle.get_bottom_left_corner_x();
                         vertical_clip_distance    = new_player_pos.get_bottom_left_corner_y() - current_obstacle.get_bottom_left_corner_y();        
 
                         if (horizontal_clip_distance < vertical_clip_distance) {
-                            new_player_pos.set_top_right_corner_y(current_obstacle.get_bottom_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
+                            new_player_pos.set_top_right_corner_x(current_obstacle.get_bottom_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
                         } else {
                             new_player_pos.set_top_right_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);       //  "Snaps" the player below the obstacle.
                         }
@@ -310,13 +319,13 @@ namespace supermotor
                         break;
 
 
-                    case 3:        // Player has crashed into the bottom right corner of the obstacle.
+                    case 0:        // Player has crashed into the top left? corner of the obstacle.
                     
                         horizontal_clip_distance  = new_player_pos.get_bottom_right_corner_x() - current_obstacle.get_bottom_right_corner_x();
                         vertical_clip_distance    = new_player_pos.get_bottom_right_corner_y() - current_obstacle.get_bottom_right_corner_y();
 
                         if (horizontal_clip_distance < vertical_clip_distance) {
-                            new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
+                            new_player_pos.set_top_left_corner_x(current_obstacle.get_bottom_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
                         } else {
                             new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_right_corner_y() + 1);       //  "Snaps" the player below the obstacle.
                         }        
@@ -333,10 +342,13 @@ namespace supermotor
                   new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);                            // SDL_Log("ceiling...");
                 } else if ((current_collisions[0] == LEFT[0]) && (current_collisions[1] == LEFT[1])) {                  
                   new_player_pos.set_top_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);                          // SDL_Log("right wall...");
+                  SDL_Log("Noooooooooo");
                 } else if ((current_collisions[0] == TOP[0]) && (current_collisions[1] == TOP[1])) {
                   new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_left_corner_y() - 1);                       // SDL_Log("floor...");
                 } else {         // ((current_collisions[0] == RIGHT[0]) && (current_collisions[1] == RIGHT[1]))
                   new_player_pos.set_top_right_corner_x(current_obstacle.get_top_left_corner_x() - 1);                         // SDL_Log("left wall...");
+                  assert (current_collisions[0] && RIGHT[0]);
+                  assert (current_collisions[1] && RIGHT[1]);
                 }
 
                 break;

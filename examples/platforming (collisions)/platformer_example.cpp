@@ -6,11 +6,11 @@
 // .
 
 
-// ------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Adjust these to your liking! :3
-int floaty_jump_intensity = 10;
-float gravity = 1.0f;
-// ------------------------------------------------------------------------
+int floaty_jump_intensity = 10;            // The bigger, the longer you can hold the jump button for. Change to 0 if you want the player to always jump at the same height!
+float gravity = 1.0f;                     //  The bigger, the smaller your jumps.
+// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -280,8 +280,8 @@ struct SDL_Application{
                     SDL_Log("Vertical velocity: %f", vertical_velocity);
                     */
 
-                    SDL_Log("frames_since_started_jumping: %d", frames_since_started_jumping);
-                    SDL_Log("is airborne: %d", is_airborne);
+                    // SDL_Log("frames_since_started_jumping: %d", frames_since_started_jumping);
+                    // SDL_Log("is airborne: %d", is_airborne);
                 }
             }
 		}
@@ -332,9 +332,10 @@ struct SDL_Application{
     // Every tick is one iteration of the game loop.
 	void Tick(){
 
+        // SDL_Log("\n");
+        // SDL_Log("current_frame: %ld", frame);
+
         /*
-        SDL_Log("\n");
-        SDL_Log("current_frame: %ld", frame);
         if (frame > 34){
             SDL_Quit();
             exit(0);
