@@ -346,7 +346,9 @@ struct SDL_Application{
 		Update();
 		Render();
 
-        frame++;
+        update_nudge();
+
+        // frame++;
 	}
 
 	void MainLoop(){

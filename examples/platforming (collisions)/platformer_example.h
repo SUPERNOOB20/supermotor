@@ -18,10 +18,9 @@
 #include <vector>
 
 #include "../../supermotor/essentials/collisions.h"
+#include "../../supermotor/essentials/common.h"
 
 
-#define WINDOW_WIDTH   1280
-#define WINDOW_HEIGHT   720
 
 
 
@@ -29,8 +28,6 @@
 // std::vector<SDL_Texture*> your_textures_here;
 std::vector<SDL_FRect> your_obstacles_here;
 
-double vertical_velocity = 0.0f;
-double horizontal_velocity = 0.0f;
 
 // Your player's texture resolution goes here.
 int player_texture_width = 45;
