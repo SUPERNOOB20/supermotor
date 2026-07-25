@@ -17,8 +17,8 @@
 #include <cassert>
 #include <vector>
 
-#include "../../supermotor/essentials/collisions.h"
-#include "../../supermotor/essentials/common.h"
+#include "../../../supermotor/essentials/collisions.h"
+#include "../../../supermotor/essentials/common.h"
 
 
 
@@ -50,11 +50,21 @@ SDL_FRect Background{
 };
 
 
-SDL_FRect Obstacle1{
+/*
+// One-direction obstacle.
+SDL_FRect Obstacle1D{
     .x = 0,
     .y = WINDOW_HEIGHT  / 1.4f,
     .w = WINDOW_WIDTH,
     .h = WINDOW_HEIGHT / 2
+};
+*/
+
+SDL_FRect Obstacle1{
+    .x = 0,
+    .y = WINDOW_HEIGHT  / 1.4f,
+    .w = WINDOW_WIDTH,
+    .h = WINDOW_HEIGHT / 40.0f
 };
 
 SDL_FRect Obstacle2{

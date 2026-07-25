@@ -87,7 +87,6 @@ bool player_is_on_the_ground(supermotor::Rect current_obstacle){
 //
 // Should be pretty self explanatory:
 // If there are no current collisions, then the player is airborne.
-// TODO: Include grounded check too.
 bool check_airborne(){
 
     bool res = true;
@@ -145,6 +144,9 @@ void process_horizontal_movement(){
     if (keyboardState[SDL_SCANCODE_LEFT]) {
 		// Player moves to the left :3
 		horizontal_velocity -= 3.0f;
+        if (keyboardState[SDL_SCANCODE_D]) {
+            horizontal_velocity -= 6.0f;
+        }
     }
 
 
@@ -152,6 +154,9 @@ void process_horizontal_movement(){
     if (keyboardState[SDL_SCANCODE_RIGHT]) {
        	// Player moves to the right :3
 		horizontal_velocity += 3.0f;
+        if (keyboardState[SDL_SCANCODE_D]) {
+            horizontal_velocity += 6.0f;
+        }
 	}
 }
 
@@ -232,7 +237,7 @@ struct SDL_Application{
 	    }
 
 
-	    SDL_Surface* player_surface = SDL_LoadPNG("./silly_thing.png");
+	    SDL_Surface* player_surface = SDL_LoadPNG("../Assets/silly_thing.png");
 	    if (player_surface == nullptr){
 		    assert (0 && "ERROR: File not found :c");
 	    }
@@ -261,28 +266,30 @@ struct SDL_Application{
 
                 if (event.button.button == 41){          // 41 is the escape key       (you can remap it if you want :3)
                     SDL_Quit();     // Exits SDL.
-                    exit(0);       //  Exits daemon.
+                    exit(0);       //  Taskkill.
                 }
 
-                if (event.button.button == 7){          // 41 is the D key       (you can remap it if you want :3)
+                /*
+                // Debug.
+                if (event.button.button == 7){          // 7 is the D key       (you can remap it if you want :3)
                     
                     SDL_Log("\n");
-
-                    /*
+                    
                     SDL_Log("Current frame: %ld", frame);
                     SDL_Log("Player.x: %f", Player.x);
                     SDL_Log("Player.y: %f", Player.y);
                     SDL_Log("Player.w: %f", Player.w);
                     SDL_Log("Player.h: %f", Player.h);
                     
-
                     SDL_Log("Horizontal velocity: %f", horizontal_velocity);
                     SDL_Log("Vertical velocity: %f", vertical_velocity);
-                    */
 
-                    // SDL_Log("frames_since_started_jumping: %d", frames_since_started_jumping);
-                    // SDL_Log("is airborne: %d", is_airborne);
+                    SDL_Log("frames_since_started_jumping: %d", frames_since_started_jumping);
+                    SDL_Log("is airborne: %d", is_airborne);
+                    
                 }
+                */
+
             }
 		}
 	}

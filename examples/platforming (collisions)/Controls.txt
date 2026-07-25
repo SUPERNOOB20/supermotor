@@ -1,0 +1,6 @@
+Controls / Bindings:
+
+
+* Arrow keys: Move
+
+* D: Run.

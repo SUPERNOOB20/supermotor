@@ -240,6 +240,171 @@ namespace supermotor
 
 
 
+Rect handle_two_corners(Rect dummy_new_player_pos, Rect current_obstacle, std::vector<int> current_collisions){
+
+    // CAREFUL: I am still referring to the player and not the obstacle.
+
+    // Avoid aliasing. Just in case...
+    Rect new_player_pos(dummy_new_player_pos);
+
+
+    // SDL_Log("trespassing...");
+    if ((current_collisions[0] == BOTTOM[0]) && (current_collisions[1] == BOTTOM[1])) {
+      new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);                            // SDL_Log("ceiling...");
+      vertical_velocity = 0.0f;     // Personal preference, honestly. Feel free to remove or commentate this line if you like a "floatier" effect :3
+    } else if ((current_collisions[0] == LEFT[0]) && (current_collisions[1] == LEFT[1])) {                  
+      new_player_pos.set_top_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);                          // SDL_Log("right wall...");
+    } else if ((current_collisions[0] == TOP[0]) && (current_collisions[1] == TOP[1])) {
+      new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_left_corner_y() - 1);                       // SDL_Log("floor...");
+    } else {         // ((current_collisions[0] == RIGHT[0]) && (current_collisions[1] == RIGHT[1]))
+      new_player_pos.set_top_right_corner_x(current_obstacle.get_top_left_corner_x() - 1);                         // SDL_Log("left wall...");
+      assert (current_collisions[0] && RIGHT[0]);
+      assert (current_collisions[1] && RIGHT[1]);
+    }
+
+    return new_player_pos;
+}
+
+
+
+
+// Player has crashed into the top left corner of the obstacle.
+Rect handle_top_left_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect current_obstacle){
+
+    // Avoid aliasing. Just in case...
+    Rect new_player_pos(dummy_new_player_pos);
+
+    // SDL_Log("3");        
+
+    int a_y = previous_player_pos.get_bottom_right_corner_y();
+    int b_y = current_obstacle.get_top_left_corner_y();
+
+    if (a_y > b_y) {
+        new_player_pos.set_bottom_right_corner_x(current_obstacle.get_top_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
+    } else {
+        new_player_pos.set_bottom_right_corner_y(current_obstacle.get_top_left_corner_y() - 1);       //  "Snaps" the player above the obstacle.
+    }  
+
+    return new_player_pos;
+}
+
+
+
+
+// Player has crashed into the top right corner of the obstacle.
+Rect handle_top_right_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect current_obstacle){
+
+    // Avoid aliasing. Just in case...
+    Rect new_player_pos(dummy_new_player_pos);
+
+    // SDL_Log("2");      
+
+    int a_y = previous_player_pos.get_bottom_left_corner_y();
+    int b_y = current_obstacle.get_top_right_corner_y();
+
+    if (a_y > b_y) {
+        new_player_pos.set_bottom_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
+    } else {
+        new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_right_corner_y() - 1);       //  "Snaps" the player above the obstacle.
+    }
+
+    return new_player_pos;
+}
+
+
+
+
+
+
+// Player has crashed into the bottom left corner of the obstacle.
+Rect handle_bottom_left_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect current_obstacle){
+
+    // Avoid aliasing. Just in case...
+    Rect new_player_pos(dummy_new_player_pos);
+
+    // SDL_Log("1");        
+
+    int a_y = previous_player_pos.get_top_right_corner_y();
+    int b_y = current_obstacle.get_bottom_left_corner_y();
+
+
+    // Nudge sideways.
+    int a_x = previous_player_pos.get_top_right_corner_x();
+    int b_x = current_obstacle.get_bottom_left_corner_x();
+
+
+    if ((a_y < b_y) || ((a_x - b_x) <= nudge)){
+        new_player_pos.set_top_right_corner_x(current_obstacle.get_bottom_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
+    } else {
+        new_player_pos.set_top_right_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);       //  "Snaps" the player below the obstacle.
+    }
+
+    return new_player_pos;
+}
+
+
+
+
+
+
+// Player has crashed into the bottom right corner of the obstacle.
+Rect handle_bottom_right_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect current_obstacle){
+
+    Rect new_player_pos(dummy_new_player_pos);
+
+    // SDL_Log("0");                      
+
+    int a_y = previous_player_pos.get_top_left_corner_y();
+    int b_y = current_obstacle.get_bottom_right_corner_y();
+
+    // Nudge sideways.
+    int a_x = previous_player_pos.get_top_left_corner_x();
+    int b_x = current_obstacle.get_bottom_right_corner_x();
+
+    if ((a_y < b_y) || ((b_x - a_x) <= nudge) ){
+        new_player_pos.set_top_left_corner_x(current_obstacle.get_bottom_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
+    } else {
+        new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_right_corner_y() + 1);       //  "Snaps" the player below the obstacle.
+    }
+
+    return new_player_pos;
+};
+
+
+
+
+
+
+Rect handle_one_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect current_obstacle, int current_colliding_corner){
+
+    Rect new_player_pos(dummy_new_player_pos);
+
+
+
+    // Here's something interesting if you want to improve this code further:
+    // Player's snapped corner is always the opposite as the block's colliding corner 
+    // (look at a visualization if it's not entirely obvious to you :3)
+    switch (current_colliding_corner){
+        case 0:
+            new_player_pos = handle_bottom_right_corner(previous_player_pos, dummy_new_player_pos, current_obstacle);
+        break;
+        case 1:
+            new_player_pos = handle_bottom_left_corner(previous_player_pos, dummy_new_player_pos, current_obstacle);
+        break;
+        case 2:
+            new_player_pos = handle_top_right_corner(previous_player_pos, dummy_new_player_pos, current_obstacle);
+        break;
+        case 3:
+            new_player_pos = handle_top_left_corner(previous_player_pos, dummy_new_player_pos, current_obstacle);
+    }
+
+    return new_player_pos;
+}
+
+
+
+
+
     // This whole collision system works with the origin ((0, 0)) being the top-left corner of the screen (do not violate this invariant).
     Rect handle_collisions(Rect previous_player_pos, Rect cur_player_pos, std::vector<Rect> obstacles) {
 
@@ -260,115 +425,17 @@ namespace supermotor
             switch(number_of_colliding_vertices) {
               case 0:                                   // No collisions! We're golden, keep the game going like nothing happened.
                 break;
+
               case 1:                               // What we have to do in this case is check if the player was above the obstacle or not during the last frame. "above" and "below" will change based on each of the 4 corner scenarios:
                 
-                int a_y;
-                int b_y;
-
-                int a_x;
-                int b_x;
-
-                // Here's something interesting if you want to improve this code further:
-                // Player's snapped corner is always the opposite as the block's colliding corner 
-                // (look at a visualization if it's not entirely obvious to you :3)
-                switch (current_collisions[0]){
-                    case 0:                   // Player has crashed into the bottom right corner of the obstacle.
-      
-                        SDL_Log("0");                      
-
-                        a_y = previous_player_pos.get_top_left_corner_y();
-                        b_y = current_obstacle.get_bottom_right_corner_y();
-
-                        // Nudge sideways.
-                        a_x = previous_player_pos.get_top_left_corner_x();
-                        b_x = current_obstacle.get_bottom_right_corner_x();
-
-                        if ((a_y < b_y) || ((b_x - a_x) <= nudge) ){
-                            new_player_pos.set_top_left_corner_x(current_obstacle.get_bottom_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
-                        } else {
-                            new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_right_corner_y() + 1);       //  "Snaps" the player below the obstacle.
-                        }
-
-                        break;
-
-                    case 1:           // Player has crashed into the bottom left corner of the obstacle.
-
-                        SDL_Log("1");        
-
-                        a_y = previous_player_pos.get_top_right_corner_y();
-                        b_y = current_obstacle.get_bottom_left_corner_y();
-      
-
-                        // Nudge sideways.
-                        a_x = previous_player_pos.get_top_right_corner_x();
-                        b_x = current_obstacle.get_bottom_left_corner_x();
-
-
-                        if ((a_y < b_y) || ((a_x - b_x) <= nudge)){
-                            new_player_pos.set_top_right_corner_x(current_obstacle.get_bottom_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
-                            // SDL_Log("a");
-                        } else {
-                            new_player_pos.set_top_right_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);       //  "Snaps" the player below the obstacle.
-                            // SDL_Log("o");
-                        }
-
-                        break;
-
-
-                    case 2:           // Player has crashed into the top right corner of the obstacle.
-
-                        SDL_Log("2");        
-    
-                        a_y = previous_player_pos.get_bottom_left_corner_y();
-                        b_y = current_obstacle.get_top_right_corner_y();
-
-                        if (a_y > b_y) {
-                            new_player_pos.set_bottom_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
-                        } else {
-                            new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_right_corner_y() - 1);       //  "Snaps" the player above the obstacle.
-                        }        
-
-
-                        break;
-
-
-                    case 3:        // Player has crashed into the top left corner of the obstacle.
-
-                        SDL_Log("3");        
-    
-                        a_y = previous_player_pos.get_bottom_right_corner_y();
-                        b_y = current_obstacle.get_top_left_corner_y();
-
-                        if (a_y > b_y) {
-                            SDL_Log("prev: %d", a_y);
-                            SDL_Log("cur: %d", current_player_pos.get_bottom_right_corner_y());
-
-                            new_player_pos.set_bottom_right_corner_x(current_obstacle.get_top_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
-                        } else {
-                            new_player_pos.set_bottom_right_corner_y(current_obstacle.get_top_left_corner_y() - 1);       //  "Snaps" the player above the obstacle.
-                        }        
-                }
-
-                break;
+                // Only one corner is colliding.
+                new_player_pos = handle_one_corner(previous_player_pos, new_player_pos, current_obstacle, current_collisions[0]);
+              break;
 
               case 2:
 
-                // CAREFUL: I am still referring to the player and not the obstacle.
-                // SDL_Log("trespassing...");
-
-                if ((current_collisions[0] == BOTTOM[0]) && (current_collisions[1] == BOTTOM[1])) {
-                  new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);                            // SDL_Log("ceiling...");
-                  vertical_velocity = 0.0f;     // Personal preference, honestly. Feel free to remove or commentate this line if you like a "floatier" effect :3
-                } else if ((current_collisions[0] == LEFT[0]) && (current_collisions[1] == LEFT[1])) {                  
-                  new_player_pos.set_top_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);                          // SDL_Log("right wall...");
-                } else if ((current_collisions[0] == TOP[0]) && (current_collisions[1] == TOP[1])) {
-                  new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_left_corner_y() - 1);                       // SDL_Log("floor...");
-                } else {         // ((current_collisions[0] == RIGHT[0]) && (current_collisions[1] == RIGHT[1]))
-                  new_player_pos.set_top_right_corner_x(current_obstacle.get_top_left_corner_x() - 1);                         // SDL_Log("left wall...");
-                  assert (current_collisions[0] && RIGHT[0]);
-                  assert (current_collisions[1] && RIGHT[1]);
-                }
-
+                // One whole side is colliding (two corners).
+                new_player_pos = handle_two_corners(new_player_pos, current_obstacle, current_collisions);
                 break;
 
               default:       // number_of_colliding_vertices == 4  (when the player is inside an obstacle, or an obstacle is inside a player)
