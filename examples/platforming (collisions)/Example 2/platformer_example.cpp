@@ -8,7 +8,7 @@
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Adjust these to your liking! :3
-int floaty_jump_intensity = 10;            // The bigger, the longer you can hold the jump button for. Change to 0 if you want the player to always jump at the same height!
+int floaty_jump_intensity = 100;            // The bigger, the longer you can hold the jump button for. Change to 0 if you want the player to always jump at the same height!
 float gravity = 1.0f;                     //  The bigger, the smaller your jumps.
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -194,14 +194,55 @@ void update_player_pos() {
     vertical_velocity_decay();      // You can refactor this to use "float gravity" or "double gravity" as a parameter here if you want.
 
     Current_player_pos = supermotor::handle_collisions(Previous_player_pos, Current_player_pos, your_obstacles_here);
+    // Current_player_pos = supermotor::handle_1d_up_collisions(Previous_player_pos, Current_player_pos, your_1d_up_obstacles_here);
+    // Current_player_pos = supermotor::handle_1d_down_collisions(Previous_player_pos, Current_player_pos, your_1d_down_obstacles_here);
 
     Player = supermotor::copy_supermotor_rect_to_sdl_rect(Current_player_pos, Player);
+}
+
+
+void render_obstacles(SDL_Renderer* mRenderer){
+
+    SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0xFF, 0xFF);
+    Uint32 obstacles_amount = your_obstacles_here.size();
+    for (int i = 0; i < obstacles_amount; i++){
+		SDL_RenderFillRect(mRenderer, &your_obstacles_here[i]);                           // Renders the obstacles.
+    }
 }
 
 
 
 
 
+void render_1d_down_obstacles(SDL_Renderer* mRenderer){
+    
+    SDL_SetRenderDrawColor(mRenderer, 0xFF, 0x00, 0x00, 0xFF);
+    Uint32 obstacles_amount = your_1d_down_obstacles_here.size();
+    for (int i = 0; i < obstacles_amount; i++){
+		SDL_RenderFillRect(mRenderer, &your_1d_down_obstacles_here[i]);                           // Renders the obstacles.
+    }
+}
+
+
+
+
+
+void render_1d_up_obstacles(SDL_Renderer* mRenderer){
+    
+    SDL_SetRenderDrawColor(mRenderer, 0x00, 0xFF, 0x00, 0xFF);
+    Uint32 obstacles_amount = your_1d_up_obstacles_here.size();
+    for (int i = 0; i < obstacles_amount; i++){
+		SDL_RenderFillRect(mRenderer, &your_1d_up_obstacles_here[i]);                           // Renders the obstacles.
+    }
+}
+
+
+
+void render_1d_obstacles(SDL_Renderer* mRenderer){
+
+    render_1d_up_obstacles(mRenderer);
+    render_1d_down_obstacles(mRenderer);
+}
 
 
 
@@ -269,9 +310,9 @@ struct SDL_Application{
                     exit(0);       //  Taskkill.
                 }
 
-                /*
+                
                 // Debug.
-                if (event.button.button == 7){          // 7 is the D key       (you can remap it if you want :3)
+                if (event.button.button == 9){          // 9 is the D key       (you can remap it if you want :3)
                     
                     SDL_Log("\n");
                     
@@ -288,7 +329,7 @@ struct SDL_Application{
                     SDL_Log("is airborne: %d", is_airborne);
                     
                 }
-                */
+                
 
             }
 		}
@@ -322,12 +363,10 @@ struct SDL_Application{
         // SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 		SDL_RenderTexture(mRenderer, playerTexture, nullptr, &Player);                // Renders the player.
 
+
+        render_obstacles(mRenderer);
+        render_1d_obstacles(mRenderer);
         
-        SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0xFF, 0xFF);
-        Uint32 your_obstacles_amount = your_obstacles_here.size();
-        for (int i = 0; i < your_obstacles_amount; i++){
-    		SDL_RenderFillRect(mRenderer, &your_obstacles_here[i]);                           // Renders the obstacles.
-        }
         
 
 		// draw other things here ...		
@@ -385,10 +424,25 @@ struct SDL_Application{
 // Entry Point
 int main(int argc, char* argv[]){
 
-    your_obstacles_here.push_back(Obstacle1);
-    your_obstacles_here.push_back(Obstacle2);
-    your_obstacles_here.push_back(Obstacle3);
-    your_obstacles_here.push_back(Obstacle4);
+
+    SDL_FRect obstacle2 = obstacle1;
+    obstacle2.x -= WINDOW_WIDTH  / 5.5f;
+
+    SDL_FRect obstacle3 = obstacle2;
+    obstacle3.x -= WINDOW_WIDTH  / 3.5f;
+
+    SDL_FRect obstacle4 = obstacle3;
+    obstacle4.x -= WINDOW_WIDTH  / 5.5f;
+
+
+    your_obstacles_here.push_back(obstacle1);
+    your_obstacles_here.push_back(obstacle2);
+    your_obstacles_here.push_back(obstacle3);
+    your_obstacles_here.push_back(obstacle4);
+    your_obstacles_here.push_back(obstacle5);
+
+    your_1d_up_obstacles_here.push_back(Obstacle1D_up);
+    your_1d_down_obstacles_here.push_back(Obstacle1D_down);
 
     SDL_Log("Player.x: %f", Player.x);
     SDL_Log("Player.y: %f", Player.y);

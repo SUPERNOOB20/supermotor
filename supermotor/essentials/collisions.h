@@ -16,11 +16,14 @@
 // See the attached drawing for more information.
 // These are the player's and NOT the obstacle's.
 int TOP[] = {2, 3};
-int RIGHT[] = {0, 2};
+// int RIGHT[] = {0, 2};
 int BOTTOM[] = {0, 1};
-int LEFT[] = {1, 3};
+// int LEFT[] = {1, 3};
 
 
+
+int LEFT[] = {0, 2};
+int RIGHT[] = {1, 3};
 
 
 
@@ -258,8 +261,8 @@ Rect handle_two_corners(Rect dummy_new_player_pos, Rect current_obstacle, std::v
       new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_left_corner_y() - 1);                       // SDL_Log("floor...");
     } else {         // ((current_collisions[0] == RIGHT[0]) && (current_collisions[1] == RIGHT[1]))
       new_player_pos.set_top_right_corner_x(current_obstacle.get_top_left_corner_x() - 1);                         // SDL_Log("left wall...");
-      assert (current_collisions[0] && RIGHT[0]);
-      assert (current_collisions[1] && RIGHT[1]);
+      assert (current_collisions[0] == RIGHT[0]);
+      assert (current_collisions[1] == RIGHT[1]);
     }
 
     return new_player_pos;
@@ -491,7 +494,7 @@ Rect handle_one_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect
 
         // SDL_Log("obstacles.size(): %ld", obstacles.size());
         // SDL_Log("converted_obstacles.size(): %ld", converted_obstacles.size());
-        assert (obstacles.size() && converted_obstacles.size());
+        assert (obstacles.size() == converted_obstacles.size());
 
         return handle_collisions(previous_player_pos, current_player_pos, converted_obstacles);
     }

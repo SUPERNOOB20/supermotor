@@ -27,6 +27,8 @@
 
 // std::vector<SDL_Texture*> your_textures_here;
 std::vector<SDL_FRect> your_obstacles_here;
+std::vector<SDL_FRect> your_1d_up_obstacles_here;
+std::vector<SDL_FRect> your_1d_down_obstacles_here;
 
 
 // Your player's texture resolution goes here.
@@ -50,44 +52,39 @@ SDL_FRect Background{
 };
 
 
-/*
+
 // One-direction obstacle.
-SDL_FRect Obstacle1D{
-    .x = 0,
-    .y = WINDOW_HEIGHT  / 1.4f,
-    .w = WINDOW_WIDTH,
-    .h = WINDOW_HEIGHT / 2
-};
-*/
-
-SDL_FRect Obstacle1{
-    .x = 0,
-    .y = WINDOW_HEIGHT  / 1.4f,
-    .w = WINDOW_WIDTH,
-    .h = WINDOW_HEIGHT / 40.0f
+SDL_FRect Obstacle1D_up{
+    .x = WINDOW_WIDTH  / 3.1f,
+    .y = WINDOW_HEIGHT  / 2.5f,
+    .w = WINDOW_WIDTH / 13.0f,
+    .h = WINDOW_HEIGHT / 22
 };
 
-SDL_FRect Obstacle2{
-    .x = WINDOW_WIDTH  / 3.5f,
-    .y = WINDOW_HEIGHT  / 5.0f,
+SDL_FRect Obstacle1D_down{
+    .x = WINDOW_WIDTH  / 1.2665f,
+    .y = WINDOW_HEIGHT  / 1.65f,
+    .w = WINDOW_WIDTH / 13.0f,
+    .h = WINDOW_HEIGHT / 22
+};
+
+
+
+SDL_FRect obstacle1{
+    .x = WINDOW_WIDTH  / 1.15f,
+    .y = WINDOW_HEIGHT  / 2.5f,
     .w = WINDOW_WIDTH  / 10.0f,
     .h = WINDOW_HEIGHT / 4.0f
 };
 
 
-SDL_FRect Obstacle3{
-    .x = WINDOW_WIDTH  / 1.5f,
-    .y = WINDOW_HEIGHT  / 1.75f,
-    .w = WINDOW_WIDTH  / 10.0f,
-    .h = WINDOW_HEIGHT / 5.0f
-};
 
 
-SDL_FRect Obstacle4{
+SDL_FRect obstacle5{
     .x = 0,
-    .y = WINDOW_HEIGHT  / 6.0f,
+    .y = WINDOW_HEIGHT  / 1.1f,
     .w = WINDOW_WIDTH,
-    .h = WINDOW_HEIGHT / 10
+    .h = WINDOW_HEIGHT / 12
 };
 
 

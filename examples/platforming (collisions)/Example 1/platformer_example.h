@@ -81,8 +81,6 @@ SDL_FRect Obstacle4{
 };
 
 
-
-
 // std::array<int, 2> previous_player_pos = {0, 0};
 // std::array<int, 2> current_player_pos = {0, 0};
 
