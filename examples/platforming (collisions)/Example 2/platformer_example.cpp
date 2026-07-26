@@ -197,7 +197,7 @@ void update_player_pos() {
     // Current_player_pos = supermotor::handle_1d_up_collisions(Previous_player_pos, Current_player_pos, your_1d_up_obstacles_here);
     // Current_player_pos = supermotor::handle_1d_down_collisions(Previous_player_pos, Current_player_pos, your_1d_down_obstacles_here);
 
-    Player = supermotor::copy_supermotor_rect_to_sdl_rect(Current_player_pos, Player);
+    Player = supermotor::convert_supermotor_rect_to_sdl_rect(Current_player_pos, Player);
 }
 
 

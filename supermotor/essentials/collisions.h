@@ -204,6 +204,30 @@ namespace supermotor
     };
 
 
+    Rect convert_sdl_rect_to_supermotor_rect(SDL_FRect my_rect){
+        Rect converted_rect(my_rect);   // Calls "Rect(sdl_rect)".
+        return converted_rect;
+    }
+    
+
+    // Copies src_rect to dst_rect.
+    // Overwrites ("pisa") the given SDL_FRect
+    //
+    // I tried to get this to work with pointers but I couldn't :c
+    // If you want to optimise this function further, you can try to implement pointers for it (i.e passing Rect* and SDL_FRect* here instead of Rect and SDL_FRect e.e).
+    SDL_FRect convert_supermotor_rect_to_sdl_rect(Rect src_rect, SDL_FRect dst_rect){    
+
+        dst_rect.x = src_rect.get_top_left_corner_x();
+        dst_rect.y = src_rect.get_top_left_corner_y();
+        dst_rect.w = src_rect.get_bottom_right_corner_x() - src_rect.get_top_left_corner_x();     // Distance between the right edge and the left   edge of src_rect.
+        dst_rect.h = src_rect.get_bottom_right_corner_y() - src_rect.get_top_left_corner_y();    //  Distance between the top   edge and the bottom edge of src_rect.
+
+        
+        return dst_rect;
+    }
+
+
+
 
     // a represents the player.
     // b represents an obstacle.
@@ -242,168 +266,259 @@ namespace supermotor
     }
 
 
+    Rect handle_right_collisions(Rect dummy_new_player_pos, Rect current_obstacle){
+        Rect new_player_pos(dummy_new_player_pos);
 
-Rect handle_two_corners(Rect dummy_new_player_pos, Rect current_obstacle, std::vector<int> current_collisions){
-
-    // CAREFUL: I am still referring to the player and not the obstacle.
-
-    // Avoid aliasing. Just in case...
-    Rect new_player_pos(dummy_new_player_pos);
-
-
-    // SDL_Log("trespassing...");
-    if ((current_collisions[0] == BOTTOM[0]) && (current_collisions[1] == BOTTOM[1])) {
-      new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);                            // SDL_Log("ceiling...");
-      vertical_velocity = 0.0f;     // Personal preference, honestly. Feel free to remove or commentate this line if you like a "floatier" effect :3
-    } else if ((current_collisions[0] == LEFT[0]) && (current_collisions[1] == LEFT[1])) {                  
-      new_player_pos.set_top_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);                          // SDL_Log("right wall...");
-    } else if ((current_collisions[0] == TOP[0]) && (current_collisions[1] == TOP[1])) {
-      new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_left_corner_y() - 1);                       // SDL_Log("floor...");
-    } else {         // ((current_collisions[0] == RIGHT[0]) && (current_collisions[1] == RIGHT[1]))
-      new_player_pos.set_top_right_corner_x(current_obstacle.get_top_left_corner_x() - 1);                         // SDL_Log("left wall...");
-      assert (current_collisions[0] == RIGHT[0]);
-      assert (current_collisions[1] == RIGHT[1]);
+        new_player_pos.set_top_right_corner_x(current_obstacle.get_top_left_corner_x() - 1);                         // SDL_Log("left wall...");
+        return new_player_pos;
     }
 
-    return new_player_pos;
-}
+    Rect handle_bottom_collisions(Rect dummy_new_player_pos, Rect current_obstacle){
+        Rect new_player_pos(dummy_new_player_pos);
 
-
-
-
-// Player has crashed into the top left corner of the obstacle.
-Rect handle_top_left_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect current_obstacle){
-
-    // Avoid aliasing. Just in case...
-    Rect new_player_pos(dummy_new_player_pos);
-
-    // SDL_Log("3");        
-
-    int a_y = previous_player_pos.get_bottom_right_corner_y();
-    int b_y = current_obstacle.get_top_left_corner_y();
-
-    if (a_y > b_y) {
-        new_player_pos.set_bottom_right_corner_x(current_obstacle.get_top_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
-    } else {
-        new_player_pos.set_bottom_right_corner_y(current_obstacle.get_top_left_corner_y() - 1);       //  "Snaps" the player above the obstacle.
-    }  
-
-    return new_player_pos;
-}
-
-
-
-
-// Player has crashed into the top right corner of the obstacle.
-Rect handle_top_right_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect current_obstacle){
-
-    // Avoid aliasing. Just in case...
-    Rect new_player_pos(dummy_new_player_pos);
-
-    // SDL_Log("2");      
-
-    int a_y = previous_player_pos.get_bottom_left_corner_y();
-    int b_y = current_obstacle.get_top_right_corner_y();
-
-    if (a_y > b_y) {
-        new_player_pos.set_bottom_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
-    } else {
-        new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_right_corner_y() - 1);       //  "Snaps" the player above the obstacle.
+        new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_left_corner_y() - 1);                       // SDL_Log("floor...");
+        return new_player_pos;
     }
 
-    return new_player_pos;
-}
+    Rect handle_left_collisions(Rect dummy_new_player_pos, Rect current_obstacle){
+        Rect new_player_pos(dummy_new_player_pos);
 
-
-
-
-
-
-// Player has crashed into the bottom left corner of the obstacle.
-Rect handle_bottom_left_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect current_obstacle){
-
-    // Avoid aliasing. Just in case...
-    Rect new_player_pos(dummy_new_player_pos);
-
-    // SDL_Log("1");        
-
-    int a_y = previous_player_pos.get_top_right_corner_y();
-    int b_y = current_obstacle.get_bottom_left_corner_y();
-
-
-    // Nudge sideways.
-    int a_x = previous_player_pos.get_top_right_corner_x();
-    int b_x = current_obstacle.get_bottom_left_corner_x();
-
-
-    if ((a_y < b_y) || ((a_x - b_x) <= nudge)){
-        new_player_pos.set_top_right_corner_x(current_obstacle.get_bottom_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
-    } else {
-        new_player_pos.set_top_right_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);       //  "Snaps" the player below the obstacle.
+        new_player_pos.set_top_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);                          // SDL_Log("right wall...");
+        return new_player_pos;
     }
 
-    return new_player_pos;
-}
+    Rect handle_top_collisions(Rect dummy_new_player_pos, Rect current_obstacle){
+        
+        Rect new_player_pos(dummy_new_player_pos);
 
+        new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);                            // SDL_Log("ceiling...");
+        vertical_velocity = 0.0f;     // Personal preference, honestly. Feel free to remove or commentate this line if you like a "floatier" effect :3
 
-
-
-
-
-// Player has crashed into the bottom right corner of the obstacle.
-Rect handle_bottom_right_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect current_obstacle){
-
-    Rect new_player_pos(dummy_new_player_pos);
-
-    // SDL_Log("0");                      
-
-    int a_y = previous_player_pos.get_top_left_corner_y();
-    int b_y = current_obstacle.get_bottom_right_corner_y();
-
-    // Nudge sideways.
-    int a_x = previous_player_pos.get_top_left_corner_x();
-    int b_x = current_obstacle.get_bottom_right_corner_x();
-
-    if ((a_y < b_y) || ((b_x - a_x) <= nudge) ){
-        new_player_pos.set_top_left_corner_x(current_obstacle.get_bottom_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
-    } else {
-        new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_right_corner_y() + 1);       //  "Snaps" the player below the obstacle.
+        return new_player_pos;
     }
 
-    return new_player_pos;
-};
+    Rect handle_two_corners(Rect dummy_new_player_pos, Rect current_obstacle, std::vector<int> current_collisions){
+
+        // CAREFUL: I am still referring to the player and not the obstacle.
+
+        // Avoid aliasing. Just in case...
+        Rect new_player_pos(dummy_new_player_pos);
 
 
+        // SDL_Log("trespassing...");
+        if ((current_collisions[0] == BOTTOM[0]) && (current_collisions[1] == BOTTOM[1])) {
+          new_player_pos = handle_top_collisions(dummy_new_player_pos, current_obstacle);
+        } else if ((current_collisions[0] == LEFT[0]) && (current_collisions[1] == LEFT[1])) {                  
+          new_player_pos = handle_left_collisions(dummy_new_player_pos, current_obstacle);
+        } else if ((current_collisions[0] == TOP[0]) && (current_collisions[1] == TOP[1])) {
+          new_player_pos = handle_bottom_collisions(dummy_new_player_pos, current_obstacle);
+        } else {         // ((current_collisions[0] == RIGHT[0]) && (current_collisions[1] == RIGHT[1]))
+          assert (current_collisions[0] == RIGHT[0]);
+          assert (current_collisions[1] == RIGHT[1]);
+          new_player_pos = handle_right_collisions(dummy_new_player_pos, current_obstacle);
+        }
 
-
-
-
-Rect handle_one_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect current_obstacle, int current_colliding_corner){
-
-    Rect new_player_pos(dummy_new_player_pos);
-
-
-
-    // Here's something interesting if you want to improve this code further:
-    // Player's snapped corner is always the opposite as the block's colliding corner 
-    // (look at a visualization if it's not entirely obvious to you :3)
-    switch (current_colliding_corner){
-        case 0:
-            new_player_pos = handle_bottom_right_corner(previous_player_pos, dummy_new_player_pos, current_obstacle);
-        break;
-        case 1:
-            new_player_pos = handle_bottom_left_corner(previous_player_pos, dummy_new_player_pos, current_obstacle);
-        break;
-        case 2:
-            new_player_pos = handle_top_right_corner(previous_player_pos, dummy_new_player_pos, current_obstacle);
-        break;
-        case 3:
-            new_player_pos = handle_top_left_corner(previous_player_pos, dummy_new_player_pos, current_obstacle);
+        return new_player_pos;
     }
 
-    return new_player_pos;
-}
 
+
+
+    // Player has crashed into the top left corner of the obstacle.
+    Rect handle_top_left_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect current_obstacle){
+
+        // Avoid aliasing. Just in case...
+        Rect new_player_pos(dummy_new_player_pos);
+
+        // SDL_Log("3");        
+
+        int a_y = previous_player_pos.get_bottom_right_corner_y();
+        int b_y = current_obstacle.get_top_left_corner_y();
+
+        if (a_y > b_y) {
+            new_player_pos.set_bottom_right_corner_x(current_obstacle.get_top_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
+        } else {
+            new_player_pos.set_bottom_right_corner_y(current_obstacle.get_top_left_corner_y() - 1);       //  "Snaps" the player above the obstacle.
+        }  
+
+        return new_player_pos;
+    }
+
+
+
+
+    // Player has crashed into the top right corner of the obstacle.
+    Rect handle_top_right_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect current_obstacle){
+
+        // Avoid aliasing. Just in case...
+        Rect new_player_pos(dummy_new_player_pos);
+
+        // SDL_Log("2");      
+
+        int a_y = previous_player_pos.get_bottom_left_corner_y();
+        int b_y = current_obstacle.get_top_right_corner_y();
+
+        if (a_y > b_y) {
+            new_player_pos.set_bottom_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
+        } else {
+            new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_right_corner_y() - 1);       //  "Snaps" the player above the obstacle.
+        }
+
+        return new_player_pos;
+    }
+
+
+
+
+
+
+    // Player has crashed into the bottom left corner of the obstacle.
+    Rect handle_bottom_left_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect current_obstacle){
+
+        // Avoid aliasing. Just in case...
+        Rect new_player_pos(dummy_new_player_pos);
+
+        // SDL_Log("1");        
+
+        int a_y = previous_player_pos.get_top_right_corner_y();
+        int b_y = current_obstacle.get_bottom_left_corner_y();
+
+
+        // Nudge sideways.
+        int a_x = previous_player_pos.get_top_right_corner_x();
+        int b_x = current_obstacle.get_bottom_left_corner_x();
+
+
+        if ((a_y < b_y) || ((a_x - b_x) <= nudge)){
+            new_player_pos.set_top_right_corner_x(current_obstacle.get_bottom_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
+        } else {
+            new_player_pos.set_top_right_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);       //  "Snaps" the player below the obstacle.
+        }
+
+        return new_player_pos;
+    }
+
+
+
+
+
+
+    // Player has crashed into the bottom right corner of the obstacle.
+    Rect handle_bottom_right_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect current_obstacle){
+
+        Rect new_player_pos(dummy_new_player_pos);
+
+        // SDL_Log("0");                      
+
+        int a_y = previous_player_pos.get_top_left_corner_y();
+        int b_y = current_obstacle.get_bottom_right_corner_y();
+
+        // Nudge sideways.
+        int a_x = previous_player_pos.get_top_left_corner_x();
+        int b_x = current_obstacle.get_bottom_right_corner_x();
+
+        if ((a_y < b_y) || ((b_x - a_x) <= nudge) ){
+            new_player_pos.set_top_left_corner_x(current_obstacle.get_bottom_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
+        } else {
+            new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_right_corner_y() + 1);       //  "Snaps" the player below the obstacle.
+        }
+
+        return new_player_pos;
+    } // ;
+
+
+
+
+
+
+    Rect handle_one_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect current_obstacle, int current_colliding_corner){
+
+        Rect new_player_pos(dummy_new_player_pos);
+
+
+
+        // Here's something interesting if you want to improve this code further:
+        // Player's snapped corner is always the opposite as the block's colliding corner 
+        // (look at a visualization if it's not entirely obvious to you :3)
+        switch (current_colliding_corner){
+            case 0:
+                new_player_pos = handle_bottom_right_corner(previous_player_pos, dummy_new_player_pos, current_obstacle);
+            break;
+            case 1:
+                new_player_pos = handle_bottom_left_corner(previous_player_pos, dummy_new_player_pos, current_obstacle);
+            break;
+            case 2:
+                new_player_pos = handle_top_right_corner(previous_player_pos, dummy_new_player_pos, current_obstacle);
+            break;
+            case 3:
+                new_player_pos = handle_top_left_corner(previous_player_pos, dummy_new_player_pos, current_obstacle);
+        }
+
+        return new_player_pos;
+    }
+
+
+
+    // Acts as a "floor-only" obstacle.
+    Rect handle_1d_down_collisions(Rect previous_player_pos, Rect cur_player_pos, std::vector<Rect> obstacles_1d_down) {
+
+        Rect res(cur_player_pos);
+        
+        for (int i = 0; i < obstacles_1d_down.size(); i++) {
+
+            
+            // Rect current_obstacle = obstacles[i];
+            // std::vector<int> current_collisions = collidingVertices(new_player_pos, current_obstacle);     // Implicit cast from to std::vector<int> to int[] (I hope it works...)
+            // unsigned short int number_of_colliding_vertices = current_collisions.size();
+
+
+            res = handle_bottom_collisions(cur_player_pos, obstacles_1d_down[i]);
+        }
+
+        return res; 
+    }
+
+
+    // Acts as a "floor-only" obstacle.
+    Rect handle_1d_down_collisions(Rect previous_player_pos, Rect cur_player_pos, std::vector<SDL_FRect> obstacles_1d_down) {
+        
+        std::vector<Rect> converted_obstacles = {};
+
+        for (int i = 0; i < obstacles_1d_down.size(); i++) { 
+            Rect current_obstacle = convert_sdl_rect_to_supermotor_rect(obstacles_1d_down[i]);
+            converted_obstacles.push_back(current_obstacle);
+        }
+
+        return handle_1d_down_collisions(previous_player_pos, cur_player_pos, converted_obstacles); 
+    }
+
+
+
+    // Acts as a "ceiling-only" obstacle.
+    Rect handle_1d_up_collisions(Rect previous_player_pos, Rect cur_player_pos, std::vector<Rect> obstacles_1d_up) {
+
+        Rect res(cur_player_pos);
+        
+        for (int i = 0; i < obstacles_1d_up.size(); i++) { 
+            res = handle_top_collisions(cur_player_pos, obstacles_1d_up[i]);
+        }
+
+        return res; 
+    }
+
+
+    // Acts as a "ceiling-only" obstacle.
+    Rect handle_1d_up_collisions(Rect previous_player_pos, Rect cur_player_pos, std::vector<SDL_FRect> obstacles_1d_up) {
+        
+        std::vector<Rect> converted_obstacles = {};
+
+        for (int i = 0; i < obstacles_1d_up.size(); i++) { 
+            Rect current_obstacle = convert_sdl_rect_to_supermotor_rect(obstacles_1d_up[i]);
+            converted_obstacles.push_back(current_obstacle);
+        }
+
+        return handle_1d_up_collisions(previous_player_pos, cur_player_pos, converted_obstacles); 
+    }
 
 
 
@@ -455,29 +570,7 @@ Rect handle_one_corner(Rect previous_player_pos, Rect dummy_new_player_pos, Rect
     }
 
 
-
-    Rect convert_sdl_rect_to_supermotor_rect(SDL_FRect my_rect){
-        Rect converted_rect(my_rect);   // Calls "Rect(sdl_rect)".
-        return converted_rect;
-    }
-
-
-    // Copies src_rect to dst_rect.
-    // Overwrites ("pisa") the given SDL_FRect
-    //
-    // I tried to get this to work with pointers but I couldn't :c
-    // If you want to optimise this function further, you can try to implement pointers for it (i.e passing Rect* and SDL_FRect* here instead of Rect and SDL_FRect e.e).
-    SDL_FRect copy_supermotor_rect_to_sdl_rect(Rect src_rect, SDL_FRect dst_rect){    
-
-        dst_rect.x = src_rect.get_top_left_corner_x();
-        dst_rect.y = src_rect.get_top_left_corner_y();
-        dst_rect.w = src_rect.get_bottom_right_corner_x() - src_rect.get_top_left_corner_x();     // Distance between the right edge and the left   edge of src_rect.
-        dst_rect.h = src_rect.get_bottom_right_corner_y() - src_rect.get_top_left_corner_y();    //  Distance between the top   edge and the bottom edge of src_rect.
-
-        
-        return dst_rect;
-    }
-
+    
 
     // Vector version of Rect(sdl_rect).
     // If you want to use this for any other data structure, I recommend making this into a template...
