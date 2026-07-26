@@ -466,13 +466,13 @@ namespace supermotor
         
         for (int i = 0; i < obstacles_1d_down.size(); i++) {
 
-            
-            // Rect current_obstacle = obstacles[i];
-            // std::vector<int> current_collisions = collidingVertices(new_player_pos, current_obstacle);     // Implicit cast from to std::vector<int> to int[] (I hope it works...)
-            // unsigned short int number_of_colliding_vertices = current_collisions.size();
+            Rect current_obstacle = obstacles_1d_down[i];
+            std::vector<int> current_collisions = collidingVertices(res, current_obstacle);     // Implicit cast from to std::vector<int> to int[] (I hope it works...)
+            unsigned short int number_of_colliding_vertices = current_collisions.size();
 
-
-            res = handle_bottom_collisions(cur_player_pos, obstacles_1d_down[i]);
+            if ((number_of_colliding_vertices == 2) && (((current_collisions[0] == TOP[0]) && (current_collisions[1] == TOP[1])))) {
+                res = handle_bottom_collisions(cur_player_pos, obstacles_1d_down[i]);
+            }
         }
 
         return res; 
@@ -500,7 +500,14 @@ namespace supermotor
         Rect res(cur_player_pos);
         
         for (int i = 0; i < obstacles_1d_up.size(); i++) { 
-            res = handle_top_collisions(cur_player_pos, obstacles_1d_up[i]);
+    
+            Rect current_obstacle = obstacles_1d_up[i];
+            std::vector<int> current_collisions = collidingVertices(res, current_obstacle);     // Implicit cast from to std::vector<int> to int[] (I hope it works...)
+            unsigned short int number_of_colliding_vertices = current_collisions.size();
+
+            if ((number_of_colliding_vertices == 2) && (((current_collisions[0] == BOTTOM[0]) && (current_collisions[1] == BOTTOM[1])))) {
+                res = handle_top_collisions(cur_player_pos, obstacles_1d_up[i]);
+            }
         }
 
         return res; 

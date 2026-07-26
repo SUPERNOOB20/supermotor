@@ -87,17 +87,17 @@ bool player_is_on_the_ground(supermotor::Rect current_obstacle){
 //
 // Should be pretty self explanatory:
 // If there are no current collisions, then the player is airborne.
-bool check_airborne(){
+bool check_airborne(){    
 
     bool res = true;
     
-    Uint32 your_obstacles_amount = your_obstacles_here.size();
+    Uint32 your_floor_obstacles_amount = your_floor_obstacles_here.size();
 
-    for (int i = 0; i < your_obstacles_amount; i++){
+    for (int i = 0; i < your_floor_obstacles_amount; i++){
 
-        supermotor::Rect current_obstacle = your_obstacles_here[i];
+        supermotor::Rect current_floor_obstacle = your_floor_obstacles_here[i];
 
-        if (player_is_on_the_ground(current_obstacle)) {       // your_obstacles_here[i] is the current_obstacle.
+        if (player_is_on_the_ground(current_floor_obstacle)) {       // your_obstacles_here[i] is the current_obstacle.
             // SDL_Log("is airborne: false");
             res = false;
         }
@@ -194,8 +194,8 @@ void update_player_pos() {
     vertical_velocity_decay();      // You can refactor this to use "float gravity" or "double gravity" as a parameter here if you want.
 
     Current_player_pos = supermotor::handle_collisions(Previous_player_pos, Current_player_pos, your_obstacles_here);
-    // Current_player_pos = supermotor::handle_1d_up_collisions(Previous_player_pos, Current_player_pos, your_1d_up_obstacles_here);
-    // Current_player_pos = supermotor::handle_1d_down_collisions(Previous_player_pos, Current_player_pos, your_1d_down_obstacles_here);
+    Current_player_pos = supermotor::handle_1d_down_collisions(Previous_player_pos, Current_player_pos, your_1d_up_obstacles_here);
+    Current_player_pos = supermotor::handle_1d_up_collisions(Previous_player_pos, Current_player_pos, your_1d_down_obstacles_here);
 
     Player = supermotor::convert_supermotor_rect_to_sdl_rect(Current_player_pos, Player);
 }
@@ -443,6 +443,9 @@ int main(int argc, char* argv[]){
 
     your_1d_up_obstacles_here.push_back(Obstacle1D_up);
     your_1d_down_obstacles_here.push_back(Obstacle1D_down);
+
+    your_floor_obstacles_here = your_obstacles_here;
+    your_floor_obstacles_here.push_back(Obstacle1D_up);
 
     SDL_Log("Player.x: %f", Player.x);
     SDL_Log("Player.y: %f", Player.y);

@@ -30,6 +30,8 @@ std::vector<SDL_FRect> your_obstacles_here;
 std::vector<SDL_FRect> your_1d_up_obstacles_here;
 std::vector<SDL_FRect> your_1d_down_obstacles_here;
 
+std::vector<SDL_FRect> your_floor_obstacles_here;
+
 
 // Your player's texture resolution goes here.
 int player_texture_width = 45;
