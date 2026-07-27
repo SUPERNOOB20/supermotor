@@ -57,7 +57,7 @@ struct SDL_Application{
 
 
         std::string your_filenames_here[4] = {"./YourImagesHere/Remilia.png", "./YourImagesHere/Yorihime.png", "./YourImagesHere/Youmu.png", "./YourImagesHere/Ascent.png"};
-        your_textures_here = generate_textures(mRenderer, your_filenames_here, 4);
+        your_textures_here = supermotor::generate_textures(mRenderer, your_filenames_here, 4);
 
     }
 	// Destructor

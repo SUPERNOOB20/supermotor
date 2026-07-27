@@ -1,11 +1,8 @@
-// Batch rendering implementations (should) go here.
+#ifndef SUPERCORE20
+#define SUPERCORE20
 
-// Input:  Your renderer and your filenames (as C strings)
-// Output: A vector with your textures ()
 
-// NOTE: Only accepts .png, .jpg, and .bmp file formats.
-//       (If you want other file formats, you can ask me to implement one, or look for another tool yourself, such as this one ---> https://wiki.libsdl.org/SDL3_image/FrontPage)
-//       (for more info, read here ---> https://wiki.libsdl.org/SDL3/CategorySurface)
+
 
 
 #include <bits/stdc++.h>
@@ -72,20 +69,25 @@ std::string find_file_format(std::string current_filename){
 
 
 
-// Run ONLY ONCE, at startup (or during a loading screen when changing scenes, for example)
-// (DO NOT run this on your game loop)
-std::vector<SDL_Texture*> generate_textures(SDL_Renderer* your_renderer, std::string image_filenames[], uint64_t number_of_files){
-    
-    std::vector<SDL_Texture*> your_textures;
 
-    for (int i = 0; i < number_of_files; i++){
 
-        // SDL_Log("%s", image_filenames[i].c_str());
+
+namespace supermotor
+{
+
+
+
+    // Run ONLY ONCE, at startup (or during a loading screen when changing scenes, for example)
+    // (DO NOT run this on your game loop)
+    //
+    SDL_Texture* generate_texture(SDL_Renderer* your_renderer, std::string filename){
+
+        // SDL_Log("%s", filename.c_str());
         SDL_Texture* currentTexture;
      
-        std::string file_extension = find_file_format(image_filenames[i]);
+        std::string file_extension = find_file_format(filename);
         
-        const char* current_filename = image_filenames[i].c_str();
+        const char* current_filename = filename.c_str();
         
         SDL_Surface* currentSurface;
         if (file_extension == ".png") {
@@ -109,8 +111,44 @@ std::vector<SDL_Texture*> generate_textures(SDL_Renderer* your_renderer, std::st
         // free(file_extension);
 
         currentTexture = SDL_CreateTextureFromSurface(your_renderer, currentSurface);
-        your_textures.push_back(currentTexture);
+            
+        return currentTexture;
     }
 
-    return your_textures;
+
+
+
+
+
+
+
+    // Run ONLY ONCE, at startup (or during a loading screen when changing scenes, for example)
+    // (DO NOT run this on your game loop)
+    //
+    //
+    //
+    // Batch rendering implementations (should) go here.
+    //
+    // Input:  Your renderer and your filenames (as C strings)
+    // Output: A vector with your textures ()
+    //
+    // NOTE: Only accepts .png, .jpg, and .bmp file formats.
+    //       (If you want other file formats, you can ask me to implement one, or look for another tool yourself, such as this one ---> https://wiki.libsdl.org/SDL3_image/FrontPage)
+    //       (for more info, read here ---> https://wiki.libsdl.org/SDL3/CategorySurface)
+    //
+    //
+    std::vector<SDL_Texture*> generate_textures(SDL_Renderer* your_renderer, std::string image_filenames[], uint64_t number_of_files){
+        
+        std::vector<SDL_Texture*> your_textures;
+
+        for (int i = 0; i < number_of_files; i++){
+            your_textures.push_back(generate_texture(your_renderer, image_filenames[i]));        
+        }
+
+        return your_textures;
+    }
 }
+
+
+
+#endif

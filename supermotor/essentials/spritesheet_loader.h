@@ -30,9 +30,37 @@ enum Direction {
 
 namespace supermotor
 {
-    
-    // Returns an array with all your sprites, in order.
+ 
+    // Similar to supermotor::generate_texture(...), but this one lets you include color key :3
+    SDL_Texture* create_spritesheet(SDL_Renderer* mRenderer, std::string filename, Uint8 transparency_colour_red, Uint8 transparency_colour_green, Uint8 transparency_colour_blue){
+
+        SDL_Surface* six_seven;         // SIX SEEEEEEEEEEVEN
+        SDL_Texture* your_texture;
+
+        six_seven = SDL_LoadBMP(filename.c_str());     // If you want other fileformats, do the find_file_format thingy from core.h, I'm too lazy to do it myself right now... e.e
+
+        if (six_seven == nullptr){
+		    assert(0 && ("ERROR: spritesheet image file not found :c"));
+	    }
+
+        const SDL_PixelFormatDetails* surface_details = SDL_GetPixelFormatDetails(six_seven->format);   // Usually BRG or RGB.
+        SDL_Palette* surface_palette = SDL_GetSurfacePalette(six_seven);
+        Uint32 colorKey = SDL_MapRGB(surface_details, surface_palette, transparency_colour_red, transparency_colour_green, transparency_colour_blue);          // Lets us treat a surface as RGB regardless of internal representation (think of different bpp and different endianess, for example).
+
+        SDL_SetSurfaceColorKey(six_seven, true, colorKey);
+
+        your_texture = SDL_CreateTextureFromSurface(mRenderer, six_seven);
+        SDL_DestroySurface(six_seven);
+
+        return your_texture;
+    }
+
+   
+    // You can once again thank the allmighty Mike Shah for the core idea behind this whole library! Taken from here ---> https://www.youtube.com/watch?v=GpCcQeoYYKE
+    //
+    // Returns a vector with all your sprites, in order.
     // for the width and height parameters: I recommend you to use nullptr for the one you won't use.
+    //
     // That is to say:
     //    sprite_height == nullptr for HORIZONTAL
     //       and
@@ -40,6 +68,7 @@ namespace supermotor
     //
     //
     // Want to optimise this further? Try returning an array instead of a vector! ":3
+    //
     std::vector<SDL_FRect> load_spritesheet(SDL_Texture* spritesheet_texture, unsigned int sprite_height, unsigned int sprite_width, bool direction){
 
         unsigned int texture_height = spritesheet_texture->h;
@@ -50,7 +79,7 @@ namespace supermotor
         if (direction == HORIZONTAL) {
         
             unsigned int size = texture_width / sprite_width;       // Amount of sprites to generate.  
-            spritesheet_rects.reserve(size);
+            spritesheet_rects.resize(size);
 
             for (int i = 0; i < size; i++){
                 SDL_FRect current_sprite {
@@ -65,7 +94,7 @@ namespace supermotor
         } else { // direction == VERTICAL
  
             unsigned int size = texture_height / sprite_height;       // Amount of sprites to generate.
-            spritesheet_rects.reserve(size);
+            spritesheet_rects.resize(size);
 
             for (int i = 0; i < size; i++){
                 SDL_FRect current_sprite {
@@ -78,6 +107,7 @@ namespace supermotor
             }
 
         }
+
 
         return spritesheet_rects;
     }

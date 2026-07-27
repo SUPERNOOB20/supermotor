@@ -11,24 +11,27 @@
 
 #include "../../supermotor/essentials/spritesheet_loader.h"
 
-#define WINDOW_WIDTH   1280
+#define WINDOW_WIDTH    720
 #define WINDOW_HEIGHT   720
 
 
 
-
+SDL_Renderer* mRenderer;
 SDL_Texture* cirnoTexture;
+
+std::vector<SDL_FRect> cirno_poses;
+
 Uint64 frame_counter;
 
-/*
 
-// cirno_anim(int frame_counter);
-// cirno_sprite.set_tiles(bn::sprite_items::cirno_spritesheet.tiles_item().create_tiles(3));
-void cirno_anim(Uint64 frame_counter){
 
-    bn::sprite_ptr cirno_sprite = bn::sprite_items::cirno_spritesheet.create_sprite(0, 0); 
 
-    VRAM->global_sprites.push_back(cirno_sprite);
+
+// Returns the corresponding sprite to render according to my silly animation :3
+//
+// Uint8 cirno_anim(Uint64 frame_counter)
+//
+Uint8 cirno_anim(){
 
     int f = frame_counter % 470;
     int i = 0;
@@ -45,12 +48,11 @@ void cirno_anim(Uint64 frame_counter){
         }
     }
         
-    cirno_sprite.set_tiles(bn::sprite_items::cirno_spritesheet.tiles_item().create_tiles(i));
 
-    return;
+    return i;
 }
 
-*/
+
 
 
 
@@ -58,9 +60,6 @@ void cirno_anim(Uint64 frame_counter){
 struct SDL_Application{
 
     SDL_Window* mWindow;
-    SDL_Renderer* mRenderer;
-
-    SDL_Surface* cirnoSurface;
     
     bool running = true;
 
@@ -81,12 +80,6 @@ struct SDL_Application{
 		    }
             SDL_SetRenderLogicalPresentation(mRenderer, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 	    }
-
-	    cirnoSurface = SDL_LoadBMP("./Assets/cirno_spritesheet.bmp");
-	    if (cirnoSurface == nullptr){
-		    assert(0 && "ERROR: 'cirno_spriteseet.bmp' file not found :c");
-	    }
-	    cirnoTexture = SDL_CreateTextureFromSurface(mRenderer, cirnoSurface);
     }
 	// Destructor
 	~SDL_Application(){
@@ -131,7 +124,7 @@ struct SDL_Application{
         
         // cirno_anim();
         
-		SDL_RenderTexture(mRenderer, cirnoTexture, nullptr, nullptr);
+		SDL_RenderTexture(mRenderer, cirnoTexture, &cirno_poses[cirno_anim()], nullptr);
 
 		// draw other things here ...
 		
@@ -179,7 +172,9 @@ int main(int argc, char* argv[]){
 
 	SDL_Application app("FPS test! Current FPS: ");
 
-    supermotor::load_spritesheet(cirnoTexture, 32, 32, VERTICAL);
+    cirnoTexture = supermotor::create_spritesheet(mRenderer, "./Assets/cirno_spritesheet.bmp", 0x00, 0xFF, 0x00);
+    cirno_poses = supermotor::load_spritesheet(cirnoTexture, 32, 32, VERTICAL);
+    assert((cirno_poses.size()) == 4);
 
 	app.MainLoop();
 	return 0;
