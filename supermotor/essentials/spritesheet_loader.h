@@ -69,6 +69,9 @@ namespace supermotor
     //
     // Want to optimise this further? Try returning an array instead of a vector! ":3
     //
+    // I have also included some small amounts of SDL_Log for you to uncommentate and use when debugging if needed :3
+    //    Enjoy! ^- ^)7
+    //
     std::vector<SDL_FRect> load_spritesheet(SDL_Texture* spritesheet_texture, unsigned int sprite_height, unsigned int sprite_width, bool direction){
 
         unsigned int texture_height = spritesheet_texture->h;
@@ -89,6 +92,13 @@ namespace supermotor
                     .h = (float) (texture_height)
                 };                
                 spritesheet_rects[i] = current_sprite;
+
+                /*
+                SDL_Log("\n");
+                SDL_Log("Current texture: %d", i);
+                SDL_Log("Starts at: %f", current_sprite.x);
+                SDL_Log("Finished at: %f", current_sprite.x + current_sprite.w);
+                */
             }
 
         } else { // direction == VERTICAL
@@ -99,11 +109,18 @@ namespace supermotor
             for (int i = 0; i < size; i++){
                 SDL_FRect current_sprite {
                     .x = 0.0f,
-                    .y = (float) (i * size),
+                    .y = (float) (i * sprite_height),
                     .w = (float) (texture_width),
                     .h = (float) (sprite_height)
                 };                
                 spritesheet_rects[i] = current_sprite;
+
+                /*
+                SDL_Log("\n");
+                SDL_Log("Current texture: %d", i);
+                SDL_Log("Starts at: %f", current_sprite.y);
+                SDL_Log("Finished at: %f", current_sprite.y + current_sprite.h);
+                */
             }
 
         }
