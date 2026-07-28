@@ -6,13 +6,12 @@
 // .
 
 #include <SDL3/SDL.h>
-#include <string>
 #include <cassert>
 
 #define WINDOW_WIDTH   1280
 #define WINDOW_HEIGHT   720
-#include "supermotor/essentials/animate.h"
-#include "supermotor/essentials/atlas.h"
+#include "../../supermotor/essentials/animate.h"
+// #include "../../supermotor/essentials/atlas.h"
 
 Uint64 deltaTime;
 
@@ -22,52 +21,28 @@ Uint64 deltaTime;
 static float texture_width = 900.0f;
 static float texture_height = 1600.0f;
 
+/*
 SDL_FRect a_dst_rect;
 a_dst_rect.x = (float) 0.0f;
 a_dst_rect.y = (float) 0.0f;
 a_dst_rect.w = (float) texture_width;
 a_dst_rect.h = (float) texture_height;
+*/
 
-SDL_FRect b_dst_rect;
-b_dst_rect.x = (float) 0.0f;
-b_dst_rect.y = (float) 0.0f;
-b_dst_rect.w = (float) texture_width;
-b_dst_rect.h = (float) texture_height;
+struct SDL_FRect a_dst_rect{
+    .x = (float) 0.0f,
+    .y = (float) 0.0f,
+    .w = (float) texture_width,
+    .h = (float) texture_height
+};
 
-SDL_FRect c_dst_rect;
-c_dst_rect.x = (float) 0.0f;
-c_dst_rect.y = (float) 0.0f;
-c_dst_rect.w = (float) texture_width;
-c_dst_rect.h = (float) texture_height;
-
+SDL_FRect b_dst_rect = a_dst_rect;
+SDL_FRect c_dst_rect = a_dst_rect;
 
 
 
-void bubbles(Uint64 deltaTime){
 
-    SDL Texture* a;
-    SDL Texture* b;
-    SDL Texture* c;
 
-    a = animation_loop("vertical", bubbles_I_surface, "bubbles_I_f.png", deltaTime);               //  a
-    b = animation_loop("vertical", bubbles_II_surface, "bubbles_II_f.png", deltaTime);            //   b
-    c = animation_loop("vertical", bubbles_III_surface, "bubbles_III_f.png", deltaTime);         //    c
-
-    
-    SDL_RenderTexture(mRenderer, a, nullptr, &a_dst_rect);
-    delete a;
-    
-    SDL_RenderTexture(mRenderer, b, nullptr, &b_dst_rect);
-    delete b;
-
-	SDL_RenderTexture(mRenderer, c, nullptr, &c_dst_rect);
-    delete c;
-}
-
-void stars(Uint64 deltaTime){
-    // animation_loop ("horizontal", stars_surface, "stars.png", deltaTime)        < --- Scrapped idea, sorry.
-   // ...
-}
 
 
 
@@ -77,6 +52,11 @@ struct SDL_Application{
     SDL_Window* mWindow;
     SDL_Renderer* mRenderer;
     SDL_Texture* bgTexture;
+
+    SDL_Surface* bubbles_I_surface;
+    SDL_Surface* bubbles_II_surface;
+    SDL_Surface* bubbles_III_surface;
+
     SDL_Texture* bubbles_I_texture;
     SDL_Texture* bubbles_II_texture;
     SDL_Texture* bubbles_III_texture;
@@ -110,9 +90,9 @@ struct SDL_Application{
 	    bgTexture = SDL_CreateTextureFromSurface(mRenderer, surface);
 
 
-	    SDL_Surface* bubbles_I_surface   = SDL_LoadPNG("./bubbles_I.png");
-	    SDL_Surface* bubbles_II_surface  = SDL_LoadPNG("./bubbles_II.png");
-	    SDL_Surface* bubbles_III_surface = SDL_LoadPNG("./bubbles_III.png");
+	    bubbles_I_surface   = SDL_LoadPNG("./bubbles_I.png");
+	    bubbles_II_surface  = SDL_LoadPNG("./bubbles_II.png");
+	    bubbles_III_surface = SDL_LoadPNG("./bubbles_III.png");
 
 	    bubbles_I_texture   = SDL_CreateTextureFromSurface(mRenderer, bubbles_I_surface);
 	    bubbles_II_texture  = SDL_CreateTextureFromSurface(mRenderer, bubbles_II_surface);
@@ -126,8 +106,36 @@ struct SDL_Application{
 	}
 
 
+    // If you have a LOT of animations you can automate this with a for loop.
+    // In our case we only have 3 so we'll roll with doing it by hand :p
+	void bubbles(Uint64 deltaTime){
 
-	
+        textures_and_locations a;
+        textures_and_locations b;
+        textures_and_locations c;
+
+        a = animation_loop(mRenderer, WINDOW_WIDTH, WINDOW_HEIGHT, "VERTICAL", bubbles_I_surface, "bubbles_I_f.png", deltaTime);               //  a
+        b = animation_loop(mRenderer, WINDOW_WIDTH, WINDOW_HEIGHT, "VERTICAL", bubbles_II_surface, "bubbles_II_f.png", deltaTime);            //   b
+        c = animation_loop(mRenderer, WINDOW_WIDTH, WINDOW_HEIGHT, "VERTICAL", bubbles_III_surface, "bubbles_III_f.png", deltaTime);         //    c
+
+        
+        SDL_RenderTexture(mRenderer, std::get<0>(a[0]), nullptr, std::get<1>(a[0]));      // Original image
+        SDL_RenderTexture(mRenderer, std::get<0>(a[1]), nullptr, std::get<1>(a[1]));     //  Mirror.
+        // delete a;
+        
+        SDL_RenderTexture(mRenderer, std::get<0>(b[0]), nullptr, std::get<1>(b[0]));      // Original image
+        SDL_RenderTexture(mRenderer, std::get<0>(b[1]), nullptr, std::get<1>(b[1]));     //  Mirror.
+        // delete b;
+
+        SDL_RenderTexture(mRenderer, std::get<0>(c[0]), nullptr, std::get<1>(c[0]));      // Original image
+        SDL_RenderTexture(mRenderer, std::get<0>(c[1]), nullptr, std::get<1>(c[1]));     //  Mirror.
+        // delete c;
+    }
+
+    void stars(Uint64 deltaTime){
+        // animation_loop ("horizontal", stars_surface, "stars.png", deltaTime)        < --- Scrapped idea, sorry.
+       // ...
+    }
 
 
 
@@ -146,6 +154,13 @@ struct SDL_Application{
    
 	void Update(){
 	}
+
+
+
+
+
+
+
 
 
 	void Render(Uint64 deltaTime){

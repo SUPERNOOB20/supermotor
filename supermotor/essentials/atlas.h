@@ -15,65 +15,68 @@
 
 
 
-bool generate_horizontal_atlas(SDL_Surface* image_surface, const char* filename){
+#include <string>
+
+#include <array>
+#include <vector>
+
+#include <SDL3/SDL.h>
+
+
+typedef std::array<SDL_Texture*, 2> atlas;                  // Fast, but only accepts vertical and horizontal. 
+// typedef std::vector<SDL_Texture*> atlas_rework;         //  Accepts diagonal, but marginally slower.
+
+
+
+
+
+bool generate_atlas(SDL_Surface* image_surface, std::string filename, std::string direction){
 
     bool success;
-    success = SDL_FlipSurface(image_surface, SDL_FLIP_HORIZONTAL);
+    if (direction == "VERTICAL"){
+        success = SDL_FlipSurface(image_surface, SDL_FLIP_HORIZONTAL);
+    } else if (direction == "HORIZONTAL") {
+        success = SDL_FlipSurface(image_surface, SDL_FLIP_VERTICAL);
+    }
+
     if (!success){
         return 1;   // We tried to flip your image, but we failed :c
     }
     
 
-    !SDL_SavePNG(image_surface, filename);
+    SDL_SavePNG(image_surface, filename.c_str());
 
     return 0;   // Success! :3
 }
 
 
+SDL_Texture* load_atlas(SDL_Renderer* mRenderer, SDL_Surface* image_surface){
 
-
-bool generate_vertical_atlas(SDL_Surface* image_surface, const char* filename){
-
-    bool success;
-    success = SDL_FlipSurface(image_surface, SDL_FLIP_VERTICAL);
-    if (!success){
-        return 1;   // We tried to flip your image, but we failed :c
-    }
-    
-
-    !SDL_SavePNG(image_surface, filename);
-
-    return 0;   // Success! :3
-}
-
-
-SDL_Texture load_atlas(SDL_Renderer* mRenderer, SDL_Surface* image_surface){
-
-    SDL_Texture* mTexture
+    SDL_Texture* bgTexture;
     bgTexture = SDL_CreateTextureFromSurface(mRenderer, image_surface);
 
-    return mTexture;   // Success! :3
+    return bgTexture;   // Success! :3
 }
 
 
 // Horizontal and vertical loop animations require 2 textures:
 // texture1: Original one
 // texture2: Flipped one
-// If I ever implement diagonal atlases, there will be 8 textures.
-SDL_Texture* generate_and_load_atlas(SDL_Renderer* mRenderer, const char* direction, SDL_Surface* image_surface, const char* filename){
+// If I ever implement diagonal atlases, there will be 8 textures... yeah, that will definitely require a lot of refactoring e.e
+atlas generate_and_load_atlas(SDL_Renderer* mRenderer, std::string direction, SDL_Surface* image_surface, std::string filename){
 
-    if direction == vertical{
-        generate_vertical_atlas(image_surface, filename);    
-    } else {       // direction == horizontal
-        generate_horizontal_atlas(image_surface, filename);    
+    if (direction == "VERTICAL") {
+        generate_atlas(image_surface, filename, "VERTICAL");    
+    } else if (direction == "HORIZONTAL") {       // direction == horizontal
+        generate_atlas(image_surface, filename, "HORIZONTAL");    
     }
     
-    texture1 = SDL_CreateTextureFromSurface(mRenderer, image_surface);
-    texture2 = load_atlas(mRenderer, image_surface);
+    SDL_Texture* texture1 = SDL_CreateTextureFromSurface(mRenderer, image_surface);
+    SDL_Texture* texture2 = load_atlas(mRenderer, image_surface);
 
-    SDL_Texture* atlas = new SDL_Texture[];
+    atlas my_atlas = {texture1, texture2};
 
-    return atlas;   // Success! :3
+    return my_atlas;   // Success! :3
 }
 
 #endif
