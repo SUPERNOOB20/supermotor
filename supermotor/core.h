@@ -140,6 +140,7 @@ namespace supermotor
     std::vector<SDL_Texture*> generate_textures(SDL_Renderer* your_renderer, std::string image_filenames[], uint64_t number_of_files){
         
         std::vector<SDL_Texture*> your_textures;
+        your_textures.resize() = number_of_files;
 
         for (int i = 0; i < number_of_files; i++){
             your_textures.push_back(generate_texture(your_renderer, image_filenames[i]));        

@@ -114,9 +114,9 @@ struct SDL_Application{
         textures_and_locations b;
         textures_and_locations c;
 
-        a = animation_loop(mRenderer, WINDOW_WIDTH, WINDOW_HEIGHT, "VERTICAL", bubbles_I_surface, "bubbles_I_f.png", deltaTime);               //  a
-        b = animation_loop(mRenderer, WINDOW_WIDTH, WINDOW_HEIGHT, "VERTICAL", bubbles_II_surface, "bubbles_II_f.png", deltaTime);            //   b
-        c = animation_loop(mRenderer, WINDOW_WIDTH, WINDOW_HEIGHT, "VERTICAL", bubbles_III_surface, "bubbles_III_f.png", deltaTime);         //    c
+        a = render_simple_animation(SIMPLE, mRenderer, 10000, WINDOW_WIDTH, WINDOW_HEIGHT, UP, deltaTime, "./bubbles_I.png");              //  a
+        b = render_simple_animation(SIMPLE, mRenderer, 10000, WINDOW_WIDTH, WINDOW_HEIGHT, UP, deltaTime, "./bubbles_II.png");            //   b
+        c = render_simple_animation(SIMPLE, mRenderer, 10000, WINDOW_WIDTH, WINDOW_HEIGHT, UP, deltaTime, "./bubbles_III.png");          //    c
 
         
         SDL_RenderTexture(mRenderer, std::get<0>(a[0]), nullptr, std::get<1>(a[0]));      // Original image

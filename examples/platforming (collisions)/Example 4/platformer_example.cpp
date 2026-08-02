@@ -10,7 +10,6 @@
 // Adjust these to your liking! :3
 int floaty_jump_intensity = 10;            // The bigger, the longer you can hold the jump button for. Change to 0 if you want the player to always jump at the same height!
 float gravity = 1.0f;                     //  The bigger, the smaller your jumps.
-float ice_speed = 2.5f;
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -68,26 +67,22 @@ void reset_jump(){
 
 
 
-bool player_is_on_the_ground(supermotor::Rect current_obstacle, bool check_for_ice){
+bool player_is_on_the_ground(supermotor::Rect current_obstacle){
 
     bool res = false;
-    bool standing_on_ice = false;
 
     supermotor::Rect dummy_current_obstacle(current_obstacle);
     dummy_current_obstacle.move_y(-2);  // Remember that our origin (0, 0) is the top-left corner of the screen.
 
     if (((supermotor::collidingVertices(Player, current_obstacle)).size() == 0) && (supermotor::collidingVertices(Player, dummy_current_obstacle).size() > 0)) {
         res = true;
-        standing_on_ice = true;
     }    
-
-    if(check_for_ice && standing_on_ice) { horizontal_velocity *= ice_speed; } 
 
     return res;
 }
 
 
-// consumes     std::vector<SDL_FRect> your_floor_obstacles_here
+// consumes     std::vector<SDL_FRect> your_obstacles_here
 // and          std::array <int, 2> current_player_pos = {0, 0};
 //
 // Should be pretty self explanatory:
@@ -96,35 +91,20 @@ bool check_airborne(){
 
     bool res = true;
     
-    Uint32 your_floor_obstacles_amount = your_floor_obstacles_here.size();
+    Uint32 your_obstacles_amount = your_obstacles_here.size();
 
-    for (int i = 0; i < your_floor_obstacles_amount; i++){
+    for (int i = 0; i < your_obstacles_amount; i++){
 
-        supermotor::Rect current_floor_obstacle = your_floor_obstacles_here[i];
+        supermotor::Rect current_obstacle = your_obstacles_here[i];
 
-        if (player_is_on_the_ground(current_floor_obstacle, false)) {       // your_obstacles_here[i] is the current_obstacle.
+        if (player_is_on_the_ground(current_obstacle)) {       // your_obstacles_here[i] is the current_obstacle.
             // SDL_Log("is airborne: false");
             res = false;
         }
     }
-    
+
     return res;
 }
-
-
-
-// Apply slippery ice effect if player is above ice.
-void check_airborne_ice() {
-    Uint32 your_ice_obstacles_amount = your_ice_obstacles_here.size();
-
-    for (int i = 0; i < your_ice_obstacles_amount; i++){
-
-        supermotor::Rect current_ice_obstacle = your_ice_obstacles_here[i];
-
-        player_is_on_the_ground(current_ice_obstacle, true);
-    }
-}
-
 
 
 void vertical_velocity_decay() {
@@ -205,8 +185,6 @@ void update_player_pos() {
     process_vertical_movement();
     process_horizontal_movement();
 
-    check_airborne_ice();
-
     Current_player_pos.move_x(horizontal_velocity);
     Current_player_pos.move_y(vertical_velocity);
 
@@ -215,9 +193,9 @@ void update_player_pos() {
 
     vertical_velocity_decay();      // You can refactor this to use "float gravity" or "double gravity" as a parameter here if you want.
 
-    Current_player_pos = supermotor::handle_collisions(Previous_player_pos, Current_player_pos, your_floor_obstacles_here);
+    Current_player_pos = supermotor::handle_collisions(Previous_player_pos, Current_player_pos, your_obstacles_here);
 
-    Player = supermotor::convert_supermotor_rect_to_sdl_rect(Current_player_pos, Player);
+    Player = supermotor::copy_supermotor_rect_to_sdl_rect(Current_player_pos, Player);
 }
 
 
@@ -237,12 +215,10 @@ struct SDL_Application{
     SDL_Window* mWindow;
     SDL_Renderer* mRenderer;
     SDL_Texture* playerTexture;
-    SDL_Texture* iceTexture;
     
     bool running = true;
 
-    SDL_Surface* player_surface;
-    SDL_Surface* ice_surface;
+    // SDL_Surface* mSurface;
 
     // Constructor
     SDL_Application(const char* title){
@@ -261,21 +237,14 @@ struct SDL_Application{
 	    }
 
 
-	    player_surface = SDL_LoadPNG("../Assets/silly_thing.png");
+	    SDL_Surface* player_surface = SDL_LoadPNG("../Assets/silly_thing.png");
 	    if (player_surface == nullptr){
-		    assert (0 && "ERROR: Player file 'silly_thing.png' not found :c");
+		    assert (0 && "ERROR: File not found :c");
 	    }
-        playerTexture = SDL_CreateTextureFromSurface(mRenderer, player_surface);
-        SDL_DestroySurface(player_surface);
-
-
-        ice_surface = SDL_LoadBMP("../Assets/ice.bmp");
-	    if (player_surface == nullptr){
-		    assert (0 && "ERROR: Obstacle file 'ice.bmp' not found :c");
-	    }
-        iceTexture = SDL_CreateTextureFromSurface(mRenderer, ice_surface);
-        SDL_DestroySurface(ice_surface);
         
+        playerTexture = SDL_CreateTextureFromSurface(mRenderer, player_surface);
+
+        SDL_DestroySurface(player_surface);
 
     }
 	// Destructor
@@ -300,28 +269,26 @@ struct SDL_Application{
                     exit(0);       //  Taskkill.
                 }
 
-
-                
+                /*
                 // Debug.
-                if (event.button.button == 9){          // 9 is the F key       (you can remap it if you want :3)
+                if (event.button.button == 7){          // 7 is the D key       (you can remap it if you want :3)
                     
                     SDL_Log("\n");
-
-                                        
+                    
                     SDL_Log("Current frame: %ld", frame);
                     SDL_Log("Player.x: %f", Player.x);
                     SDL_Log("Player.y: %f", Player.y);
                     SDL_Log("Player.w: %f", Player.w);
                     SDL_Log("Player.h: %f", Player.h);
                     
-                    SDL_Log("frames_since_started_jumping: %d", frames_since_started_jumping);
-                    SDL_Log("is airborne: %d", is_airborne);
-
-                    
                     SDL_Log("Horizontal velocity: %f", horizontal_velocity);
                     SDL_Log("Vertical velocity: %f", vertical_velocity);
+
+                    SDL_Log("frames_since_started_jumping: %d", frames_since_started_jumping);
+                    SDL_Log("is airborne: %d", is_airborne);
+                    
                 }
-                
+                */
 
             }
 		}
@@ -362,11 +329,6 @@ struct SDL_Application{
     		SDL_RenderFillRect(mRenderer, &your_obstacles_here[i]);                           // Renders the obstacles.
         }
         
-
-        Uint32 your_ice_obstacles_amount = your_ice_obstacles_here.size();
-        for (int i = 0; i < your_ice_obstacles_amount; i++){
-    		SDL_RenderTexture(mRenderer, iceTexture, nullptr, &your_ice_obstacles_here[i]);                           // Renders the ice obstacles.
-        }
 
 		// draw other things here ...		
 
@@ -423,15 +385,13 @@ struct SDL_Application{
 // Entry Point
 int main(int argc, char* argv[]){
 
-    your_obstacles_here.push_back(ObstacleFloor1);
+    // magic number: 5
+    SDL_FRect* all_obstacles[5] = {Obstacle1, Obstacle2, Obstacle3, Obstacle4, Obstacle5};
+    unsigned int amount_of_obstacles = 5;
 
-    your_obstacles_here.push_back(ObstacleWall1);
-    your_obstacles_here.push_back(ObstacleWall2);
-
-    your_floor_obstacles_here = your_obstacles_here;
-    your_floor_obstacles_here.push_back(ObstacleIce1);
-
-    your_ice_obstacles_here.push_back(ObstacleIce1);    
+    for (int i == 0; amount_of_obstacles; i++){
+        your_obstacles_here.push_back(all_obstacles[i]);
+    }
 
     SDL_Log("Player.x: %f", Player.x);
     SDL_Log("Player.y: %f", Player.y);

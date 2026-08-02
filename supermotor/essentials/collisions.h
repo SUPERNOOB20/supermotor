@@ -53,7 +53,6 @@ namespace supermotor
       //  vvvv  Constructors  vvvv
       public:
 
-
         
         // Attempt at a copy-constructor...
         Rect(Rect* og_rect)     // NO idea why this consumes Rect* instead of Rect. If you know, please tell me...
@@ -225,6 +224,40 @@ namespace supermotor
         
         return dst_rect;
     }
+
+
+
+    class MovingPlatform : public Rect {
+
+      private:
+        double horizontal_velocity = 0.0f;
+        double vertical_velocity = 0.0f;
+        double max_horizontal_velocity = 0.0f;
+        double max_vertical_velocity = 0.0f;
+
+      public:
+
+        // using Rect::Rect;
+
+        MovingPlatform(double x_speed, double y_speed, Rect* position) : Rect (position) {
+            max_horizontal_velocity = SDL_sin(0) * x_speed;
+            max_vertical_velocity   = SDL_sin(0) * y_speed;
+        }
+
+
+        double GetHorizontalVelocity() { return horizontal_velocity; }
+        void SetHorizontalVelocity(double new_horizontal_velocity)   { horizontal_velocity  = new_horizontal_velocity;   }
+        void AddHorizontalVelocity(double added_horizontal_velocity) { horizontal_velocity += added_horizontal_velocity; }
+
+        double GetVerticalVelocity()   { return vertical_velocity; }
+        void SetVerticalVelocity(double new_vertical_velocity)       { vertical_velocity    = new_vertical_velocity;     }
+        void AddVerticalVelocity(double added_vertical_velocity)     { vertical_velocity   += added_vertical_velocity;   }
+    };
+
+
+
+
+
 
 
 
