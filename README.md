@@ -13,26 +13,35 @@ My own C++ game engine <br>
 ## Features
 <br>
 ( ✅️✅️ means already implemented )<br>
-( ✅️ means planned )<br>
+( 🔨 means work in progress (WIP) )<br>
 ( 🔜 means planned, but not for the near future (low priority in my to-do list) ) <br>
-( 🔜🔜 is even less priority than 🔜)<br>
+( 🔜🔜 means planned, but not for the near future (low priority in my to-do list) (it's even less priority than 🔜)<br>
 ( ❌️ is out of the scope for this project for now ) <br>
 <br>
 <br>
 <br>
-✅️✅️ Batch rendering (loading data to the GPU in bulk)<br>
-❌️   3D<br>
-🔜   Generalized math stuff for N dimensions (1D, 2D, 3D, 4D, 5D, 6D, etc)<br>
+✅️✅️  Batch rendering (loading data to the GPU in bulk)<br>
 ✅️✅️  Galleries (grids, image galleries, etc. Anything that can be looped, basically)<br>
-✅️   Animations (atlas)<br>
-🔜🔜 Squishing and streching <br>
-❌️   Cameras (and corresponding transformations) <br>
-🔜🔜 Bezier trayectories and transitions <br>
-❌️   Lerps (linear interpolations)<br>
-✅️✅️   Collisions<br>
-🔜   Transient objects <br>
+✅️✅️  Collisions<br>
+✅️✅️  Text handling abstractions<br><br>
+
+🔨   Animations (atlas)<br>
+
+🔜  Batch text handling<br>
 🔜   Screenshots<br>
+🔜   Pausing<br>
+🔜   Transient objects (memory management)<br>
+🔜   Generalized math stuff for N dimensions (1D, 2D, 3D, 4D, 5D, 6D, etc)<br>
+
+🔜🔜 Squishing and streching <br>
+🔜🔜 Bezier trayectories and transitions <br>
+
+❌️   Cameras (and corresponding transformations) <br>
+❌️   Lerps (linear interpolations)<br>
 ❌️   Shaders, Graphics pipelines<br>
+❌️   3D<br>
+
+
 <br>
 
 ## Why you should use supermotor
