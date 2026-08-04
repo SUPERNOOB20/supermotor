@@ -24,15 +24,15 @@ bool vsync = true;
 SDL_Renderer* mRenderer;
 
 TTF_Font* mFont                        =  nullptr;
-// static SDL_Texture* press_start_text_texture  =  nullptr;
-
-// static SDL_Texture* new_game_text_texture  =  nullptr;
-// static SDL_Texture* load_game_text_texture  =  nullptr;
-
-// static SDL_Texture* how_to_play_text_texture  =  nullptr;
 
 
-SDL_Texture* my_gay_texture;
+
+
+
+std::vector<SDL_Texture*> my_text_textures;
+
+
+
 SDL_Texture* press_start_text_texture;
 SDL_Texture* new_game_text_texture;
 SDL_Texture* load_game_text_texture;
@@ -100,12 +100,15 @@ static void init_text() {
     supermotor::text::Text   how_to_play_text           (mRenderer, mFont, "How to Play");
     */
 
-    press_start_text_texture      = supermotor::text::text_fun(mRenderer, mFont, "PRESS   START");
-    new_game_text_texture         = supermotor::text::text_fun(mRenderer, mFont, "New Game");
-    load_game_text_texture        = supermotor::text::text_fun(mRenderer, mFont, "Load Game");
-    how_to_play_text_texture      = supermotor::text::text_fun(mRenderer, mFont, "How to Play");
+    // press_start_text_texture      = supermotor::text::text_fun(mRenderer, mFont, "PRESS   START");
+    // new_game_text_texture         = supermotor::text::text_fun(mRenderer, mFont, "New Game");
+    // load_game_text_texture        = supermotor::text::text_fun(mRenderer, mFont, "Load Game");
+    // how_to_play_text_texture      = supermotor::text::text_fun(mRenderer, mFont, "How to Play");
 
-    my_gay_texture                = gay_fun(mRenderer, mFont, "XD");
+    std::string my_texts[4] = {"PRESS   START", "New Game", "Load Game", "How to Play"};
+    my_text_textures = supermotor::text::make_texts(mRenderer, my_texts, 4);
+
+
 
     SDL_Log("ERROR: %s", SDL_GetError());
 
@@ -174,34 +177,32 @@ struct SDL_Application{
 		SDL_RenderClear(mRenderer);
 
         
-        // SDL_Log("AAAAA sizeof my texture: %ld", sizeof(*my_gay_texture));
-        // SDL_Log("AAAAA sizeof my texture: %ld", sizeof(*press_start_text_texture));
 
         // do bulk...        
-		SDL_RenderTexture(mRenderer, my_gay_texture, nullptr, &text1Rect);
-
-		SDL_RenderTexture(mRenderer, press_start_text_texture, nullptr, &text1Rect);
-		SDL_RenderTexture(mRenderer, new_game_text_texture,    nullptr, &text2Rect);
-		SDL_RenderTexture(mRenderer, load_game_text_texture,   nullptr, &text3Rect);
-		SDL_RenderTexture(mRenderer, how_to_play_text_texture, nullptr, &text4Rect);
+		// SDL_RenderTexture(mRenderer, press_start_text_texture, nullptr, &text1Rect);
+		// SDL_RenderTexture(mRenderer, new_game_text_texture,    nullptr, &text2Rect);
+		// SDL_RenderTexture(mRenderer, load_game_text_texture,   nullptr, &text3Rect);
+		// SDL_RenderTexture(mRenderer, how_to_play_text_texture, nullptr, &text4Rect);
 
 
         // SDL_Log("sizeof vector: %ld", sizeof(my_texts));
 
-        /*
-        for (int i = 0; i < my_texts.size(); i++){
+        int number_of_texts = my_text_textures.size();
+        for (int i = 0; i < number_of_texts; i++){
             
-            SDL_Texture* current_texture = &my_texts.back();
+            SDL_Texture* current_texture = my_text_textures.back();
 
+            SDL_Log("#%d: %s", i, "OK");
+    
             if (current_texture == nullptr){
-                SDL_Log("XD");
+                SDL_Log("#%d: %s", i, "NOT OK");
             }
 
     		SDL_RenderTexture(mRenderer, current_texture, nullptr, &text2Rect);
-            my_texts.pop_back();
+            my_text_textures.pop_back();
 
         }
-        */
+        
 
 		// draw other things here ...
 

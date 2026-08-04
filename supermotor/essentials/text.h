@@ -19,28 +19,6 @@
 // Avoids nullptr
 // Inefficient. Change with arrays if you can... e.e
 
-std::vector<SDL_Texture> my_texts;
-
-
-SDL_Texture* gay_fun(SDL_Renderer* mRenderer, TTF_Font* mFont, std::string text){
-
-    SDL_Surface* textSurface69 = TTF_RenderText_Solid(mFont, text.c_str(), 0, SDL_Color{0, 0, 0, 255});      // White text.
-
-    SDL_Texture* my_gay_texture = SDL_CreateTextureFromSurface(mRenderer, textSurface69);
-    SDL_SetTextureScaleMode(my_gay_texture, SDL_SCALEMODE_NEAREST);        // Also called "nearest neighbour". Suitable for pixel-art textures, like the pixel-art font we are using (no interpolation or antialiasing).
-
-    SDL_DestroySurface(textSurface69);
-
-    // my_texts.push_back(*my_gay_texture);
-
-    SDL_Log("sizeof my GAY AF texture: %ld", sizeof(*my_gay_texture));
-
-    return my_gay_texture;
-}
-
-
-// SDL_Texture* my_texture;
-
 
 
 namespace supermotor
@@ -48,22 +26,18 @@ namespace supermotor
 namespace text
 {
 
-
-
-
     // Function overloading: 3 parameters.
-    SDL_Texture* text_fun(SDL_Renderer* mRenderer, TTF_Font* mFont, std::string text_shown){
+    SDL_Texture* make_text(SDL_Renderer* mRenderer, TTF_Font* mFont, const char* text){
 
         SDL_Texture* my_texture;
 
-        SDL_Surface* textSurface1 = TTF_RenderText_Solid(mFont, text_shown.c_str(), 0, SDL_Color{0, 0, 0, 255});      // White text.
+        SDL_Surface* textSurface1 = TTF_RenderText_Solid(mFont, text, 0, SDL_Color{0, 0, 0, 255});      // White text.
 
         my_texture = SDL_CreateTextureFromSurface(mRenderer, textSurface1);
+        SDL_DestroySurface(textSurface1);
         SDL_SetTextureScaleMode(my_texture, SDL_SCALEMODE_NEAREST);        // Also called "nearest neighbour". Suitable for pixel-art textures, like the pixel-art font we are using (no interpolation or antialiasing).
 
-        SDL_DestroySurface(textSurface1);
 
-        // my_texts.push_back(*my_texture);
 
 
         if (my_texture == nullptr){
@@ -84,7 +58,7 @@ namespace text
 
 
     // Function overloading: 4 parameters.
-    SDL_Texture* text_fun(SDL_Renderer* mRenderer, TTF_Font* mFont, std::string text_shown, std::string filepath){       // filepath here is optional. Just a fallback in case we can't load your font.
+    SDL_Texture* make_text(SDL_Renderer* mRenderer, TTF_Font* mFont, const char* text_shown, std::string filepath){       // filepath here is optional. Just a fallback in case we can't load your font.
 
         if(mFont == nullptr){
             SDL_Log("Warning: Couldn't find your fond file :c");
@@ -100,14 +74,37 @@ namespace text
             assert(0 && "ERROR: Font file not found :c");
         }
 
-        return text_fun(mRenderer, mFont, text_shown);
+        return make_text(mRenderer, mFont, text_shown);
     }
 
 
     // Function overloading: 2 parameters.
-    SDL_Texture* text_fun(SDL_Renderer* mRenderer, std::string text_shown){
-        TTF_Font* mFont = TTF_OpenFont("../Fonts/Minecraft.ttf", 12.0);
-        return text_fun(mRenderer, mFont, text_shown);
+    SDL_Texture* make_text(SDL_Renderer* mRenderer, const char* text_shown){
+        TTF_Font* mFont = TTF_OpenFont("./Fonts/Minecraft.ttf", 12.0);
+        return make_text(mRenderer, mFont, text_shown);
+    }
+
+
+    // If you want to optimise this, you can probably implement this with SDL_Texture** instead of std::vector<SDL_Texture*>.
+    std::vector<SDL_Texture*> make_texts(SDL_Renderer* mRenderer, std::string* texts_shown, Uint64 len){
+        std::vector<SDL_Texture*> texts = {};
+        texts.reserve(len);
+
+        SDL_Log("texts len: %ld", texts.size());
+
+        for (int i = 0; i < len; i++){
+            std::string current_text = texts_shown[i];
+
+            SDL_Texture* current_texture = make_text(mRenderer, current_text.c_str());
+
+            SDL_Log("number of t: %d", i);
+
+            texts.push_back(current_texture);
+        }
+
+        SDL_Log("texts len: %ld", texts.size());
+
+        return texts;
     }
 
     /*
