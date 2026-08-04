@@ -14,7 +14,7 @@
 #define WINDOW_HEIGHT   720.0f
 
 #define TEXT_WIDTH (WINDOW_WIDTH/1.5f)           // You can change that 1.5f for           larger or smaller text.
-#define LINE_SPACING (WINDOW_HEIGHT/2.0f)       //  You can change that 2.0f for text with larger or smaller gaps.
+#define LINE_SPACING (WINDOW_HEIGHT/12.0f)       //  You can change that 2.0f for text with larger or smaller gaps.
 
 // Switch to false if you don't want VSync.
 // Oh yeah btw I called it VSync for simplicity, but all it does is just capping you at 60fps (it's not real, real VSync ":3)
@@ -23,13 +23,20 @@ bool vsync = true;
 
 SDL_Renderer* mRenderer;
 
-static TTF_Font* mFont                        =  nullptr;
-static SDL_Texture* press_start_text_texture  =  nullptr;
+TTF_Font* mFont                        =  nullptr;
+// static SDL_Texture* press_start_text_texture  =  nullptr;
 
-static SDL_Texture* new_game_text_texture  =  nullptr;
-static SDL_Texture* load_game_text_texture  =  nullptr;
+// static SDL_Texture* new_game_text_texture  =  nullptr;
+// static SDL_Texture* load_game_text_texture  =  nullptr;
 
-static SDL_Texture* how_to_play_text_texture  =  nullptr;
+// static SDL_Texture* how_to_play_text_texture  =  nullptr;
+
+
+SDL_Texture* my_gay_texture;
+SDL_Texture* press_start_text_texture;
+SDL_Texture* new_game_text_texture;
+SDL_Texture* load_game_text_texture;
+SDL_Texture* how_to_play_text_texture;
 
 
 SDL_FRect text1Rect;
@@ -43,12 +50,19 @@ SDL_FRect text4Rect;
 // I THINK you cannot do this before SDL initializes?
 // I wanted to do this on demo.h but maybe that would have been too untidy...
 void define_text_locations(){
+    /*
     SDL_FRect text1Rect {
-        .x = (WINDOW_WIDTH / 2.0f) - TEXT_WIDTH,     // Centers the text... I hope ":3
+        .x = (WINDOW_WIDTH / 2.0f) - (TEXT_WIDTH / 2.0f),     // Centers the text... I hope ":3
         .y = 0.0f,
         .w = TEXT_WIDTH,
         .h = WINDOW_HEIGHT / 8.0f
     };
+    */
+
+    text1Rect.x = (WINDOW_WIDTH / 2.0f) - (TEXT_WIDTH / 2.0f);     // Centers the text... I hope ":3
+    text1Rect.y = 0.0f;
+    text1Rect.w = TEXT_WIDTH;
+    text1Rect.h = WINDOW_HEIGHT / 8.0f;
 
 
     text2Rect = text1Rect;
@@ -79,16 +93,19 @@ static void init_text() {
         assert(0 && "ERROR: Font file \"Minecraft.ttf\" not found :c");
     }
 
-
+    /*
     supermotor::text::Text   press_start_text           (mRenderer, mFont, "PRESS   START");
     supermotor::text::Text   new_game_text              (mRenderer, mFont, "New Game");
     supermotor::text::Text   load_game_text             (mRenderer, mFont, "Load Game");
-    supermotor::text::Text   how_to_play_text      (mRenderer, mFont, "How to Play");
+    supermotor::text::Text   how_to_play_text           (mRenderer, mFont, "How to Play");
+    */
 
-    press_start_text_texture    =  press_start_text.get_texture();
-    new_game_text_texture       =  new_game_text.get_texture();
-    load_game_text_texture      =  load_game_text.get_texture();
-    how_to_play_text_texture    =  how_to_play_text.get_texture();
+    press_start_text_texture      = supermotor::text::text_fun(mRenderer, mFont, "PRESS   START");
+    new_game_text_texture         = supermotor::text::text_fun(mRenderer, mFont, "New Game");
+    load_game_text_texture        = supermotor::text::text_fun(mRenderer, mFont, "Load Game");
+    how_to_play_text_texture      = supermotor::text::text_fun(mRenderer, mFont, "How to Play");
+
+    my_gay_texture                = gay_fun(mRenderer, mFont, "XD");
 
     SDL_Log("ERROR: %s", SDL_GetError());
 
@@ -124,6 +141,7 @@ struct SDL_Application{
     }
 	// Destructor
 	~SDL_Application(){
+        TTF_Quit();
 		SDL_Quit();
 	}
 
@@ -155,12 +173,35 @@ struct SDL_Application{
 		SDL_SetRenderDrawColor(mRenderer, 0x77, 0x55, 0x77, 0xFF);
 		SDL_RenderClear(mRenderer);
 
+        
+        // SDL_Log("AAAAA sizeof my texture: %ld", sizeof(*my_gay_texture));
+        // SDL_Log("AAAAA sizeof my texture: %ld", sizeof(*press_start_text_texture));
 
-        // do bulk...
-		SDL_RenderTexture(mRenderer, press_start_text_texture, &text1Rect, nullptr);
-		SDL_RenderTexture(mRenderer, new_game_text_texture,    &text2Rect, nullptr);
-		SDL_RenderTexture(mRenderer, load_game_text_texture,   &text3Rect, nullptr);
-		SDL_RenderTexture(mRenderer, how_to_play_text_texture, &text4Rect, nullptr);
+        // do bulk...        
+		SDL_RenderTexture(mRenderer, my_gay_texture, nullptr, &text1Rect);
+
+		SDL_RenderTexture(mRenderer, press_start_text_texture, nullptr, &text1Rect);
+		SDL_RenderTexture(mRenderer, new_game_text_texture,    nullptr, &text2Rect);
+		SDL_RenderTexture(mRenderer, load_game_text_texture,   nullptr, &text3Rect);
+		SDL_RenderTexture(mRenderer, how_to_play_text_texture, nullptr, &text4Rect);
+
+
+        // SDL_Log("sizeof vector: %ld", sizeof(my_texts));
+
+        /*
+        for (int i = 0; i < my_texts.size(); i++){
+            
+            SDL_Texture* current_texture = &my_texts.back();
+
+            if (current_texture == nullptr){
+                SDL_Log("XD");
+            }
+
+    		SDL_RenderTexture(mRenderer, current_texture, nullptr, &text2Rect);
+            my_texts.pop_back();
+
+        }
+        */
 
 		// draw other things here ...
 

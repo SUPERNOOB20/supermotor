@@ -42,12 +42,12 @@ SDL_Texture* gay_fun(SDL_Renderer* mRenderer, TTF_Font* mFont, std::string text)
 // SDL_Texture* my_texture;
 
 
-
+/*
 namespace supermotor
 {
 namespace text
 {
-
+*/
 
 
 
@@ -117,7 +117,7 @@ namespace text
     }
     */
 
-
+/*
 }
 }
-
+*/
