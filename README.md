@@ -7,7 +7,8 @@ My own C++ game engine <br>
 <br>
 
 ## Requirements
-* SDL3
+* [SDL3](https://wiki.libsdl.org/SDL3/FrontPage)
+* [SDL3-TTF](https://wiki.libsdl.org/SDL3_ttf/FrontPage) (just for the text features)
 <br>
 
 ## Features
@@ -23,7 +24,7 @@ My own C++ game engine <br>
 ✅️✅️  Batch rendering (loading data to the GPU in bulk)<br>
 ✅️✅️  Galleries (grids, image galleries, etc. Anything that can be looped, basically)<br>
 ✅️✅️  Collisions<br>
-✅️✅️  Text handling abstractions<br><br>
+✅️✅️  Batch text handling<br><br>
 
 🔨   Animations (atlas)<br>
 
