@@ -13,7 +13,7 @@ My own C++ game engine <br>
 
 ## Features
 <br>
-( ✅️✅️ means already implemented )<br>
+( ✅️ means already implemented )<br>
 ( 🔨 means work in progress (WIP) )<br>
 ( 🔜 means planned, but not for the near future (low priority in my to-do list) ) <br>
 ( 🔜🔜 means planned, but not for the near future (low priority in my to-do list) (it's even less priority than 🔜)<br>
@@ -21,14 +21,13 @@ My own C++ game engine <br>
 <br>
 <br>
 <br>
-✅️✅️  Batch rendering (loading data to the GPU in bulk)<br>
-✅️✅️  Galleries (grids, image galleries, etc. Anything that can be looped, basically)<br>
-✅️✅️  Collisions<br>
-✅️✅️  Batch text handling<br><br>
+✅️   Batch rendering (loading data to the GPU in bulk)<br>
+✅️   Galleries (grids, image galleries, etc. Anything that can be looped, basically)<br>
+✅️   Collisions<br>
+✅️   Batch text handling<br><br>
 
 🔨   Animations (atlas)<br>
 
-🔜  Batch text handling<br>
 🔜   Screenshots<br>
 🔜   Pausing<br>
 🔜   Transient objects (memory management)<br>
