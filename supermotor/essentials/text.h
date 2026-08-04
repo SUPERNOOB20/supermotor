@@ -1,3 +1,12 @@
+#ifndef TEXT_HEADER_FILE
+#define TEXT_HEADER_FILE
+
+
+#define FONT_SIZE 72.0f
+
+
+
+
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 
@@ -31,12 +40,12 @@ namespace text
 
         SDL_Texture* my_texture;
 
-        SDL_Surface* textSurface1 = TTF_RenderText_Solid(mFont, text, 0, SDL_Color{0, 0, 0, 255});      // White text.
+        SDL_Surface* textSurface1 = TTF_RenderText_Solid(mFont, text, 0, SDL_Color{255, 255, 255, 255});      // White text.
 
         my_texture = SDL_CreateTextureFromSurface(mRenderer, textSurface1);
         SDL_DestroySurface(textSurface1);
         SDL_SetTextureScaleMode(my_texture, SDL_SCALEMODE_NEAREST);        // Also called "nearest neighbour". Suitable for pixel-art textures, like the pixel-art font we are using (no interpolation or antialiasing).
-
+        // SDL_SetTextureScaleMode(my_texture, SDL_SCALEMODE_LINEAR);
 
 
 
@@ -65,7 +74,7 @@ namespace text
             SDL_Log("Attempting fallback procedure from given filepath. Hang on tight...");
         }
         
-        mFont = TTF_OpenFont(filepath.c_str(), 12.0);
+        mFont = TTF_OpenFont(filepath.c_str(), FONT_SIZE);
         
         if(mFont == nullptr){
             SDL_Log("ERROR: Fallback procedure failed D:");
@@ -80,7 +89,7 @@ namespace text
 
     // Function overloading: 2 parameters.
     SDL_Texture* make_text(SDL_Renderer* mRenderer, const char* text_shown){
-        TTF_Font* mFont = TTF_OpenFont("./Fonts/Minecraft.ttf", 12.0);
+        TTF_Font* mFont = TTF_OpenFont("./Fonts/Minecraft.ttf", FONT_SIZE);
         return make_text(mRenderer, mFont, text_shown);
     }
 
@@ -118,3 +127,7 @@ namespace text
 }
 }
 
+
+
+
+#endif

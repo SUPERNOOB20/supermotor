@@ -14,7 +14,7 @@
 #define WINDOW_HEIGHT   720.0f
 
 #define TEXT_WIDTH (WINDOW_WIDTH/1.5f)           // You can change that 1.5f for           larger or smaller text.
-#define LINE_SPACING (WINDOW_HEIGHT/12.0f)       //  You can change that 2.0f for text with larger or smaller gaps.
+#define LINE_SPACING (WINDOW_HEIGHT/4.0f)       //  You can change that 2.0f for text with larger or smaller gaps.
 
 // Switch to false if you don't want VSync.
 // Oh yeah btw I called it VSync for simplicity, but all it does is just capping you at 60fps (it's not real, real VSync ":3)
@@ -44,7 +44,7 @@ SDL_FRect text2Rect;
 SDL_FRect text3Rect;
 SDL_FRect text4Rect;
 
-
+SDL_FRect text_rects[4];
 
 
 // I THINK you cannot do this before SDL initializes?
@@ -60,7 +60,7 @@ void define_text_locations(){
     */
 
     text1Rect.x = (WINDOW_WIDTH / 2.0f) - (TEXT_WIDTH / 2.0f);     // Centers the text... I hope ":3
-    text1Rect.y = 0.0f;
+    text1Rect.y = WINDOW_HEIGHT / 12.0f;
     text1Rect.w = TEXT_WIDTH;
     text1Rect.h = WINDOW_HEIGHT / 8.0f;
 
@@ -73,10 +73,15 @@ void define_text_locations(){
 
     text4Rect = text3Rect;
     text4Rect.y += LINE_SPACING;
+
+    text_rects[0] = text1Rect;
+    text_rects[1] = text2Rect;
+    text_rects[2] = text3Rect;
+    text_rects[3] = text4Rect;
 }
 
 
-static void init_text() {
+void init_text() {
 
 
     // Initialize SDL_TTF.
@@ -108,7 +113,7 @@ static void init_text() {
     std::string my_texts[4] = {"PRESS   START", "New Game", "Load Game", "How to Play"};
     my_text_textures = supermotor::text::make_texts(mRenderer, my_texts, 4);
 
-
+    SDL_Log("check: %ld", my_text_textures.size());
 
     SDL_Log("ERROR: %s", SDL_GetError());
 
@@ -176,30 +181,22 @@ struct SDL_Application{
 		SDL_SetRenderDrawColor(mRenderer, 0x77, 0x55, 0x77, 0xFF);
 		SDL_RenderClear(mRenderer);
 
+
         
+        std::vector<SDL_Texture*> rendering_queue = my_text_textures;
 
-        // do bulk...        
-		// SDL_RenderTexture(mRenderer, press_start_text_texture, nullptr, &text1Rect);
-		// SDL_RenderTexture(mRenderer, new_game_text_texture,    nullptr, &text2Rect);
-		// SDL_RenderTexture(mRenderer, load_game_text_texture,   nullptr, &text3Rect);
-		// SDL_RenderTexture(mRenderer, how_to_play_text_texture, nullptr, &text4Rect);
-
-
-        // SDL_Log("sizeof vector: %ld", sizeof(my_texts));
-
-        int number_of_texts = my_text_textures.size();
+        int number_of_texts = rendering_queue.size();
+        // SDL_Log("AAAAAAAAAAAA %d", rendering_queue);
         for (int i = 0; i < number_of_texts; i++){
             
-            SDL_Texture* current_texture = my_text_textures.back();
-
-            SDL_Log("#%d: %s", i, "OK");
+            SDL_Texture* current_texture = rendering_queue.back();
     
             if (current_texture == nullptr){
                 SDL_Log("#%d: %s", i, "NOT OK");
             }
 
-    		SDL_RenderTexture(mRenderer, current_texture, nullptr, &text2Rect);
-            my_text_textures.pop_back();
+    		SDL_RenderTexture(mRenderer, current_texture, nullptr, &text_rects[i]);
+            rendering_queue.pop_back();
 
         }
         
