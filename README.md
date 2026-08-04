@@ -2,7 +2,7 @@
 My own C++ game engine <br>
 <br>
 
-<p align="center"> <img src = "https://cdn.discordapp.com/attachments/1300548390458888213/1528403202909671545/supermotor_v2_no_bg.png?ex=6a5e2be7&is=6a5cda67&hm=39115d05ab4fcc0ef789131969cfa89ce460503da23073f6f67bae9da5e43bf3"></p>
+<p align="center"> <img src = "https://files.catbox.moe/3rto6m.png"></p>
 <br>
 <br>
 
