@@ -2,9 +2,6 @@
 #define SUPERCORE20
 
 
-
-
-
 #include <bits/stdc++.h>
 #include <vector>
 #include <SDL3/SDL.h>
@@ -12,6 +9,32 @@
 
 
 #include <cassert>
+
+
+// Welcome! :3)7
+// core.h contains essential game engine functions like batch rendering.
+//
+// That is to say, you give it filenames, and it loads aaaall those images into the GPU.
+// (you should run these only ONCE either on startup or on loading screens, and NOT every single frame of your game).
+//
+// Here are some ideas if you want to improve this code (or I might do these too, in the future...):
+/////// * Implementing an alternative for find_file_formats() which uses malloc "(n * sizeof(my_largest_filename))" instead of n times malloc(sizeof(my_filename)) will use slightly more RAM but should perform considerably faster (HIGH performance impact)
+/////// * Refactor std::vector into C-style arrays as much as you can (low priority...)
+/////// * Refactor std::string into const char*    as much as you can (low priority...)
+
+
+
+
+
+
+
+
+typedef std::vector<SDL_Texture*> textures;
+
+
+
+
+
 
 // https://cplusplus.com/forum/beginner/34572/
 /*
@@ -100,7 +123,7 @@ namespace supermotor
             SDL_Log("file extension: %s", file_extension.c_str());
             SDL_Log("ERROR at file %s", current_filename);
             // assert (0 && "Sorry, only .png, .bmp, and .jpg are compatible :c Your image either has the wrong extension or is not supported.");        // UNCOMMENTATE THIS IN VERSION > 3.6.0 (we are at 3.4.X at the time of me coding this)
-            assert (0 && "Sorry, only .png, and .bmp are compatible :c Your image either has the wrong extension or is not supported.");                //    COMMENTATE   THIS IN VERSION > 3.6.0 (we are at 3.4.X at the time of me coding this)
+            assert (0 && "Sorry, only .png, and .bmp are compatible :c Your image either has the wrong extension or is not supported.");                //    COMMENTATE THIS IN VERSION > 3.6.0 (we are at 3.4.X at the time of me coding this)
         }
         if (currentSurface == nullptr){
             SDL_Log("file extension: %s", file_extension.c_str());
@@ -129,18 +152,18 @@ namespace supermotor
     //
     // Batch rendering implementations (should) go here.
     //
-    // Input:  Your renderer and your filenames (as C strings)
-    // Output: A vector with your textures ()
+    // Input:  Your renderer and your filenames (as C++ strings).
+    // Output: A vector with your textures.
     //
     // NOTE: Only accepts .png, .jpg, and .bmp file formats.
     //       (If you want other file formats, you can ask me to implement one, or look for another tool yourself, such as this one ---> https://wiki.libsdl.org/SDL3_image/FrontPage)
     //       (for more info, read here ---> https://wiki.libsdl.org/SDL3/CategorySurface)
     //
     //
-    std::vector<SDL_Texture*> generate_textures(SDL_Renderer* your_renderer, std::string image_filenames[], uint64_t number_of_files){
+    textures generate_textures(SDL_Renderer* your_renderer, std::string image_filenames[], uint64_t number_of_files){
         
-        std::vector<SDL_Texture*> your_textures;
-        your_textures.resize() = number_of_files;
+        textures your_textures;
+        your_textures.resize(number_of_files);
 
         for (int i = 0; i < number_of_files; i++){
             your_textures.push_back(generate_texture(your_renderer, image_filenames[i]));        

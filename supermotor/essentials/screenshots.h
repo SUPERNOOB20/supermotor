@@ -6,6 +6,20 @@
 
 
 
+/*   // Linux only solution that I'm saving here just in case.
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+struct stat st = {0};
+
+if (stat("/some/directory", &st) == -1) {
+    mkdir("/some/directory", 0700);
+}
+*/
+
+
+
 // WIP function. This doesn't work just yet! If you want to finish it, just transfer the SDL_PixelFormat from one place to the other...
 /*
 SDL_Surface* CreateSurfaceFromTexture(SDL_Texture* my_texture){
@@ -40,11 +54,11 @@ std::string get_available_filepath(std::string directory){
 
     std::string filepath_candidate = directory + __TIME__ + ".png";      // Could also be any other desired format, like bmp or ppm, for instance.
 
-    while (exists (filepath_candidate)){
-        filename_candidate = directory + __TIME__ + ".png";
+    while (std::filesystem::exists (filepath_candidate)){
+        filepath_candidate = directory + __TIME__ + ".png";
     }
 
-    return filename_candidate;
+    return filepath_candidate;
 }
 
 
@@ -55,11 +69,17 @@ std::string get_available_filepath(std::string directory){
 
 void take_screenshot(SDL_Surface* my_surface){
 
-    std::string filename = get_available_filename("./Screenshots/");
+    std::string filename = get_available_filepath("./Screenshots/");
 
     // Saves the screenshot.
-    SavePNG(screenshot, filename.c_str());
+    if (!SDL_SavePNG(my_surface, filename.c_str())){
+        SDL_Log("ERROR: %s", SDL_GetError());
+    } else {
+        SDL_Log("Screenshot saved at: %s", filename.c_str());
+    }    
 }
+
+
 
 
 
@@ -68,10 +88,6 @@ void take_screenshot(SDL_Window* my_window){
     SDL_Surface* screenshot = SDL_GetWindowSurface(my_window);
 
     take_screenshot(screenshot);
-    std::string filepath = get_available_filepath("./Screenshots/");
-
-    // Saves the screenshot.
-    SavePNG(screenshot, filename.c_str());
 }
 
 

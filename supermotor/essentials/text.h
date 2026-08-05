@@ -44,8 +44,9 @@ namespace text
 
         my_texture = SDL_CreateTextureFromSurface(mRenderer, textSurface1);
         SDL_DestroySurface(textSurface1);
+
         SDL_SetTextureScaleMode(my_texture, SDL_SCALEMODE_NEAREST);        // Also called "nearest neighbour". Suitable for pixel-art textures, like the pixel-art font we are using (no interpolation or antialiasing).
-        // SDL_SetTextureScaleMode(my_texture, SDL_SCALEMODE_LINEAR);
+        // SDL_SetTextureScaleMode(my_texture, SDL_SCALEMODE_LINEAR);     //  Suitable for high resolution (HD) stuff (non-pixel art).
 
 
 
@@ -57,7 +58,7 @@ namespace text
 
         my_allocated_texture = my_texture;
 
-        if (my_allocated_texture == nullptr){
+        if ((my_texture != nullptr) && (my_allocated_texture == nullptr)){
             SDL_Log("%s%s%d", __TIME__, " Warning: We found your texture, but malloc() couldn't allocate it! ", __LINE__);
         }
 
@@ -99,8 +100,6 @@ namespace text
         std::vector<SDL_Texture*> texts = {};
         texts.reserve(len);
 
-        SDL_Log("texts len: %ld", texts.size());
-
         for (int i = 0; i < len; i++){
             std::string current_text = texts_shown[i];
 
@@ -110,8 +109,6 @@ namespace text
 
             texts.push_back(current_texture);
         }
-
-        SDL_Log("texts len: %ld", texts.size());
 
         return texts;
     }

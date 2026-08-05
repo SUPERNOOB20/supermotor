@@ -23,7 +23,7 @@ bool vsync = true;
 
 SDL_Renderer* mRenderer;
 
-TTF_Font* mFont                        =  nullptr;
+TTF_Font* mFont  =  nullptr;
 
 
 
@@ -192,7 +192,7 @@ struct SDL_Application{
             SDL_Texture* current_texture = rendering_queue.back();
     
             if (current_texture == nullptr){
-                SDL_Log("#%d: %s", i, "NOT OK");
+                SDL_Log("#%d: %s", i, "Warning: empty texture.");
             }
 
     		SDL_RenderTexture(mRenderer, current_texture, nullptr, &text_rects[i]);

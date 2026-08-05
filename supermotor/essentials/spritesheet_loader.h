@@ -4,15 +4,20 @@
 #include "SDL3/SDL.h"
 #include <vector>
 
+#include "../core.h"
+
 
 
 // WARNING: neither your spritesheet height nor your spritesheet width should exceed 2^16 (65536) pixels.
 // This limitation has been placed for the sake of efficiency and common sense.
 // Above that value, I cannot guarantee that this library will work properly.
 // However, you can change the necessary datatypes if (for whatever MONSTRUOUS reason) you need 2^32 or 2^64.
+//
 // ...and as always, if you have any questions, you can always ask me. I'm always happy to help ^_^
 //
+//
 //          ~ SUPERNOOB20
+
 
 
 
@@ -37,7 +42,17 @@ namespace supermotor
         SDL_Surface* six_seven;         // SIX SEEEEEEEEEEVEN
         SDL_Texture* your_texture;
 
-        six_seven = SDL_LoadBMP(filename.c_str());     // If you want other fileformats, do the find_file_format thingy from core.h, I'm too lazy to do it myself right now... e.e
+        std::string file_extension = find_file_format(filename);
+
+        if (file_extension == ".png"){
+            six_seven = SDL_LoadPNG(filename.c_str());     
+        } else if (file_extension == ".bmp") {
+            six_seven = SDL_LoadBMP(filename.c_str());     
+        // }  else if (file_extension == ".jpg") {
+            // six_seven = SDL_LoadJPG(filename.c_str());     
+        } else {
+		    assert(0 && ("ERROR: spritesheet image file format not supported :c"));
+        }
 
         if (six_seven == nullptr){
 		    assert(0 && ("ERROR: spritesheet image file not found :c"));
