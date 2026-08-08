@@ -87,7 +87,7 @@ namespace supermotor
     // I have also included some small amounts of SDL_Log for you to uncommentate and use when debugging if needed :3
     //    Enjoy! ^- ^)7
     //
-    std::vector<SDL_FRect> load_spritesheet(SDL_Texture* spritesheet_texture, unsigned int sprite_height, unsigned int sprite_width, bool direction){
+    std::vector<SDL_FRect> load_spritesheet(SDL_Texture* spritesheet_texture, unsigned int sprite_width, unsigned int sprite_height, bool direction){
 
         unsigned int texture_height = spritesheet_texture->h;
         unsigned int texture_width = spritesheet_texture->w;

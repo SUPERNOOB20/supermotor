@@ -414,7 +414,7 @@ struct SDL_Application{
         update_nudge();
 
         if (screenshot){
-            take_screenshot(mWindow);
+            take_screenshot(mWindow, mRenderer);
             screenshot = false;
         }
         // frame++;

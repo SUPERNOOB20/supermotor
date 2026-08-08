@@ -4,9 +4,14 @@
 #include <SDL3/SDL.h>
 #include <filesystem>
 
+#include <stdio.h>
+#include <time.h>
 
 
-/*   // Linux only solution that I'm saving here just in case.
+
+
+/*
+// Linux only solution that I'm saving here just in case.
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -46,16 +51,38 @@ SDL_Surface* CreateSurfaceFromTexture(SDL_Texture* my_texture){
 
 
 
+//  Thanks to https://www.w3schools.com/c/c_date_time.php
+//
+//  Returns the current time.
+//
+std::string get_current_time(){
+
+    time_t currentTime;
+    time(&currentTime);
+
+    std::string output = ctime(&currentTime);
+
+    return output;    
+}
+
+
+
 
 
 // Return an available filepath, to avoid overwriting...
 // ...
 std::string get_available_filepath(std::string directory){
 
-    std::string filepath_candidate = directory + __TIME__ + ".png";      // Could also be any other desired format, like bmp or ppm, for instance.
+    
+
+    std::string filepath_candidate = directory + get_current_time() + ".png";      // Could also be any other desired format, like bmp or ppm, for instance.
+
+    int i = 0;
 
     while (std::filesystem::exists (filepath_candidate)){
-        filepath_candidate = directory + __TIME__ + ".png";
+        filepath_candidate = directory + get_current_time() + ".png";
+        SDL_Log("TIME:   %ld  --->  %d", SDL_GetTicks(), i);
+        i++;
     }
 
     return filepath_candidate;
@@ -66,42 +93,25 @@ std::string get_available_filepath(std::string directory){
 
 
 
+// Takes either CPU or GPU screenshot.
+//
+SDL_Surface* screenshot_surface = nullptr;
+void take_screenshot(SDL_Window* my_window, SDL_Renderer* my_renderer){
 
-void take_screenshot(SDL_Surface* my_surface){
+    (my_renderer == nullptr) ? screenshot_surface = SDL_GetWindowSurface(my_window) : screenshot_surface = SDL_RenderReadPixels(my_renderer, nullptr);
 
-    std::string filename = get_available_filepath("./Screenshots/");
-
-    // Saves the screenshot.
-    if (!SDL_SavePNG(my_surface, filename.c_str())){
-        SDL_Log("ERROR: %s", SDL_GetError());
+    if (screenshot_surface == nullptr) {
+        SDL_Log("%s", "WARNING: Nothing found to screenshot! No screenshot will be taken '^- ^");
     } else {
-        SDL_Log("Screenshot saved at: %s", filename.c_str());
-    }    
-}
 
+        std::string filename = get_available_filepath("./Screenshots/");
 
+        // Saves the screenshot.
+        (!SDL_SavePNG(screenshot_surface, filename.c_str()))  ?  SDL_Log("ERROR: Couldn't save your screenshot because... %s", SDL_GetError())  :  SDL_Log("Screenshot saved at: %s", filename.c_str());
+    }
 
-
-
-void take_screenshot(SDL_Window* my_window){
-
-    SDL_Surface* screenshot = SDL_GetWindowSurface(my_window);
-
-    take_screenshot(screenshot);
-}
-
-
-
-
-// WIP e.e
-/*
-void take_screenshot(SDL_Texture* my_texture){
-
-    take_screenshot(take_screenshot(CreateSurfaceFromTexture(my_texture)));
 
 }
-*/
-
 
 
 
