@@ -68,11 +68,22 @@ struct SDL_Application{
         
         // SDL_Surface* mini_surface = SDL_ScaleSurface(surface, (surface->w / IMAGE_SCALE_DOWN_FACTOR), (surface->h / IMAGE_SCALE_DOWN_FACTOR), SDL_SCALEMODE_LINEAR);
 
+
+        SDL_Log("\n\n\n");
+        SDL_Log("prev width: %d", surface->w);
+        SDL_Log("prev height: %d", surface->h);
+
         SDL_Surface* mini_surface = SDL_ScaleSurface(surface, MINI_WIDTH, MINI_HEIGHT, SDL_SCALEMODE_LINEAR);
+
+        SDL_Log("new width: %d", mini_surface->w);
+        SDL_Log("new height: %d", mini_surface->h);
 
         SDL_DestroySurface(surface);
 
 	    mTexture = SDL_CreateTextureFromSurface(mRenderer, mini_surface);
+
+        SDL_Log("texture width: %d", mTexture->w);
+        SDL_Log("texture height: %d", mTexture->h);
 
         SDL_DestroySurface(mini_surface);
     }
