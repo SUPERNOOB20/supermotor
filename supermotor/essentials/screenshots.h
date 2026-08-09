@@ -81,7 +81,6 @@ std::string get_available_filepath(std::string directory){
 
     while (std::filesystem::exists (filepath_candidate)){
         filepath_candidate = directory + get_current_time() + ".png";
-        SDL_Log("TIME:   %ld  --->  %d", SDL_GetTicks(), i);
         i++;
     }
 
