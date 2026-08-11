@@ -61,8 +61,6 @@ T manhattanDistance(T* a, T* b, unsigned short int length) {
 
 
 
-
-
 // You can change the datatype of the dimensions to Uint32 or Uint64 if you want something bigger :3
 //
 double euclideanDistance(double *a, double *b, unsigned short int dimensions) {

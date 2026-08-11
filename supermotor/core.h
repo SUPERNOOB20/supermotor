@@ -39,7 +39,7 @@ union asset {
 
 typedef std::vector<asset> assets;
 
-typedef map<std::string, asset>
+typedef map<std::string, asset> asset_dict;
 
 
 
@@ -134,14 +134,17 @@ std::string trim(std::string foo){
         // Iterate over the std::filesystem::directory_entry elements using `auto`
         for (auto const& dir_entry : std::filesystem::recursive_directory_iterator("./")) {
 
-            current_filepath = dir_entry.path();
+            std::string current_filepath = dir_entry.path();
 
-            current_file = find_filename(current_filepath);
+            std::string current_file = find_filename(current_filepath);
+            std::string current_file_format = find_file_format(current_file);
 
-            my_asset_dict[current_file] = generate_asset(mRenderer, current_filepath);
-
-            std::cout << dir_entry.path() << std::endl;
+            if (current_file_format == ( ".png" || ."bmp")) {      // TODO: Add ".jpg" here for SDL version > 3.6.
+                my_asset_dict[current_file] = generate_asset(mRenderer, current_filepath);
+            }
         }
+
+        return my_asset_dict;
     }
 
 
