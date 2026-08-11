@@ -8,30 +8,31 @@ My own C++ game engine <br>
 
 ## Requirements
 * [SDL3](https://wiki.libsdl.org/SDL3/FrontPage)
-* [SDL3-TTF](https://wiki.libsdl.org/SDL3_ttf/FrontPage) (just for the text features)
+* [SDL3_ttf](https://wiki.libsdl.org/SDL3_ttf/FrontPage) (just for the text features)
 <br>
 
 ## Features
 <br>
 ( ✅️ means already implemented )<br>
 ( 🔨 means work in progress (WIP) )<br>
-( 🔜 means planned, but not for the near future (low priority in my to-do list) ) <br>
-( 🔜🔜 means planned, but not for the near future (low priority in my to-do list) (it's even less priority than 🔜)<br>
+( 🔜 means planned for the near future ) (planned for supermotor v1.1.0 for example) <br>
+( 🔜🔜 means planned, but not for the near future (low priority in my to-do list) (it's even less priority than 🔜) (not planned for supermotor v1.1.0 or for any time soon... )<br>
 ( ❌️ is out of the scope for this project for now ) <br>
 <br>
 <br>
 <br>
-✅️   Batch rendering (loading data to the GPU in bulk)<br>
+✅️   Batch rendering (loading data to the <ins>CPU / GPU</ins> in bulk, recursively from a directory, or from given filenames!)<br>
 ✅️   Galleries (grids, image galleries, etc. Anything that can be looped, basically)<br>
 ✅️   Collisions<br>
 ✅️   Batch text handling<br><br>
+✅️   Screenshots<br>
+✅️   Generalized math stuff (manhattan distance and euclidean distance) for N dimensions (1D, 2D, 3D, 4D, 5D, 6D, etc)<br>
 
-🔨   Animations (atlas)<br>
-
-🔜   Screenshots<br>
 🔜   Pausing<br>
-🔜   Transient objects (memory management)<br>
-🔜   Generalized math stuff for N dimensions (1D, 2D, 3D, 4D, 5D, 6D, etc)<br>
+
+🔜   Animations (atlas)<br>
+🔜   Hurtboxes<br>
+🔜   Transient objects (memory management, despawn)<br>
 
 🔜🔜 Squishing and streching <br>
 🔜🔜 Bezier trayectories and transitions <br>
