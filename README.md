@@ -24,11 +24,11 @@ My own C++ game engine <br>
 ✅️   Batch rendering (loading data to the <ins>CPU / GPU</ins> in bulk, recursively from a directory, or from given filenames!)<br>
 ✅️   Galleries (grids, image galleries, etc. Anything that can be looped, basically)<br>
 ✅️   Collisions<br>
-✅️   Batch text handling<br><br>
+✅️   Batch text handling<br>
 ✅️   Screenshots<br>
-✅️   Generalized math stuff (manhattan distance and euclidean distance) for N dimensions (1D, 2D, 3D, 4D, 5D, 6D, etc)<br>
+✅️   Generalized math stuff (manhattan distance and euclidean distance) for N dimensions (1D, 2D, 3D, 4D, 5D, 6D, etc)<br><br>
 
-🔜   Pausing<br>
+🔜   Pausing<br><br>
 
 🔜   Animations (atlas)<br>
 🔜   Hurtboxes<br>
