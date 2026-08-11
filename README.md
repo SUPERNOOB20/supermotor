@@ -56,7 +56,7 @@ My own C++ game engine <br>
 * Working with simple implementations for simple gamedev problems is a great hands-on learning experience that will strengthen your problem-solving skills <br>
 * It's merely a collection of libraries, so it comes with all the advantages of a library:<br>
   * <ins>Customizable</ins> — add, remove, or refactor to your hearts content. You can even make your own game engine off of it :)<br>
-  * <ins>Modular</ins> — Each feature is in a separate header file, so you can include only the features that you need - no bloating. <br>
+  * <ins>Modular</ins> — Each feature is in a separate header file, so you can include only the features that you need - no bloat. <br>
   * <ins>Universal</ins> — no GUIs, no hidden dependencies, fully ISO compliant (adaptable to the compiler of your choice!). <br>
   * <ins>Multipurpose</ins> — Even if it's aimed at making videogames, it can also be used for graphics in general. Animations, videos, movies... the limit is your imagination :3 <br>
 * I'm always willing to explain how it works whenever you need it <br>
