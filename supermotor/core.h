@@ -7,9 +7,12 @@
 #include <SDL3/SDL.h>
 #include <stdio.h>
 
-
 #include <cassert>
 
+#include <filesystem>
+#include <map>
+
+#include <algorithm>
 
 // Welcome! :3)7
 // core.h contains essential game engine functions like batch rendering.
@@ -23,16 +26,20 @@
 /////// * Refactor std::string into const char*    as much as you can (low priority...)
 
 
-
-
-
-
+namespace supermotor
+{
 
 
 typedef std::vector<SDL_Texture*> textures;
 
+union asset {
+    SDL_Surface* surface;
+    SDL_Texture* texture;
+};
 
+typedef std::vector<asset> assets;
 
+typedef map<std::string, asset>
 
 
 
@@ -45,6 +52,7 @@ char* strcatc( char* s, char c ) {
 */
 
 
+
 // Source - https://stackoverflow.com/a/6303595
 // Posted by Tom, modified by community. See post 'Timeline' for change history
 // Retrieved 2026-07-18, License - CC BY-SA 3.0
@@ -54,6 +62,7 @@ std::string trim(std::string foo){
     if(sep != string::npos) { name.resize(sep); }
 }
 */
+
 
 
 // Only works with fixed sizes (three characters in this case, .XXX) because I'm lazy ":3
@@ -68,45 +77,85 @@ std::string trim(std::string foo){
 // 5) Put our file extension in that box (strcpy will do)
 // 6) Return the box.
 // NOTE: We don't free the box because it gets converted to C++ style and RAII frees the box for us (I think).
-std::string find_file_format(std::string current_filename){
+//
+//
+    std::string find_file_format(std::string current_filename){
 
-    std::string emanelif_tnerruc = current_filename;
-    std::reverse((emanelif_tnerruc).begin(), (emanelif_tnerruc).end());     // .emanelif desreveR
-
-
-    char a = emanelif_tnerruc[0];
-    char b = emanelif_tnerruc[1];
-    char c = emanelif_tnerruc[2];
-    char d = emanelif_tnerruc[3];
-
-    char* allocated_file_extension_c_str = (char*) malloc(5 * sizeof(char));       // Can't return strings in C/C++  :c
-    char file_extension_c_str[]          = {d, c, b, a, 0};                       // .png
-
-    assert (sizeof(file_extension_c_str) && sizeof(allocated_file_extension_c_str));    
-    strcpy(allocated_file_extension_c_str, file_extension_c_str);   // Should be the same as strncpy(allocated_file_extension_c_str, file_extension_c_str, 5);
-
-    std::string file_extension = file_extension_c_str;
-
-    return file_extension;
-}
+        std::string emanelif_tnerruc = current_filename;
+        std::reverse((emanelif_tnerruc).begin(), (emanelif_tnerruc).end());     // .emanelif desreveR
 
 
+        char a = emanelif_tnerruc[0];
+        char b = emanelif_tnerruc[1];
+        char c = emanelif_tnerruc[2];
+        char d = emanelif_tnerruc[3];
+
+        char* allocated_file_extension_c_str = (char*) malloc(5 * sizeof(char));       // Can't return strings in C/C++  :c
+        char file_extension_c_str[]          = {d, c, b, a, 0};                       // .png
+
+        assert (sizeof(file_extension_c_str) && sizeof(allocated_file_extension_c_str));    
+        strcpy(allocated_file_extension_c_str, file_extension_c_str);   // Should be the same as strncpy(allocated_file_extension_c_str, file_extension_c_str, 5);
+
+        std::string file_extension = file_extension_c_str;
+
+        return file_extension;
+    }
+
+
+    // Example: find_filename("./foo/bar/dummy_file.txt") == "dummy_file.txt"
+    //
+    std::string find_filename(std::string filepath) {
+
+        // "Cache" filepath length to avoid a bajillion unnecessary function calls.
+        Uint64 filepath_length = filepath.length();
+
+        std::reverse(filepath);      // .htapelif
+        
+        std::string filename = "";   // .emanelif
+
+        i = 0;
+        while ((filepath[i] != "/") && (i < filepath_length)) {
+            filename += filepath[i]; 
+            i++;
+        }
+
+        std::reverse(filename)       // filename.
+
+        return filename;
+    }
 
 
 
+    // Could have just overloaded "generate_textures()" but meh, felt like it might be less confusing this way :3".
+    asset_dict generate_assets_from_directory(SDL_Renderer* mRenderer, std::string filename) {
 
-namespace supermotor
-{
+        asset_dict my_asset_dict = {{}};
+
+        // Iterate over the std::filesystem::directory_entry elements using `auto`
+        for (auto const& dir_entry : std::filesystem::recursive_directory_iterator("./")) {
+
+            current_filepath = dir_entry.path();
+
+            current_file = find_filename(current_filepath);
+
+            my_asset_dict[current_file] = generate_asset(mRenderer, current_filepath);
+
+            std::cout << dir_entry.path() << std::endl;
+        }
+    }
 
 
 
     // Run ONLY ONCE, at startup (or during a loading screen when changing scenes, for example)
     // (DO NOT run this on your game loop)
     //
-    SDL_Texture* generate_texture(SDL_Renderer* your_renderer, std::string filename){
+    asset generate_asset(SDL_Renderer* your_renderer, std::string filename){
 
         // SDL_Log("%s", filename.c_str());
+
+
         SDL_Texture* currentTexture;
+
      
         std::string file_extension = find_file_format(filename);
         
@@ -133,9 +182,15 @@ namespace supermotor
 
         // free(file_extension);
 
-        currentTexture = SDL_CreateTextureFromSurface(your_renderer, currentSurface);
+        currentAsset.surface = currentSurface;
+
+        if (your_renderer != nullptr) {
+            currentTexture = SDL_CreateTextureFromSurface(your_renderer, currentSurface);
+            currentAsset.texture = currentTexture;
+            SDL_DestroySurface(currentSurface);
+        }
             
-        return currentTexture;
+        return currentAsset;
     }
 
 
@@ -160,16 +215,27 @@ namespace supermotor
     //       (for more info, read here ---> https://wiki.libsdl.org/SDL3/CategorySurface)
     //
     //
-    textures generate_textures(SDL_Renderer* your_renderer, std::string image_filenames[], uint64_t number_of_files){
+    assets generate_assets(SDL_Renderer* your_renderer, std::string image_filenames[], uint64_t number_of_files){
         
-        textures your_textures;
-        your_textures.resize(number_of_files);
+        assets your_assets;
+        your_assets.resize(number_of_files);
 
-        for (int i = 0; i < number_of_files; i++){
-            your_textures.push_back(generate_texture(your_renderer, image_filenames[i]));        
+        // Would rather repeat a chunk of code than check a pointer (n-1) times more :3
+        if (your_renderer == nullptr) {
+
+            for (int i = 0; i < number_of_files; i++){
+                your_assets.push_back((generate_asset(your_renderer, image_filenames[i])).surface);        
+            }
+        
+        } else {
+        
+            for (int i = 0; i < number_of_files; i++){
+                your_assets.push_back((generate_asset(your_renderer, image_filenames[i])).texture);        
+            }
         }
 
-        return your_textures;
+
+        return your_assets;
     }
 }
 
