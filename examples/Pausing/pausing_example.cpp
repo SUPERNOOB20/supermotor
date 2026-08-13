@@ -23,7 +23,7 @@ float gravity = 1.0f;                     //  The bigger, the smaller your jumps
 
 
 bool game_is_paused      = false;
-bool game_was_not_paused = false;
+bool game_was_not_paused = true ;
 
 Uint64 playtime = 0;
 
@@ -308,7 +308,7 @@ struct SDL_Application{
                 }
 
 
-                if (event.button.button == 41) {    // P key
+                if (event.button.button == 19) {    // P key
                     game_is_paused = !game_is_paused;        // Pause <---> Unpause.
                 }
 
@@ -391,8 +391,27 @@ struct SDL_Application{
 		// draw other things here ...		
 
 
+
+        if (game_is_paused) {
+
+            if (game_was_not_paused) {
+                supermotor::pause_init(mWindow, mRenderer);      // Takes a screenshot for the pause screen.
+            }
+
+            supermotor::pause(mWindow, mRenderer);               // "Render" pause screen.     -  // You have to pass the width and height because I have no idea of what the width and height of your window are ":3
+        }
+
+
 		SDL_RenderPresent(mRenderer);
 	}
+
+
+
+    void update_pause(){
+        game_was_not_paused != game_is_paused;
+    }
+
+
 
     // Every tick is one iteration of the game loop.
 	void Tick(){
@@ -413,15 +432,7 @@ struct SDL_Application{
 
         update_nudge();
 
-        if (game_is_paused) {
-
-            if (game_was_not_paused) {
-                supermotor::pause_init(mWindow, mRenderer);
-            }
-
-            supermotor::pause(mWindow, mRenderer);       // You have to pass the width and height because I have no idea of what the width and height of your window are ":3
-        }
-
+        update_pause();
         // frame++;
 	}
 
