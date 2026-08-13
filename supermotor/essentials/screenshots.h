@@ -8,45 +8,8 @@
 #include <time.h>
 
 
-
-
-/*
-// Linux only solution that I'm saving here just in case.
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
-struct stat st = {0};
-
-if (stat("/some/directory", &st) == -1) {
-    mkdir("/some/directory", 0700);
-}
-*/
-
-
-
-// WIP function. This doesn't work just yet! If you want to finish it, just transfer the SDL_PixelFormat from one place to the other...
-/*
-SDL_Surface* CreateSurfaceFromTexture(SDL_Texture* my_texture){
-
-
-    int width  = my_texture.w; 
-    int height = my_texture.h;
-
-    std::array<std::array<int, width>, height> screenshot_data;
-
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            current_pixel = SDL_GetRGB(i*j);
-            screenshot_data[i][j] = current_pixel;       // Try    screenshot_data[i, j] = current_pixel;    if [i][j] doesn't work e.e
-        }
-    }
-
-    // RGB ---> Surface
-    SDL_Surface* screenshot SDL_CreateSurfaceFrom(int width, int height, SDL_PixelFormat format, void *pixels, int pitch);
-}
-*/
-
+namespace supermotor
+{
 
 
 
@@ -113,5 +76,6 @@ void take_screenshot(SDL_Window* my_window, SDL_Renderer* my_renderer){
 }
 
 
+}
 
 #endif

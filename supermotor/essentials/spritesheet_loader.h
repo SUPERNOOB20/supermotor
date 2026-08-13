@@ -22,6 +22,10 @@
 
 
 
+namespace supermotor
+{
+
+
 
 
 // Here's hoping this gets stored as a bool value internally... ("^- ^)
@@ -33,8 +37,6 @@ enum Direction {
 
 
 
-namespace supermotor
-{
  
     // Similar to supermotor::generate_texture(...), but this one lets you include color key :3
     SDL_Texture* create_spritesheet(SDL_Renderer* mRenderer, std::string filename, Uint8 transparency_colour_red, Uint8 transparency_colour_green, Uint8 transparency_colour_blue){

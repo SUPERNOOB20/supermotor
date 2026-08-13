@@ -6,6 +6,7 @@
 #include <vector>
 #include <SDL3/SDL.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <cassert>
 
@@ -13,6 +14,7 @@
 #include <map>
 
 #include <algorithm>
+
 
 // Welcome! :3)7
 // core.h contains essential game engine functions like batch rendering.
@@ -39,7 +41,7 @@ union asset {
 
 typedef std::vector<asset> assets;
 
-typedef map<std::string, asset> asset_dict;
+typedef std::map<std::string, asset> asset_dict;
 
 
 
@@ -109,43 +111,33 @@ std::string trim(std::string foo){
         // "Cache" filepath length to avoid a bajillion unnecessary function calls.
         Uint64 filepath_length = filepath.length();
 
-        std::reverse(filepath);      // .htapelif
+        std::reverse(filepath.begin(), filepath.end());      // .htapelif
         
-        std::string filename = "";   // .emanelif
+        std::string filename = "" ;      // .emanelif
+        char        sep      = '/';     //  Path separator (You can read more here  --->  https://en.wikipedia.org/wiki/Path_(computing)).
 
-        i = 0;
-        while ((filepath[i] != "/") && (i < filepath_length)) {
+
+        Uint64 i = 0;
+        char current_char = filepath[0];
+
+        // while ((strcmp(current_char, sep) != 0) && (i < filepath_length)) {
+        while ((current_char != sep) && (i < filepath_length)) {
+
             filename += filepath[i]; 
+
+            current_char = filepath[i];
             i++;
         }
 
-        std::reverse(filename)       // filename.
+        std::reverse(filepath.begin(), filepath.end());       // filename.
 
         return filename;
     }
 
 
 
-    // Could have just overloaded "generate_textures()" but meh, felt like it might be less confusing this way :3".
-    asset_dict generate_assets_from_directory(SDL_Renderer* mRenderer, std::string filename) {
 
-        asset_dict my_asset_dict = {{}};
 
-        // Iterate over the std::filesystem::directory_entry elements using `auto`
-        for (auto const& dir_entry : std::filesystem::recursive_directory_iterator("./")) {
-
-            std::string current_filepath = dir_entry.path();
-
-            std::string current_file = find_filename(current_filepath);
-            std::string current_file_format = find_file_format(current_file);
-
-            if (current_file_format == ( ".png" || ."bmp")) {      // TODO: Add ".jpg" here for SDL version > 3.6.
-                my_asset_dict[current_file] = generate_asset(mRenderer, current_filepath);
-            }
-        }
-
-        return my_asset_dict;
-    }
 
 
 
@@ -185,6 +177,7 @@ std::string trim(std::string foo){
 
         // free(file_extension);
 
+        asset currentAsset;
         currentAsset.surface = currentSurface;
 
         if (your_renderer != nullptr) {
@@ -196,6 +189,27 @@ std::string trim(std::string foo){
         return currentAsset;
     }
 
+
+    // Could have just overloaded "generate_textures()" but meh, felt like it might be less confusing this way :3".
+    asset_dict generate_assets_from_directory(SDL_Renderer* mRenderer, std::string filename) {
+
+        asset_dict my_asset_dict = {{}};
+
+        // Iterate over the std::filesystem::directory_entry elements using `auto`
+        for (auto const& dir_entry : std::filesystem::recursive_directory_iterator("./")) {
+
+            std::string current_filepath = dir_entry.path();
+
+            std::string current_file = find_filename(current_filepath);
+            std::string current_file_format = find_file_format(current_file);
+
+            if ((current_file_format == ".png") || (current_file_format == ".bmp")) {      // TODO: Add ".jpg" here for SDL version > 3.6.
+                my_asset_dict[current_file] = generate_asset(mRenderer, current_filepath);
+            }
+        }
+
+        return my_asset_dict;
+    }
 
 
 
@@ -223,19 +237,31 @@ std::string trim(std::string foo){
         assets your_assets;
         your_assets.resize(number_of_files);
 
+
+        for (int i = 0; i < number_of_files; i++){
+            asset current_asset = generate_asset(your_renderer, image_filenames[i]);
+            your_assets.push_back(current_asset);
+        }
+
+
+
+        /*
         // Would rather repeat a chunk of code than check a pointer (n-1) times more :3
         if (your_renderer == nullptr) {
 
             for (int i = 0; i < number_of_files; i++){
-                your_assets.push_back((generate_asset(your_renderer, image_filenames[i])).surface);        
+                asset current_asset = generate_asset(your_renderer, image_filenames[i]);
+                your_assets.push_back(current_asset_surface.surface);
             }
         
         } else {
         
             for (int i = 0; i < number_of_files; i++){
-                your_assets.push_back((generate_asset(your_renderer, image_filenames[i])).texture);        
+                asset current_asset = generate_asset(your_renderer, image_filenames[i]);
+                your_assets.push_back(current_asset_texture.texture);
             }
         }
+        */
 
 
         return your_assets;
