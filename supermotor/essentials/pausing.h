@@ -48,7 +48,9 @@ SDL_Surface*  my_cpu_screenshot;                 //  Why, yes, we "pause" by tak
 SDL_Texture*  my_gpu_screenshot;
 
 
+
 void pause_init(SDL_Window* my_window, SDL_Renderer* my_renderer, Uint8 opacity = 0x88) {
+
     if (my_renderer == nullptr) {
         my_cpu_screenshot = SDL_GetWindowSurface(my_window);
         SDL_SetSurfaceAlphaMod(my_cpu_screenshot, opacity);
@@ -61,30 +63,19 @@ void pause_init(SDL_Window* my_window, SDL_Renderer* my_renderer, Uint8 opacity 
 }
 
 
+
 void pause(SDL_Window* my_window, SDL_Renderer* my_renderer){    
-
-	// SDL_SetRenderDrawColor(my_renderer, 0xBB, 0xAA, 0xEE, opacity);         // Opaque background.
-    // SDL_RenderFillRect(my_renderer, &Background);
-
-    /*
-    SDL_FRect Background{
-        .x = 0.0f,
-        .y = 0.0f,
-        .w = 0.0f,
-        .h = 0.0f
-    };
-
-
-    Background.w = window_width;
-    Background.h = window_height;
-    */
-
 
     if (my_renderer == nullptr) {
         SDL_Surface* current_frame = SDL_GetWindowSurface(my_window);
         SDL_BlitSurface(my_cpu_screenshot, nullptr, current_frame, &Background_rect);
     } else {
         SDL_RenderTexture(my_renderer, my_gpu_screenshot, nullptr, &Background_frect);
+    }
+
+    // Debugging. Temporal.
+    if (my_gpu_screenshot == nullptr) {
+        SDL_Log("XDDDDD");
     }
 }
 

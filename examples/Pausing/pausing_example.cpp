@@ -22,8 +22,8 @@ float gravity = 1.0f;                     //  The bigger, the smaller your jumps
 #include "pausing_example.h"
 
 
-bool game_is_paused      = false;
-bool game_was_not_paused = true ;
+bool game_is_paused    =  false;
+bool game_was_paused   =  false;    // Holds the value of "game_is_paused" from the previous frame. You can read more here  --->  https://en.wikipedia.org/wiki/Sequential_logic
 
 Uint64 playtime = 0;
 
@@ -245,13 +245,28 @@ textures my_backgrounds;
 
 struct SDL_Application{
 
-    SDL_Window* mWindow;
-    SDL_Renderer* mRenderer;
+
+    // Cheap trick to malloc the proper amount of memory.
+    SDL_Window*   dummy_window;
+    SDL_Renderer* dummy_renderer;
+
+
+
+    // -------  WINDOW AND RENDERER  ------------------------------------------------------------
+                                                                                             //  | 
+    // No static for these two - shared between all files.                                   //  |
+    SDL_Window*       mWindow = (SDL_Window*)   malloc(sizeof(dummy_window));                //  |
+    SDL_Renderer*   mRenderer = (SDL_Renderer*) malloc(sizeof(dummy_renderer));              //  |
+                                                                                             //  |
+    // ------------------------------------------------------------------------------------------
+
+
+
     SDL_Texture* playerTexture;
     
     bool running = true;
 
-    // SDL_Surface* mSurface;
+
 
     // Constructor
     SDL_Application(const char* title){
@@ -394,11 +409,13 @@ struct SDL_Application{
 
         if (game_is_paused) {
 
-            if (game_was_not_paused) {
-                supermotor::pause_init(mWindow, mRenderer);      // Takes a screenshot for the pause screen.
+            if (!game_was_paused) {     // If this is the first frame of pause, take a screenshot for the pause screen.
+                supermotor::pause_init(mWindow, mRenderer);
+                SDL_Log("PAUSE_INIT");
             }
 
             supermotor::pause(mWindow, mRenderer);               // "Render" pause screen.     -  // You have to pass the width and height because I have no idea of what the width and height of your window are ":3
+            SDL_Log("PAUSE");
         }
 
 
@@ -408,7 +425,7 @@ struct SDL_Application{
 
 
     void update_pause(){
-        game_was_not_paused != game_is_paused;
+        game_was_paused = game_is_paused;
     }
 
 
