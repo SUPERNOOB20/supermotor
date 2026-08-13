@@ -368,15 +368,18 @@ struct SDL_Application{
             gallery_debug = false;
         }
 
-        is_airborne = check_airborne();
+        if (!game_is_paused) {
 
-        update_player_pos();
+            is_airborne = check_airborne();
 
-        reset_vertical_timer();
+            update_player_pos();
 
-        update_jump_status();
+            reset_vertical_timer();
 
-        reset_jump();
+            update_jump_status();
+
+            reset_jump();
+        }
 	}
 
     
@@ -411,11 +414,11 @@ struct SDL_Application{
 
             if (!game_was_paused) {     // If this is the first frame of pause, take a screenshot for the pause screen.
                 supermotor::pause_init(mWindow, mRenderer);
-                SDL_Log("PAUSE_INIT");
+                // SDL_Log("PAUSE_INIT");
             }
 
             supermotor::pause(mWindow, mRenderer);               // "Render" pause screen.     -  // You have to pass the width and height because I have no idea of what the width and height of your window are ":3
-            SDL_Log("PAUSE");
+            // SDL_Log("PAUSE");
         }
 
 
@@ -437,8 +440,8 @@ struct SDL_Application{
         // SDL_Log("current_frame: %ld", frame);
 
         /*
-        if (frame > 34){
-            SDL_Quit();
+        if (frame > 34){        // Useful to debug programs that hang, freeze or crash in the first few frames, and don't take your inputs.
+            SDL_Quit();         
             exit(0);
         }
         */
