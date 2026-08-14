@@ -8,6 +8,14 @@
 #define GAME_NAME "Painting_Test_Game"                          //   <--- Your videogame's name here.
 
 
+namespace supermotor
+{
+
+namespace storage
+{
+
+void* loadedData;
+
 
 // Handles SDL exceptions.
 // The reason why I made a function out of it is because
@@ -16,8 +24,8 @@ void handleException(){
     SDL_GetError();
 }
 
-void handleException(const char* line){
-    SDL_Log("Exception occured at line %s.", line);
+void handleException(int line){
+    SDL_Log("Exception occured at line %d.", line);
     handleException();
 }
 
@@ -36,8 +44,8 @@ void* ReadSave(const char* savefile)
     Uint64 saveLen = 0;
     if (SDL_GetStorageFileSize(user, savefile, &saveLen) && saveLen > 0) {
 
-        void* loadedData = SDL_malloc(saveLen);        // Your loaded data will go here!
-        if (!SDL_ReadStorageFile(user, savefile, loadData, saveLen)) {
+        loadedData = SDL_malloc(saveLen);        // Your loaded data will go here!
+        if (!SDL_ReadStorageFile(user, savefile, loadedData, saveLen)) {
             handleException(__LINE__);
         }
 
@@ -75,5 +83,7 @@ void WriteSave(const char* savefile)
 }
 
 
+}
+}
 
 #endif

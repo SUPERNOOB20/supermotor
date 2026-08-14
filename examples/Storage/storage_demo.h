@@ -6,6 +6,8 @@
 #include <string>
 #include <cassert>
 
+#include "../../supermotor/essentials/storage.h"
+
 #define WINDOW_WIDTH     (1280)
 #define WINDOW_HEIGHT     (720)
 

@@ -113,17 +113,19 @@ struct SDL_Application{
 
 
 
-                    /*
+                    
                     if (event.button.button == 22) {             // Press the S key to save your canvas.
-                        my_gallery++;
-                        gallery_debug = true;
+                        void* voidCanvas = (void*) canvas;
+                        void* savedData = voidCanvas;
+                        supermotor::storage::WriteSave("my_lovely_canvas");
                     }
 
                     if (event.button.button == 15) {             // Press the L key to load your canvas.
-                        screenshot = true;
+                        supermotor::storage::ReadSave("my_lovely_canvas");
+                        canvas = (SDL_Texture*) (supermotor::storage::loadedData);
                     }
 
-
+                    /*
                     if (event.button.button == 41) {             // P key
                         game_is_paused = !game_is_paused;        // Pause <---> Unpause.
                     }
