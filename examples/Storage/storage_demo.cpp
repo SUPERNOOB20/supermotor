@@ -76,7 +76,7 @@ struct SDL_Application{
 			} else {
 
     
-                SDL_MouseButtonFlags current_mouse_action = SDL_GetMouseState(&mouse_pos_x, &mouse_pos_y);      // Updates mouse pos (every frame, ofc! :3).
+                SDL_MouseButtonFlags current_mouse_action = SDL_GetGlobalMouseState(&mouse_pos_x, &mouse_pos_y);      // Updates mouse pos (every frame, ofc! :3).
 
                 
 
@@ -90,26 +90,41 @@ struct SDL_Application{
 
                 if (event.type == SDL_EVENT_KEY_DOWN) {
 
-                    // SDL_Log("CONGRATULA!!! You pressed the %d key :3)7", event.button.button);
+                    SDL_Log("CONGRATULA!!! You pressed the %d key :3)7", event.button.button);
                         
-                    /*
+                    
 
-                    if (event.button.button == 20) {    // Press the Q key to move to the previous image.
-                        my_gallery--;
-                        gallery_debug = true;
+
+                    if (event.button.button == 21) {             // Press the R key to reset your canvas. 
+
+                        // --- STORE ----
+                        SDL_Texture* your_previous_render_target = SDL_GetRenderTarget(mRenderer);
+
+
+                        // --- CLEAR ----
+                        SDL_SetRenderTarget(mRenderer, canvas);     // Erases your whole canvas! (Effectively "resetting" it).
+                        SDL_RenderClear(mRenderer);
+
+
+                        // --- RESTORE ----
+                        SDL_SetRenderTarget(mRenderer, your_previous_render_target);
                     }
 
-                    if (event.button.button == 8) {     // Press the E key to move to the previous image.
+
+
+
+                    /*
+                    if (event.button.button == 22) {             // Press the S key to save your canvas.
                         my_gallery++;
                         gallery_debug = true;
                     }
 
-                    if (event.button.button == 16) {    // Press the M key to take a screenshot :3
+                    if (event.button.button == 15) {             // Press the L key to load your canvas.
                         screenshot = true;
                     }
 
 
-                    if (event.button.button == 41) {    // P key
+                    if (event.button.button == 41) {             // P key
                         game_is_paused = !game_is_paused;        // Pause <---> Unpause.
                     }
                     */
@@ -139,7 +154,7 @@ struct SDL_Application{
 
    
 	void Update(){
-        // SDL_GetMouseState(float &mouse_pos_x, float &mouse_pos_y);      // Updates mouse pos (every frame, ofc! :3).
+        // SDL_GetGlobalMouseState(float &mouse_pos_x, float &mouse_pos_y);      // Updates mouse pos (every frame, ofc! :3).
 
         Brush.x = mouse_pos_x  +  MOUSE_CENTER;
         Brush.y = mouse_pos_y  +  MOUSE_CENTER;
