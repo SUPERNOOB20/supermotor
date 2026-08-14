@@ -5,6 +5,7 @@
 // .
 // .
 
+// Example 4: Moving platforms
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Adjust these to your liking! :3
@@ -195,7 +196,7 @@ void update_player_pos() {
 
     Current_player_pos = supermotor::handle_collisions(Previous_player_pos, Current_player_pos, your_obstacles_here);
 
-    Player = supermotor::copy_supermotor_rect_to_sdl_rect(Current_player_pos, Player);
+    Player = supermotor::convert_supermotor_rect_to_sdl_rect(Current_player_pos, Player);
 }
 
 
@@ -386,10 +387,10 @@ struct SDL_Application{
 int main(int argc, char* argv[]){
 
     // magic number: 5
-    SDL_FRect* all_obstacles[5] = {Obstacle1, Obstacle2, Obstacle3, Obstacle4, Obstacle5};
+    SDL_FRect all_obstacles[5] = {Obstacle1, Obstacle2, Obstacle3, Obstacle4, Obstacle5};
     unsigned int amount_of_obstacles = 5;
 
-    for (int i == 0; amount_of_obstacles; i++){
+    for (int i = 0; i < amount_of_obstacles; i++){
         your_obstacles_here.push_back(all_obstacles[i]);
     }
 

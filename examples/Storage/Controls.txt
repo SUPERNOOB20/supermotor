@@ -1,0 +1,7 @@
+Controls / Bindings:
+
+* Left click (hold): paint
+* Right click (hold): erase
+* S: Save
+* L: Load
+* R: Reset

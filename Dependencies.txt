@@ -1,0 +1,9 @@
+* SDL
+* SDL_ttf
+
+At the time of me coding this, the latest versions, supported by my code, are:
+
+--- SDL 3.4.14
+--- SDL_ttf 3.2.2
+
+Only the versions stated above are guaranteed to work - older or newer versions might or might not work!
