@@ -60,15 +60,19 @@ void* ReadSave(const char* savefile)
 
 
     // Process data.
-    inputFileStream.read((char*) loadedData, (savefile_size / sizeof(char)));      // Casts our "binary void*" into "text" (and then it reads the file :3).
+    // inputFileStream.read((char*) loadedData, (savefile_size / sizeof(char)));      // Casts our "binary void*" into "text" (and then it reads the file :3).
+    std::string text_data;
+    inputFileStream >> text_data;
+    loadedData = &text_data;     // (void*) ---> (std::string) conversion
 
 
     // Close the file.
     inputFileStream.close();
 
 
-    loadedData = SDL_malloc(savefile_size);        // Your loaded data will go here!
-    loadedData = (void*) data_to_be_loaded;        // text (char*)  --->  binary (void*)
+
+    loadedData = SDL_malloc(savefile_size);    // Your loaded data will go here!
+    loadedData = data_to_be_loaded;    // text (char*)  --->  binary (void*)
     return loadedData;
 }
 
@@ -84,9 +88,11 @@ void WriteSave(const char* savefile, void* savedData)       // Put your data to 
 
     std::ofstream outputFileStream(savefile, std::ios::out|std::ios::binary);
 
-
     // Process data.
-    outputFileStream.write((char*) savedData, (size_t) ((sizeof(savedData)) / sizeof(char)));
+    // outputFileStream.write((char*) savedData, (size_t) ((sizeof(savedData)) / sizeof(char)));
+
+    std::string* text_data = (std::string*)savedData;    // (void*) ---> (std::string) conversion
+    outputFileStream << *text_data;
 
 
     // Close the file.

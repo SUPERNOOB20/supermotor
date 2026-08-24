@@ -92,7 +92,7 @@ SDL_FRect Obstacle5{
 
 
 // std::array<int, 2> previous_player_pos = {0, 0};
-// std::array<int, 2> current_player_pos = {0, 0};
+// std::array<int, 2> current_player_pos  = {0, 0};
 
 SDL_FRect Dummy_previous_player_pos{
     .x = WINDOW_WIDTH   /  2.0f,
