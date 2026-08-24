@@ -2,7 +2,6 @@
 #define DEMO_HEADER_FILE
 
 
-#include <SDL3/SDL.h>
 #include <string>
 #include <cassert>
 

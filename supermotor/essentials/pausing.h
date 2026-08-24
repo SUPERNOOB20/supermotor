@@ -74,7 +74,7 @@ void pause(SDL_Window* my_window, SDL_Renderer* my_renderer, Uint8 opacity = 0x8
 
         SDL_RenderTexture(my_renderer, my_gpu_screenshot, nullptr, &Background_frect);
 
-        // ---- STORE ----
+        // ---- PROLOGUE (STORE) ----
         Uint8 current_render_draw_color[4];        // Prevents us from overwriting your current render draw color (https://wiki.libsdl.org/SDL3/SDL_SetRenderDrawColor).
         SDL_GetRenderDrawColor(my_renderer, &current_render_draw_color[0], &current_render_draw_color[1], &current_render_draw_color[2], &current_render_draw_color[3]);
 
@@ -86,7 +86,7 @@ void pause(SDL_Window* my_window, SDL_Renderer* my_renderer, Uint8 opacity = 0x8
         SDL_SetRenderDrawBlendMode(my_renderer, SDL_BLENDMODE_BLEND);
         SDL_RenderFillRect(my_renderer, &Background_frect);
 
-        // ---- RESTORE ----
+        // ---- EPILOGUE (RESTORE) ----
         SDL_SetRenderDrawColor(my_renderer, current_render_draw_color[0], current_render_draw_color[1], current_render_draw_color[2], current_render_draw_color[3]);    // Restore your previous render draw color.
         SDL_SetRenderDrawBlendMode(my_renderer, current_draw_blend_mode);
     }

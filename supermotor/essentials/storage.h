@@ -4,9 +4,22 @@
 // At first I tried to abstract https://wiki.libsdl.org/SDL3/SDL_Storage features, but then quickly realised it's too complex, so here comes my own, less robust system...
 // This is not async and WILL block your main thread and WON'T be compatible with a good number of platforms. Consider yourself warned.
 
-#define DEVELOPER_NAME "SUPERNOOB_Studios"              //  <--- Name of the author here (person, company, studio, whatever it might be).
-#define GAME_NAME "Painting_Test_Game"                          //   <--- Your videogame's name here.
+// Some credits here...
+// Mr. Hank     -   https://www.youtube.com/watch?v=16NXp7c53OQ
+// w3           -   https://www.w3schools.com/cpp/ref_fstream_fstream.asp
+// siliz4       - https://siliz4.github.io/guides/tutorials/2020/05/21/guide-on-binary-files-cpp.html
+//      "In order to write the data in the file, it must be casted (transformed) into an array of characters" (thanks for that useful info! I was trying to save and load void*... ahahaha ":3)
 
+
+
+//#define DEVELOPER_NAME "SUPERNOOB_Studios"                       //  <--- Name of the author here (person, company, studio, whatever it might be).
+//#define GAME_NAME "Painting_Test_Game"                          //   <--- Your videogame's name here.
+
+
+#include <SDL3/SDL.h>
+#include <fstream>
+#include <iostream>
+#include <filesystem>
 
 namespace supermotor
 {
@@ -14,7 +27,7 @@ namespace supermotor
 namespace storage
 {
 
-void* loadedData;
+
 
 
 // Handles SDL exceptions.
@@ -33,54 +46,54 @@ void handleException(int line){
 
 void* ReadSave(const char* savefile)
 {
-    SDL_Storage* user = SDL_OpenUserStorage(DEVELOPER_NAME, GAME_NAME, 0);
-    if (user == NULL) {
-        handleException(__LINE__);
-    }
-    while (!SDL_StorageReady(user)) {
-        SDL_Delay(1);
-    }
 
-    Uint64 saveLen = 0;
-    if (SDL_GetStorageFileSize(user, savefile, &saveLen) && saveLen > 0) {
+    void* loadedData;
+    void* data_to_be_loaded;
 
-        loadedData = SDL_malloc(saveLen);        // Your loaded data will go here!
-        if (!SDL_ReadStorageFile(user, savefile, loadedData, saveLen)) {
-            handleException(__LINE__);
-        }
+    size_t savefile_size = std::filesystem::file_size(savefile);
 
-    } else {
-
-        handleException(__LINE__);
-        SDL_Quit();
-        exit(1);    // Exit with error :c
-    }
+    // std::fstream f(savefile);
+    // f.open(savefile, ios::in | ios::binary);
 
 
-    SDL_CloseStorage(user);
+    std::ifstream inputFileStream(savefile, std::ios::in|std::ios::binary);
+
+
+    // Process data.
+    inputFileStream.read((char*) loadedData, savefile_size);      // Casts our "binary void*" into "text" (and then it reads the file :3).
+
+
+    // Close the file.
+    inputFileStream.close();
+
+
+    loadedData = SDL_malloc(savefile_size);        // Your loaded data will go here!
+    loadedData = (void*) data_to_be_loaded;        // text (char*)  --->  binary (void*)
     return loadedData;
 }
 
 
 
-void WriteSave(const char* savefile)
+
+
+void WriteSave(const char* savefile, void* savedData)       // Put your data to be saved HERE (  with the proper (void*) and malloc()  ).
 {
-    SDL_Storage* user = SDL_OpenUserStorage(DEVELOPER_NAME, GAME_NAME, 0);
-    if (user == NULL) {
-        handleException(__LINE__);
-    }
-    while (!SDL_StorageReady(user)) {
-        SDL_Delay(1);
-    }
+    // FILE* my_opened_file = fopen(savefile,"w");
+    // fputs(savedDatamy_opened_file);
 
-    extern void* savedData;      // Put your data to be saved HERE (  with the proper (void*) and malloc()  ).
-    extern Uint64 saveLen;
-    if (!SDL_WriteStorageFile(user, savefile, savedData, saveLen)) {
-        handleException(__LINE__);
-    }
 
-    SDL_CloseStorage(user);
+    std::ofstream outputFileStream(savefile, std::ios::out|std::ios::binary);
+
+
+    // Process data.
+    outputFileStream.write((char*) savedData, (size_t) (sizeof(savedData)));
+
+
+    // Close the file.
+    outputFileStream.close();
 }
+
+
 
 
 }

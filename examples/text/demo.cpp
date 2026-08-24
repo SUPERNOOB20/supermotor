@@ -1,5 +1,5 @@
 // Credits to Mike Shah  -  https://youtu.be/yZl9X47cHi8
-// g++ demo.cpp -O3 -o my_game `pkg-config --libs --cflags sdl3`
+// g++ demo.cpp -O3 -o text_demo `pkg-config --libs --cflags sdl3 sdl3-ttf`
 
 // .
 // .

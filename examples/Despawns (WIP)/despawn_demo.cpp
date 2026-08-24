@@ -20,6 +20,7 @@ SDL_FRect enemy_dst_rect;
 
 
 
+
 // Returns the corresponding sprite to render according to my silly animation :3
 //
 // Uint8 enemy_anim(Uint64 frame_counter)

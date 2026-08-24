@@ -7,6 +7,7 @@
 
 #include <string>
 #include <cassert>
+#include <vector>
 
 #define WINDOW_WIDTH     1280
 #define WINDOW_HEIGHT     720
@@ -16,6 +17,12 @@
 
 #define PADDING_X (WINDOW_HEIGHT_F/10.0f)
 #define PADDING_Y (WINDOW_HEIGHT_F/10.0f)
+
+typedef std::vector<supermotor::TransientObject> queue_of_despawnable_objects;
+
+queue_of_despawnable_objects projectiles
+
+
 
 
 

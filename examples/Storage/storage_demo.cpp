@@ -90,14 +90,14 @@ struct SDL_Application{
 
                 if (event.type == SDL_EVENT_KEY_DOWN) {
 
-                    SDL_Log("CONGRATULA!!! You pressed the %d key :3)7", event.button.button);
+                    // SDL_Log("CONGRATULA!!! You pressed the %d key :3)7", event.button.button);
                         
                     
 
 
                     if (event.button.button == 21) {             // Press the R key to reset your canvas. 
 
-                        // --- STORE ----
+                        // --- PROLOGUE (STORE) ----
                         SDL_Texture* your_previous_render_target = SDL_GetRenderTarget(mRenderer);
 
 
@@ -106,7 +106,7 @@ struct SDL_Application{
                         SDL_RenderClear(mRenderer);
 
 
-                        // --- RESTORE ----
+                        // --- EPLIOGUE (RESTORE) ----
                         SDL_SetRenderTarget(mRenderer, your_previous_render_target);
                     }
 
@@ -115,14 +115,16 @@ struct SDL_Application{
 
                     
                     if (event.button.button == 22) {             // Press the S key to save your canvas.
-                        void* voidCanvas = (void*) canvas;
-                        void* savedData = voidCanvas;
-                        supermotor::storage::WriteSave("my_lovely_canvas");
+                        void* voidedCanvas = (void*) canvas;
+                        void* savedData = SDL_malloc(sizeof(voidedCanvas));
+                        savedData = (void*) voidedCanvas;
+                        // saveLen = sizeof(savedData);
+                        supermotor::storage::WriteSave("my_lovely_canvas.dat", savedData);
                     }
 
                     if (event.button.button == 15) {             // Press the L key to load your canvas.
-                        supermotor::storage::ReadSave("my_lovely_canvas");
-                        canvas = (SDL_Texture*) (supermotor::storage::loadedData);
+                        void* loaded_data = supermotor::storage::ReadSave("my_lovely_canvas.dat");
+                        canvas = (SDL_Texture*) (loaded_data);
                     }
 
                     /*
