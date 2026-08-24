@@ -203,28 +203,6 @@ namespace supermotor
     };
 
 
-    Rect convert_sdl_rect_to_supermotor_rect(SDL_FRect my_rect){
-        Rect converted_rect(my_rect);   // Calls "Rect(sdl_rect)".
-        return converted_rect;
-    }
-    
-
-    // Copies src_rect to dst_rect.
-    // Overwrites ("pisa") the given SDL_FRect
-    //
-    // I tried to get this to work with pointers but I couldn't :c
-    // If you want to optimise this function further, you can try to implement pointers for it (i.e passing Rect* and SDL_FRect* here instead of Rect and SDL_FRect e.e).
-    SDL_FRect convert_supermotor_rect_to_sdl_rect(Rect src_rect, SDL_FRect dst_rect){    
-
-        dst_rect.x = src_rect.get_top_left_corner_x();
-        dst_rect.y = src_rect.get_top_left_corner_y();
-        dst_rect.w = src_rect.get_bottom_right_corner_x() - src_rect.get_top_left_corner_x();     // Distance between the right edge and the left   edge of src_rect.
-        dst_rect.h = src_rect.get_bottom_right_corner_y() - src_rect.get_top_left_corner_y();    //  Distance between the top   edge and the bottom edge of src_rect.
-
-        
-        return dst_rect;
-    }
-
 
 
     class MovingPlatform : public Rect {
@@ -255,6 +233,44 @@ namespace supermotor
     };
 
 
+
+
+
+
+
+    Rect convert_sdl_rect_to_supermotor_rect(SDL_FRect my_rect){
+        Rect converted_rect(my_rect);   // Calls "Rect(sdl_rect)".
+        return converted_rect;
+    }
+    
+
+    // Copies src_rect to dst_rect.
+    // Overwrites ("pisa") the given SDL_FRect
+    //
+    // I tried to get this to work with pointers but I couldn't :c
+    // If you want to optimise this function further, you can try to implement pointers for it (i.e passing Rect* and SDL_FRect* here instead of Rect and SDL_FRect e.e).
+    SDL_FRect convert_supermotor_rect_to_sdl_rect(Rect src_rect, SDL_FRect dst_rect){    
+
+        dst_rect.x = src_rect.get_top_left_corner_x();
+        dst_rect.y = src_rect.get_top_left_corner_y();
+        dst_rect.w = src_rect.get_bottom_right_corner_x() - src_rect.get_top_left_corner_x();     // Distance between the right edge and the left   edge of src_rect.
+        dst_rect.h = src_rect.get_bottom_right_corner_y() - src_rect.get_top_left_corner_y();    //  Distance between the top   edge and the bottom edge of src_rect.
+
+        return dst_rect;
+    }
+
+
+
+    // TODO: Find a way to merge this function with the one above because having two functions doing the exact same thing is bullshit.
+    SDL_FRect convert_moving_platform_to_sdl_rect(MovingPlatform my_moving_platform, SDL_FRect dst_rect){    
+
+        dst_rect.x = my_moving_platform.get_top_left_corner_x();
+        dst_rect.y = my_moving_platform.get_top_left_corner_y();
+        dst_rect.w = my_moving_platform.get_bottom_right_corner_x() - my_moving_platform.get_top_left_corner_x();     // Distance between the right edge and the left   edge of src_rect.
+        dst_rect.h = my_moving_platform.get_bottom_right_corner_y() - my_moving_platform.get_top_left_corner_y();    //  Distance between the top   edge and the bottom edge of src_rect.
+
+        return dst_rect;
+    }
 
 
 

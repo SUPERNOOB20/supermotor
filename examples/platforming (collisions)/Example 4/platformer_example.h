@@ -27,7 +27,7 @@
 
 // std::vector<SDL_Texture*> your_textures_here;
 std::vector<SDL_FRect> your_obstacles_here;
-
+std::vector<supermotor::MovingPlatform> your_moving_platforms_here;
 
 // Your player's texture resolution goes here.
 int player_texture_width = 45;
@@ -54,37 +54,40 @@ SDL_FRect Obstacle1{
     .x = 0,
     .y = WINDOW_HEIGHT  / 1.4f,
     .w = WINDOW_WIDTH,
-    .h = WINDOW_HEIGHT / 2
+    .h = WINDOW_HEIGHT  / 2
 };
 
 SDL_FRect Obstacle2{
-    .x = WINDOW_WIDTH  / 3.5f,
-    .y = WINDOW_HEIGHT  / 5.0f,
-    .w = WINDOW_WIDTH  / 10.0f,
-    .h = WINDOW_HEIGHT / 4.0f
+    .x = WINDOW_WIDTH   / 3.5f,
+    .y = WINDOW_HEIGHT  / 3.0f,
+    .w = WINDOW_WIDTH   / 10.0f,
+    .h = WINDOW_HEIGHT  / 8.0f
 };
 
 
 SDL_FRect Obstacle3{
-    .x = WINDOW_WIDTH  / 1.5f,
-    .y = WINDOW_HEIGHT  / 1.75f,
-    .w = WINDOW_WIDTH  / 10.0f,
-    .h = WINDOW_HEIGHT / 5.0f
+    .x = WINDOW_WIDTH   /  1.9f,
+    .y = WINDOW_HEIGHT  /  1.75f,
+    .w = WINDOW_WIDTH   /  10.0f,
+    .h = WINDOW_HEIGHT  /  5.0f
 };
 
 
+// Moving platform on the left side of the screen.
 SDL_FRect Obstacle4{
     .x = 0,
-    .y = WINDOW_HEIGHT  / 6.0f,
-    .w = WINDOW_WIDTH / 6.0f,
-    .h = WINDOW_HEIGHT / 10
+    .y = WINDOW_HEIGHT  /  6.0f,
+    .w = WINDOW_WIDTH   /  6.0f,
+    .h = WINDOW_HEIGHT  /  10
 };
 
+
+// Moving platform on the right side of the screen.
 SDL_FRect Obstacle5{
-    .x = WINDOW_WIDTH / 1.1f,
-    .y = WINDOW_HEIGHT  / 6.0f,
-    .w = WINDOW_WIDTH / 6.0f,
-    .h = WINDOW_HEIGHT / 10
+    .x = WINDOW_WIDTH   /  1.1f,
+    .y = WINDOW_HEIGHT  /  6.0f,
+    .w = WINDOW_WIDTH   /  6.0f,
+    .h = WINDOW_HEIGHT  /  10
 };
 
 
@@ -92,8 +95,8 @@ SDL_FRect Obstacle5{
 // std::array<int, 2> current_player_pos = {0, 0};
 
 SDL_FRect Dummy_previous_player_pos{
-    .x = WINDOW_WIDTH  / 2.0f,
-    .y = WINDOW_HEIGHT  / 2.7f,
+    .x = WINDOW_WIDTH   /  2.0f,
+    .y = WINDOW_HEIGHT  /  2.7f,
     .w = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_width)),          // WINDOW_WIDTH / WINDOW_HEIGHT = ratio
     .h = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height))
 };
@@ -101,8 +104,8 @@ supermotor::Rect Previous_player_pos(Dummy_previous_player_pos);
 
 
 SDL_FRect Dummy_current_player_pos{
-    .x = WINDOW_WIDTH  / 2.0f,
-    .y = WINDOW_HEIGHT  / 2.7f,
+    .x = WINDOW_WIDTH   /  2.0f,
+    .y = WINDOW_HEIGHT  /  2.7f,
     .w = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_width)),          // WINDOW_WIDTH / WINDOW_HEIGHT = ratio
     .h = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height))
 };

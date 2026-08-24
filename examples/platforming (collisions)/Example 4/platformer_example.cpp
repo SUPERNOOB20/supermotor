@@ -10,7 +10,7 @@
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Adjust these to your liking! :3
 int floaty_jump_intensity = 10;            // The bigger, the longer you can hold the jump button for. Change to 0 if you want the player to always jump at the same height!
-float gravity = 1.0f;                     //  The bigger, the smaller your jumps.
+float gravity = 0.3f;                     //  The bigger, the smaller your jumps.
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -204,7 +204,17 @@ void update_player_pos() {
 
 
 
+    void update_platforms() {
 
+        Uint32 your_moving_platforms_amount = your_moving_platforms_here.size();
+        
+        for (int i = 0; i < your_moving_platforms_amount; i++) {
+            supermotor::MovingPlatform current_platform = your_moving_platforms_here[i];
+
+            current_platform.move_x(horizontal_velocity);
+            current_platform.move_y(vertical_velocity);
+        }
+    }
 
 
 
@@ -299,6 +309,10 @@ struct SDL_Application{
 
 	void Update(){
 
+        update_platforms();
+
+
+
         is_airborne = check_airborne();
 
         update_player_pos();
@@ -328,6 +342,20 @@ struct SDL_Application{
         Uint32 your_obstacles_amount = your_obstacles_here.size();
         for (int i = 0; i < your_obstacles_amount; i++){
     		SDL_RenderFillRect(mRenderer, &your_obstacles_here[i]);                           // Renders the obstacles.
+        }
+
+        SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0x7F, 0xFF);
+        Uint32 your_moving_platforms_amount = your_moving_platforms_here.size();
+
+        // TODO
+        for (int i = 0; i < your_moving_platforms_amount; i++){
+
+            supermotor::MovingPlatform current_platform = your_moving_platforms_here[i]; 
+
+            SDL_FRect current_platform_sdl_rect;            
+            current_platform_sdl_rect             = convert_moving_platform_to_sdl_rect(current_platform, current_platform_sdl_rect);
+
+    		SDL_RenderFillRect(mRenderer, &current_platform_sdl_rect);                           // Renders the moving platforms.
         }
         
 
@@ -387,12 +415,28 @@ struct SDL_Application{
 int main(int argc, char* argv[]){
 
     // magic number: 5
-    SDL_FRect all_obstacles[5] = {Obstacle1, Obstacle2, Obstacle3, Obstacle4, Obstacle5};
+    SDL_FRect all_obstacles[5] = {Obstacle1, Obstacle2, Obstacle3};
     unsigned int amount_of_obstacles = 5;
 
     for (int i = 0; i < amount_of_obstacles; i++){
         your_obstacles_here.push_back(all_obstacles[i]);
     }
+
+    supermotor::Rect SupermotorObstacle4 = supermotor::Rect(Obstacle4);       // Convert this "SDL Rect" to a "supermotor rect"...
+    supermotor::Rect SupermotorObstacle5 = supermotor::Rect(Obstacle5);      //  Convert this "SDL Rect" to a "supermotor rect"...
+
+    supermotor::MovingPlatform my_moving_platform1 ((double) 10.0f, (double) 0.0f, &SupermotorObstacle4);
+    supermotor::MovingPlatform my_moving_platform2 ((double) 40.0f, (double) 0.0f, &SupermotorObstacle5);
+
+    // magic number: 2
+    supermotor::MovingPlatform all_moving_platforms[2] = {my_moving_platform1, my_moving_platform2};
+    unsigned int amount_of_moving_platforms = 2;
+
+    for (int i = 0; i < amount_of_moving_platforms; i++){
+        your_moving_platforms_here.push_back(all_moving_platforms[i]);
+    }
+
+
 
     SDL_Log("Player.x: %f", Player.x);
     SDL_Log("Player.y: %f", Player.y);

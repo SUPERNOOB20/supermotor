@@ -60,7 +60,7 @@ void* ReadSave(const char* savefile)
 
 
     // Process data.
-    inputFileStream.read((char*) loadedData, savefile_size);      // Casts our "binary void*" into "text" (and then it reads the file :3).
+    inputFileStream.read((char*) loadedData, (savefile_size / sizeof(char)));      // Casts our "binary void*" into "text" (and then it reads the file :3).
 
 
     // Close the file.
@@ -86,7 +86,7 @@ void WriteSave(const char* savefile, void* savedData)       // Put your data to 
 
 
     // Process data.
-    outputFileStream.write((char*) savedData, (size_t) (sizeof(savedData)));
+    outputFileStream.write((char*) savedData, (size_t) ((sizeof(savedData)) / sizeof(char)));
 
 
     // Close the file.
