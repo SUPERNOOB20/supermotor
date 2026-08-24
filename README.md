@@ -26,9 +26,9 @@ My own C++ game engine <br>
 ✅️   Collisions<br>
 ✅️   Batch text handling<br>
 ✅️   Screenshots<br>
+✅️   Pausing<br>
 ✅️   Generalized math stuff (manhattan distance and euclidean distance) for N dimensions (1D, 2D, 3D, 4D, 5D, 6D, etc)<br><br>
 
-🔜   Pausing<br><br>
 
 🔜   Animations (atlas)<br>
 🔜   Hurtboxes<br>
