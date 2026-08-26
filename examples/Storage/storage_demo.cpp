@@ -47,8 +47,8 @@ struct SDL_Application{
 	    } else {
 		    SDL_Log("Current renderer: %s", SDL_GetRendererName(mRenderer));
 		    SDL_Log("Available renderer drivers:");
-		    for (int i = 0; i > SDL_GetNumRenderDrivers(); i++) {
-			    SDL_Log("%d, %s", i + 1, SDL_GetRenderDriver(i));
+		    for (int i = 0; i < SDL_GetNumRenderDrivers(); i++) {
+			    SDL_Log("%s", SDL_GetRenderDriver(i));
 		    }
             SDL_SetRenderLogicalPresentation(mRenderer, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 	    }
@@ -115,12 +115,20 @@ struct SDL_Application{
 
                     
                     if (event.button.button == 22) {             // Press the S key to save your canvas.
-                        void* voidedCanvas = (void*) canvas;
-                        void* savedData = SDL_malloc(sizeof(voidedCanvas));
-                        savedData = (void*) voidedCanvas;
+                        SDL_Texture* canvasCopy;                                       // Init new texture
+                        canvasCopy = (SDL_Texture*) SDL_malloc(sizeof(canvas));        // void*  --->  SDL_Texture*
+                        canvasCopy = canvas;                                           // Backup of our current canvas.
+
+                        SDL_Log("Canvas Size: %ld",     sizeof(*canvas));
+                        SDL_Log("CanvasCopy Size: %ld", sizeof(*canvasCopy));
+
+                        void* savedData_ptr = &canvasCopy;
+
                         // saveLen = sizeof(savedData);
-                        supermotor::storage::WriteSave("my_lovely_canvas.dat", savedData);
+                        supermotor::storage::WriteSave("my_lovely_canvas.dat", savedData_ptr);       // Send a filename and a pointer to the data that we want to store.
                     }
+
+
 
                     if (event.button.button == 15) {             // Press the L key to load your canvas.
                         void* loaded_data = supermotor::storage::ReadSave("my_lovely_canvas.dat");

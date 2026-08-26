@@ -38,8 +38,8 @@ SDL_FRect Background{
 
 
 SDL_FRect Brush{
-    .x = mouse_pos_x  +  MOUSE_CENTER,
-    .y = mouse_pos_y  +  MOUSE_CENTER,
+    .x = mouse_pos_x  -  MOUSE_CENTER,
+    .y = mouse_pos_y  -  MOUSE_CENTER,
     .w = BRUSH_SIZE,
     .h = BRUSH_SIZE
 };

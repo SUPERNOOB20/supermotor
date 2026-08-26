@@ -63,21 +63,28 @@ void handleException(int line){
 void* ReadSave(const char* savefile)
 {
 
-    void* loadedData;           // Will point to your loaded savefile.
-    void* data_to_be_loaded;    // Will be an auxiliary, dummy pointer.
+    void* loadedData;
+    void* data_to_be_loaded;
 
     size_t savefile_size = std::filesystem::file_size(savefile);
 
-    std::ifstream inputFileStream(savefile);
+    // std::fstream f(savefile);
+    // f.open(savefile, ios::in | ios::binary);
 
-    char* text_data_ptr = (char*) SDL_malloc(savefile_size);    // Your loaded data will go here!  (Notice the implicit void*  --->  char* conversion...)
-    inputFileStream >> *text_data_ptr;    // Your data has been saved! :3
 
-    // Close the file, we don't need it anymore.
+    std::ifstream inputFileStream(savefile, std::ios::in|std::ios::binary);
+
+
+    // Process data.
+    // inputFileStream.read((char*) loadedData, (savefile_size / sizeof(char)));      // Casts our "binary void*" into "text" (and then it reads the file :3).
+
+    char* text_data_ptr = (std::string*) SDL_malloc(text_data.length() * sizeof(text_data[0]));    // Your loaded data will go here!
+    inputFileStream >> *text_data_ptr;
+
+    data_to_be_loaded = &text_data;     // text (std::string) ---> binary (void*) conversion
+
+    // Close the file.
     inputFileStream.close();
-
-
-    data_to_be_loaded = &text_data_ptr;     // data_to_be_loaded now points to your loaded data.
 
     loadedData = SDL_malloc(savefile_size);    // A pointer to your loaded data will go here!
     loadedData = data_to_be_loaded;
@@ -94,12 +101,12 @@ void WriteSave(const char* savefile, void* savedData)       // Put a pointer to 
     // fputs(savedDatamy_opened_file);
 
 
-    std::ofstream outputFileStream(savefile);
+    std::ofstream outputFileStream(savefile, std::ios::out|std::ios::binary);
 
     // Process data.
     // outputFileStream.write((char*) savedData, (size_t) ((sizeof(savedData)) / sizeof(char)));
 
-    char* text_data = static_cast<char*>(savedData);    // (void*) ---> (char*) conversion
+    std::string* text_data = static_cast<std::string*>(savedData);    // (void*) ---> (std::string) conversion
     outputFileStream << *text_data;        // Pray.
 
 

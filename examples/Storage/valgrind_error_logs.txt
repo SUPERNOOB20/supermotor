@@ -1,0 +1,45 @@
+==34636== Memcheck, a memory error detector
+==34636== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==34636== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==34636== Command: ./my_game_with_saving_system
+==34636== 
+Current renderer: opengles2
+Available renderer drivers:
+==34636== Invalid read of size 8
+==34636==    at 0x10AF73: operator<< <char, std::char_traits<char>, std::allocator<char> > (basic_string.h:4037)
+==34636==    by 0x10AF73: supermotor::storage::WriteSave(char const*, void*) (storage.h:95)
+==34636==    by 0x10B6F6: Input (storage_demo.cpp:122)
+==34636==    by 0x10B6F6: Tick (storage_demo.cpp:204)
+==34636==    by 0x10B6F6: SDL_Application::MainLoop() (storage_demo.cpp:214)
+==34636==    by 0x10A942: main (storage_demo.cpp:244)
+==34636==  Address 0x8 is not stack'd, malloc'd or (recently) free'd
+==34636== 
+==34636== 
+==34636== Process terminating with default action of signal 11 (SIGSEGV)
+==34636==  Access not within mapped region at address 0x8
+==34636==    at 0x10AF73: operator<< <char, std::char_traits<char>, std::allocator<char> > (basic_string.h:4037)
+==34636==    by 0x10AF73: supermotor::storage::WriteSave(char const*, void*) (storage.h:95)
+==34636==    by 0x10B6F6: Input (storage_demo.cpp:122)
+==34636==    by 0x10B6F6: Tick (storage_demo.cpp:204)
+==34636==    by 0x10B6F6: SDL_Application::MainLoop() (storage_demo.cpp:214)
+==34636==    by 0x10A942: main (storage_demo.cpp:244)
+==34636==  If you believe this happened as a result of a stack
+==34636==  overflow in your program's main thread (unlikely but
+==34636==  possible), you can try to increase the size of the
+==34636==  main thread stack using the --main-stacksize= flag.
+==34636==  The main thread stack size used in this run was 8388608.
+==34636== 
+==34636== HEAP SUMMARY:
+==34636==     in use at exit: 11,091,800 bytes in 80,724 blocks
+==34636==   total heap usage: 93,818 allocs, 13,094 frees, 14,324,103 bytes allocated
+==34636== 
+==34636== LEAK SUMMARY:
+==34636==    definitely lost: 96 bytes in 2 blocks
+==34636==    indirectly lost: 0 bytes in 0 blocks
+==34636==      possibly lost: 8,503,463 bytes in 56,140 blocks
+==34636==    still reachable: 2,588,241 bytes in 24,582 blocks
+==34636==         suppressed: 0 bytes in 0 blocks
+==34636== Rerun with --leak-check=full to see details of leaked memory
+==34636== 
+==34636== For lists of detected and suppressed errors, rerun with: -s
+==34636== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)

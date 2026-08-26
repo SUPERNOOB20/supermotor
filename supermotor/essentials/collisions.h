@@ -263,13 +263,16 @@ namespace supermotor
 
     // TODO: Find a way to merge this function with the one above because having two functions doing the exact same thing is bullshit.
     SDL_FRect convert_moving_platform_to_sdl_rect(MovingPlatform my_moving_platform, SDL_FRect dst_rect){    
-
+        /*
         dst_rect.x = my_moving_platform.get_top_left_corner_x();
         dst_rect.y = my_moving_platform.get_top_left_corner_y();
         dst_rect.w = my_moving_platform.get_bottom_right_corner_x() - my_moving_platform.get_top_left_corner_x();     // Distance between the right edge and the left   edge of src_rect.
         dst_rect.h = my_moving_platform.get_bottom_right_corner_y() - my_moving_platform.get_top_left_corner_y();    //  Distance between the top   edge and the bottom edge of src_rect.
 
         return dst_rect;
+        */
+
+        return convert_supermotor_rect_to_sdl_rect(dynamic_cast<Rect*>(&my_moving_platform), SDL_FRect dst_rect);       // https://www.quora.com/How-do-you-explain-the-differences-among-static_cast-reinterpret_cast-const_cast-and-dynamic_cast-to-a-new-C++-programmer
     }
 
 
