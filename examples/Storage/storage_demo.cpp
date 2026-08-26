@@ -24,6 +24,46 @@ unsigned short int current_action = 0;
 
 
 SDL_Texture* canvas;            // Your drawing will get saved here.
+bool save_my_canvas = false;
+bool load_my_canvas = false;
+
+
+
+void save(SDL_Renderer* my_renderer) {
+    SDL_Surface* canvasBackup;                                          // Your canvas will be stored here :3
+    SDL_Surface* canvasDummy;                                           // A dummy, placeholder copy of our canvas.
+
+    canvasDummy = SDL_RenderReadPixels(my_renderer, nullptr);           // Texture ---> Surface    ( You can read more here ---> https://wiki.libsdl.org/SDL3/SDL_RenderReadPixels )
+
+    SDL_Log("Canvas Size (surface) (AAAAAAAAA): %ld", sizeof(*canvasDummy));
+
+    canvasBackup = (SDL_Surface*) SDL_malloc(sizeof(canvasDummy));      // void*  --->  SDL_Surface*
+    canvasBackup = canvasDummy;                                         // Backup of our current canvas.
+    SDL_DestroySurface(canvasDummy);                                    // We don't need that placeholder copy anymore.
+
+
+    SDL_Log("Canvas Size (texture): %ld",     sizeof(*canvas));
+    SDL_Log("CanvasCopy Size (surface): %ld", sizeof(*canvasBackup));
+
+    
+
+    void* savedData_ptr = &canvasBackup;
+
+    // saveLen = sizeof(savedData);
+    supermotor::storage::WriteSave("my_lovely_canvas.dat", savedData_ptr);       // Send a filename and a pointer to the data that we want to store.
+}
+
+
+void load(SDL_Renderer* my_renderer){
+    void* loaded_data = supermotor::storage::ReadSave("my_lovely_canvas.dat");
+    SDL_Surface* canvas_surface = (SDL_Surface*) (loaded_data);
+
+    SDL_Log("Canvas Size (texture): %ld",     sizeof(*canvas_surface));
+
+
+    canvas = SDL_CreateTextureFromSurface(my_renderer, canvas_surface);
+    SDL_Log("Canvas Size (surface): %ld", sizeof(*canvas));
+}
 
 
 
@@ -115,25 +155,14 @@ struct SDL_Application{
 
                     
                     if (event.button.button == 22) {             // Press the S key to save your canvas.
-                        SDL_Texture* canvasCopy;                                       // Init new texture
-                        canvasCopy = (SDL_Texture*) SDL_malloc(sizeof(canvas));        // void*  --->  SDL_Texture*
-                        canvasCopy = canvas;                                           // Backup of our current canvas.
-
-                        SDL_Log("Canvas Size: %ld",     sizeof(*canvas));
-                        SDL_Log("CanvasCopy Size: %ld", sizeof(*canvasCopy));
-
-                        void* savedData_ptr = &canvasCopy;
-
-                        // saveLen = sizeof(savedData);
-                        supermotor::storage::WriteSave("my_lovely_canvas.dat", savedData_ptr);       // Send a filename and a pointer to the data that we want to store.
+                        save_my_canvas = true;
                     }
-
 
 
                     if (event.button.button == 15) {             // Press the L key to load your canvas.
-                        void* loaded_data = supermotor::storage::ReadSave("my_lovely_canvas.dat");
-                        canvas = (SDL_Texture*) (loaded_data);
+                        load_my_canvas = true;
                     }
+
 
                     /*
                     if (event.button.button == 41) {             // P key
@@ -181,29 +210,47 @@ struct SDL_Application{
 		// SDL_SetRenderDrawColor(mRenderer, 0xBB, 0xAA, 0xEE, 0xFF);
         // SDL_RenderFillRect(mRenderer, &Background);
 
-		switch(current_action) {
 
-            case 1:
-                SDL_SetRenderTarget(mRenderer, canvas);     // Paint! (Renders to canvas)
+        // LOADS savefile.
+        if(!load_my_canvas) {
 
-                SDL_SetRenderDrawColor(mRenderer, BRUSH_COLOR_R, BRUSH_COLOR_G, BRUSH_COLOR_B, 0xFF);
-                SDL_RenderFillRect(mRenderer, &Brush);
+		    switch(current_action) {
 
-                SDL_SetRenderTarget(mRenderer, nullptr);    // Back to normal... (resume rendering on window)
-            break;
+                case 1:
+                    SDL_SetRenderTarget(mRenderer, canvas);     // Paint! (Renders to canvas)
+
+                    SDL_SetRenderDrawColor(mRenderer, BRUSH_COLOR_R, BRUSH_COLOR_G, BRUSH_COLOR_B, 0xFF);
+                    SDL_RenderFillRect(mRenderer, &Brush);
+
+                    SDL_SetRenderTarget(mRenderer, nullptr);    // Back to normal... (resume rendering on window)
+                break;
 
 
-            case 2:
-                SDL_SetRenderTarget(mRenderer, canvas);     // Erase! (Renders to canvas)
+                case 2:
+                    SDL_SetRenderTarget(mRenderer, canvas);     // Erase! (Renders to canvas)
 
-                SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0x00, 0xFF);
-                SDL_RenderFillRect(mRenderer, &Brush);
+                    SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0x00, 0xFF);
+                    SDL_RenderFillRect(mRenderer, &Brush);
 
-                SDL_SetRenderTarget(mRenderer, nullptr);    // Back to normal... (resume rendering on window)
-            break;
+                    SDL_SetRenderTarget(mRenderer, nullptr);    // Back to normal... (resume rendering on window)
+                break;
+            }
+
+        } else {
+            load(mRenderer);
+            load_my_canvas = false;
         }
 
+
+
         SDL_RenderTexture(mRenderer, canvas, nullptr, nullptr);
+
+        // SAVES savefile. The reason why this code is specifically here is: "If you're using this on the main rendering target, it should be called after rendering and before SDL_RenderPresent()"  --->  https://wiki.libsdl.org/SDL3/SDL_RenderReadPixels
+        if (save_my_canvas){
+            save(mRenderer);
+            save_my_canvas = false;
+        }
+
 		SDL_RenderPresent(mRenderer);
 	}
 
