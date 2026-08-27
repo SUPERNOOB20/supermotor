@@ -18,9 +18,11 @@
 #define PADDING_X (WINDOW_HEIGHT_F/10.0f)
 #define PADDING_Y (WINDOW_HEIGHT_F/10.0f)
 
+
+#define PROJECTILE_SPAWN_RATE 10	// The lower, the quicker the projectiles will spawn!!
 typedef std::vector<supermotor::TransientObject> queue_of_despawnable_objects;
 
-queue_of_despawnable_objects projectiles
+queue_of_despawnable_objects projectiles;
 
 
 

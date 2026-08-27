@@ -28,12 +28,10 @@ namespace supermotor
 
 
 
-// Here's hoping this gets stored as a bool value internally... ("^- ^)
 enum Direction {
     HORIZONTAL,
     VERTICAL  
 };
-
 
 
 

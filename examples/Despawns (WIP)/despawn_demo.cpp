@@ -21,6 +21,7 @@ SDL_FRect enemy_dst_rect;
 
 
 
+
 // Returns the corresponding sprite to render according to my silly animation :3
 //
 // Uint8 enemy_anim(Uint64 frame_counter)
@@ -55,6 +56,8 @@ typedef std::vector<SDL_FRect> poses;
 
 SDL_Texture* enemy_texture;
 poses enemy_poses;
+
+
 
 
 
@@ -109,7 +112,17 @@ struct SDL_Application{
 	}
 
    
-	void Update(){
+	void Update(Uint64 frame_counter){
+		
+		Uint64 number_of_transient_objects = projectiles.size();
+		for (int i = 0; i < number_of_transient_objects; i++) {
+			despawn_check();
+		}
+		
+		if ((frame_counter %  PROJECTILE_SPAWN_RATE) == 0) {
+			Projectile my_projectile();					// Generate a new proiejctile.
+			projectiles.push_back(my_projectile);		// Add it to our list of projectiles.
+		}
 	}
 
 
@@ -124,7 +137,11 @@ struct SDL_Application{
 
 		SDL_RenderTexture(mRenderer, enemy_texture, &enemy_poses[enemy_anim()], &enemy_dst_rect);
 
-
+		Uint64 number_of_projectiles = projectiles.size();
+		for (int i = 0; i < number_of_projectiles; i++) {
+			SDL_RenderTexture(mRenderer, projectiles[i], nullptr, nullptr);
+		}
+		
 		// draw other things here ...
 		
         SDL_SetTextureScaleMode(enemy_texture, SDL_SCALEMODE_NEAREST);         // For pixel-art textures (no interpolation or antialiasing).

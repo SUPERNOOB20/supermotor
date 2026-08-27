@@ -35,17 +35,10 @@ void save(SDL_Renderer* my_renderer) {
 
     canvasDummy = SDL_RenderReadPixels(my_renderer, nullptr);           // Texture ---> Surface    ( You can read more here ---> https://wiki.libsdl.org/SDL3/SDL_RenderReadPixels )
 
-    SDL_Log("Canvas Size (surface) (AAAAAAAAA): %ld", sizeof(*canvasDummy));
-
     canvasBackup = (SDL_Surface*) SDL_malloc(sizeof(canvasDummy));      // void*  --->  SDL_Surface*
     canvasBackup = canvasDummy;                                         // Backup of our current canvas.
     SDL_DestroySurface(canvasDummy);                                    // We don't need that placeholder copy anymore.
 
-
-    SDL_Log("Canvas Size (texture): %ld",     sizeof(*canvas));
-    SDL_Log("CanvasCopy Size (surface): %ld", sizeof(*canvasBackup));
-
-    
 
     void* savedData_ptr = &canvasBackup;
 
@@ -58,11 +51,9 @@ void load(SDL_Renderer* my_renderer){
     void* loaded_data = supermotor::storage::ReadSave("my_lovely_canvas.dat");
     SDL_Surface* canvas_surface = (SDL_Surface*) (loaded_data);
 
-    SDL_Log("Canvas Size (texture): %ld",     sizeof(*canvas_surface));
-
 
     canvas = SDL_CreateTextureFromSurface(my_renderer, canvas_surface);
-    SDL_Log("Canvas Size (surface): %ld", sizeof(*canvas));
+
 }
 
 
