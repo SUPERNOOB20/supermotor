@@ -6,6 +6,9 @@
 // .
 
 
+#define PLAYER_SIZE 3       // Scale the player!!! 3 means 3 times as big :3 (1 would mean normal size, 0.5 would mean half the size... etc. o.o)
+
+
 
 #include "../../supermotor/essentials/spritesheet_loader.h"
 #include "../../supermotor/essentials/platforming.h"
@@ -282,10 +285,17 @@ struct SDL_Application{
 };
 
 
+
+
 // Entry Point
 int main(int argc, char* argv[]){
 
+
 	SDL_Application app("FPS test! Current FPS: ");
+
+
+    set_player_size(32 * PLAYER_SIZE,  32 * PLAYER_SIZE);
+
 
     your_obstacles_here = {Floor, Platform1, Platform2, HighFloor1, HighFloor2};    
 

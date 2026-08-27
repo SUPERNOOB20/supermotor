@@ -21,8 +21,24 @@ float gravity = 1.0f;                     //  The bigger, the smaller your jumps
 
 //  ----------------  PLAYER  ----------------------------------------------------------------------------------------------------------------------------------
 //  Your player's texture resolution goes here.
-int player_texture_width = 32 * 3;
-int player_texture_height = 32 * 3;
+// int player_texture_width = 32;
+// int player_texture_height = 32;
+
+#ifndef player_texture_width
+    #define player_texture_width 32
+#endif
+
+#ifndef player_texture_height
+    #define player_texture_height 32
+#endif
+
+/*
+void set_player_size(int width, int height) {
+    player_texture_width = width;
+    player_texture_height = height;
+}
+*/
+
 
 
 SDL_FRect Player{
