@@ -272,7 +272,7 @@ namespace supermotor
         return dst_rect;
         */
 
-        return convert_supermotor_rect_to_sdl_rect(dynamic_cast<Rect*>(&my_moving_platform), SDL_FRect dst_rect);       // https://www.quora.com/How-do-you-explain-the-differences-among-static_cast-reinterpret_cast-const_cast-and-dynamic_cast-to-a-new-C++-programmer
+        return convert_supermotor_rect_to_sdl_rect(dynamic_cast<Rect*>(&my_moving_platform), dst_rect);       // https://www.quora.com/How-do-you-explain-the-differences-among-static_cast-reinterpret_cast-const_cast-and-dynamic_cast-to-a-new-C++-programmer
     }
 
 

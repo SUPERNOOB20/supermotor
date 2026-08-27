@@ -8,6 +8,7 @@
 
 
 #include "../../supermotor/essentials/spritesheet_loader.h"
+#include "../../supermotor/essentials/platforming.h"
 
 #include "savestates_example.h"
 
@@ -15,7 +16,29 @@
 
 
 
+
+
+
+
+
+
 SDL_Renderer* mRenderer;
+
+
+
+// -------- Text stuff here maybe -----------
+
+
+
+
+// ------------ Player texture -----------
+SDL_Texture* playerTexture;
+std::vector<SDL_FRect> player_poses;
+
+
+
+
+// ------------ Akyuu anim -----------
 SDL_Texture* akyuuTexture;
 
 std::vector<SDL_FRect> akyuu_poses;
@@ -71,14 +94,50 @@ Uint8 akyuu_anim(){
 
 
 
+
+
+SDL_Texture* load_background(SDL_Texture* my_background) {
+
+    SDL_Surface* my_background_surface = SDL_LoadPNG("./Assets/background.png");
+    my_background = SDL_CreateTextureFromSurface(mRenderer, my_background_surface);
+    SDL_DestroySurface(my_background_surface);
+
+    return my_background;
+}
+
+
+
+
+SDL_Texture* load_player(SDL_Texture* playerTexture) {
+
+    SDL_Surface* player_surface = SDL_LoadBMP("./Assets/remoo.bmp");
+    if (player_surface == nullptr){
+	    assert (0 && "ERROR: File not found :c");
+    }
+    
+    playerTexture = SDL_CreateTextureFromSurface(mRenderer, player_surface);
+
+    SDL_DestroySurface(player_surface);
+    
+    return playerTexture;
+}
+
+
+
+
 struct SDL_Application{
 
     SDL_Window* mWindow;
     SDL_Texture* my_background;
+    // SDL_Texture* playerTexture;
 
     bool running = true;
 
-
+    // unsigned short int number_of_obstacles = 5;     // Remember to change this datatype yf you have more than 255 obstacles  :3
+    // list_of_obstacles
+    // for (int = 0; i < number_of_obstacles; i++) {
+        // your_obstacles_here = {Floor, Platform1, Platform2, HighFloor1, HighFloor2};
+    // }
 
 
     // Constructor
@@ -97,10 +156,8 @@ struct SDL_Application{
             SDL_SetRenderLogicalPresentation(mRenderer, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 	    }
 
-
-        SDL_Surface* my_background_surface = SDL_LoadPNG("./Assets/background.png");
-        my_background = SDL_CreateTextureFromSurface(mRenderer, my_background_surface);
-        SDL_DestroySurface(my_background_surface);
+        my_background  = load_background(my_background);
+        playerTexture = load_player(playerTexture);
     }
 
 
@@ -137,6 +194,16 @@ struct SDL_Application{
 
    
 	void Update(){
+
+        is_airborne = check_airborne();
+
+        update_player_pos();
+
+        reset_vertical_timer();
+
+        update_jump_status();
+
+        reset_jump();
 	}
 
 
@@ -149,13 +216,23 @@ struct SDL_Application{
         SDL_RenderFillRect(mRenderer, &Background);
 
 
+		SDL_RenderTexture(mRenderer, my_background, nullptr, &Background);            // Renders the background.
 
-		SDL_RenderTexture(mRenderer, my_background, nullptr, &Background);        
+
+        SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0xFF, 0xFF);
+        Uint32 your_obstacles_amount = your_obstacles_here.size();
+        for (int i = 0; i < your_obstacles_amount; i++){
+    		SDL_RenderFillRect(mRenderer, &your_obstacles_here[i]);                   // Renders the obstacles.
+        }
+
 
         // akyuu_anim();
-		SDL_RenderTexture(mRenderer, akyuuTexture, &akyuu_poses[akyuu_anim()], &akyuu1_position);
-		SDL_RenderTexture(mRenderer, akyuuTexture, &akyuu_poses[akyuu_anim()], &akyuu2_position);
+		SDL_RenderTexture(mRenderer, akyuuTexture, &akyuu_poses[akyuu_anim()], &akyuu1_position);       // Renders akyuu.
+		SDL_RenderTexture(mRenderer, akyuuTexture, &akyuu_poses[akyuu_anim()], &akyuu2_position);       // Renders akyuu.
 
+
+        // SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+		SDL_RenderTexture(mRenderer, playerTexture, nullptr, &Player);                // Renders the player.
 
 		// draw other things here ...
 
@@ -178,6 +255,7 @@ struct SDL_Application{
 	void MainLoop(){
         SDL_SetTextureScaleMode(akyuuTexture,  SDL_SCALEMODE_NEAREST);        // For pixel-art textures (no interpolation or antialiasing).
         SDL_SetTextureScaleMode(my_background, SDL_SCALEMODE_NEAREST);        // For pixel-art textures (no interpolation or antialiasing).
+        SDL_SetTextureScaleMode(playerTexture, SDL_SCALEMODE_NEAREST);        // For pixel-art textures (no interpolation or antialiasing).
 
 		Uint64 fps = 0;
 		Uint64 lastTime = 0;
@@ -208,6 +286,24 @@ struct SDL_Application{
 int main(int argc, char* argv[]){
 
 	SDL_Application app("FPS test! Current FPS: ");
+
+    your_obstacles_here = {Floor, Platform1, Platform2, HighFloor1, HighFloor2};    
+
+    /*
+    your_obstacles_here.reserve(5);
+    your_obstacles_here.push_back(Floor);
+    your_obstacles_here.push_back(Platform1);
+    your_obstacles_here.push_back(Platform2);
+    your_obstacles_here.push_back(HighFloor1);
+    your_obstacles_here.push_back(HighFloor2);
+    */
+
+
+    playerTexture = supermotor::create_spritesheet(mRenderer, "./Assets/remoo.bmp", 0x00, 0xFF, 0x00);
+    player_poses  = supermotor::load_spritesheet(playerTexture, 32, 32, VERTICAL);
+    assert((player_poses.size()) == 1);
+
+
 
     akyuuTexture = supermotor::create_spritesheet(mRenderer, "./Assets/akyuu.bmp", 0x00, 0xFF, 0x00);
     akyuu_poses = supermotor::load_spritesheet(akyuuTexture, 32, 32, VERTICAL);
