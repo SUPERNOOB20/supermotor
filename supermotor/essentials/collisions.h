@@ -130,17 +130,11 @@ namespace supermotor
 
 
 
+
         // Shifts your Rect by x pixels.
         void move_x(int amount){
             top_left_corner[0]     += amount;
             bottom_right_corner[0] += amount;
-
-            /*
-            if (amount != 0){
-                SDL_Log("amount: %d", amount);
-            }
-            */
-
         }
 
         // Shifts your Rect by y pixels.
@@ -156,45 +150,124 @@ namespace supermotor
         }
 
 
-        void set_top_left_corner_x(int new_x_value) {
-            int delta_x = new_x_value - top_left_corner[0];       // delta_x = new_x_pos - current_x_pos;
-            move_x(delta_x);
+
+
+
+        //  vvv  --------------- Corner setters ------------------  vvv
+        //       ----- Move a corner to the desired position -----
+        //
+        //
+        // (If "move == true", then move the whole rect along with it (all 4 corners), without alterating its' size. Similar to anchors in GUIs).
+        // (Otherwise, if "move == false", only 2 corners will change {**} ). The rect's size will get deformed!)
+        //
+        //
+        // {**} (can you see why...? Because we're only changing one coordinate at a time! Otherwise it could be 2 or 3)
+        //
+        //
+        // WARNING: "move = true" does NO checking that you don't mirror the rect. Use at your own risk... (or extend the code with your own checking implementation).
+
+
+
+        void set_top_left_corner_x(int new_x_value, bool move) {
+
+            if (move) {
+                int delta_x = new_x_value - top_left_corner[0];       // delta_x = new_x_pos - current_x_pos;
+                move_x(delta_x);
+            } else {
+                top_left_corner[0]  =  new_x_value;         // Moves only the LEFT edge of our rect :3
+            }
         }
 
-        void set_top_left_corner_y(int new_y_value) {
-            int delta_y = new_y_value - top_left_corner[1];       // delta_y = new_y_pos - current_y_pos;
-            move_y(delta_y);
+
+        void set_top_left_corner_y(int new_y_value, bool move) {
+            if (move) {
+                int delta_y = new_y_value - top_left_corner[1];       // delta_y = new_y_pos - current_y_pos;
+                move_y(delta_y);
+            } else {
+                top_left_corner[1]  =  new_y_value;         // Moves only the TOP edge of our rect :3
+            }
         }
 
-        void set_bottom_right_corner_x(int new_x_value) {
-            int delta_x = new_x_value - bottom_right_corner[0];       // delta_x = new_x_pos - current_x_pos;
-            move_x(delta_x);
+
+        void set_bottom_right_corner_x(int new_x_value, bool move) {
+            if (move) {
+                int delta_x = new_x_value - bottom_right_corner[0];       // delta_x = new_x_pos - current_x_pos;
+                move_x(delta_x);
+            } else {
+                bottom_right_corner[0]  =  new_x_value;     // Moves only the RIGHT edge of our rect :3
+            }
         }
 
-        void set_bottom_right_corner_y(int new_y_value) {
-            int delta_y =  new_y_value - bottom_right_corner[1];       // delta_y = new_y_pos - current_y_pos;
-            move_y(delta_y);
+
+        void set_bottom_right_corner_y(int new_y_value, bool move) {
+            if (move) {
+                int delta_y =  new_y_value - bottom_right_corner[1];       // delta_y = new_y_pos - current_y_pos;
+                move_y(delta_y);
+            } else {
+                bottom_right_corner[1] = new_y_value;       // Moves only the BOTTOM edge of our rect :3
+            }
         }
 
-        void set_top_right_corner_x(int new_x_value) {
-            int delta_x = new_x_value - get_top_right_corner_x();
-            move_x(delta_x);
+
+        void set_top_right_corner_x(int new_x_value, bool move) {
+            if (move) {
+                int delta_x = new_x_value - get_top_right_corner_x();
+                move_x(delta_x);
+            } else {
+                bottom_right_corner[0] = new_x_value;       // Moves only the RIGHT edge of our rect :3    
+            }
         }
 
-        void set_top_right_corner_y(int new_y_value) {
-            int delta_y = new_y_value - get_top_right_corner_y();
-            move_y(delta_y);
+
+        void set_top_right_corner_y(int new_y_value, bool move) {
+            if (move) {
+                int delta_y = new_y_value - get_top_right_corner_y();
+                move_y(delta_y);
+            } else {
+                top_left_corner[1] = new_y_value;           // Moves only the TOP edge of our rect :3
+            }
         }
 
-        void set_bottom_left_corner_x(int new_x_value) {
-            int delta_x = new_x_value - get_bottom_left_corner_x();
-            move_x(delta_x);
+
+        void set_bottom_left_corner_x(int new_x_value, bool move) {
+            if (move) {
+                int delta_x = new_x_value - get_bottom_left_corner_x();
+                move_x(delta_x);
+            } else {
+                top_left_corner[0] = new_x_value;           // Moves only the LEFT edge of our rect :3
+            }
         }
 
-        void set_bottom_left_corner_y(int new_y_value) {
-            int delta_y = new_y_value - get_bottom_left_corner_y();
-            move_y(delta_y);
+
+        void set_bottom_left_corner_y(int new_y_value, bool move) {
+            if (move) {
+                int delta_y = new_y_value - get_bottom_left_corner_y();
+                move_y(delta_y);
+            } else {
+                bottom_right_corner[1] = new_y_value;       // Moves only the BOTTOM edge of our rect :3
+            }
         }
+
+
+        // ----------------------------------------------
+
+
+
+
+
+        // Analogous to "SDL_FRect my_sample_rect.h"
+        void set_height(int rect_height){
+            int absolute_height = get_top_left_corner_y() + rect_height; 
+            set_bottom_right_corner_y(absolute_height, false);
+        }
+
+
+        // Analogous to "SDL_FRect my_sample_rect.w"
+        void set_width(int rect_width){
+            int absolute_width = get_top_left_corner_x() + rect_width; 
+            set_bottom_right_corner_x(absolute_width, false);
+        }
+
 
 
         // (Explicit) destructor
@@ -321,21 +394,21 @@ namespace supermotor
     Rect handle_right_collisions(Rect dummy_new_player_pos, Rect current_obstacle){
         Rect new_player_pos(dummy_new_player_pos);
 
-        new_player_pos.set_top_right_corner_x(current_obstacle.get_top_left_corner_x() - 1);                         // SDL_Log("left wall...");
+        new_player_pos.set_top_right_corner_x(current_obstacle.get_top_left_corner_x() - 1, true);                         // SDL_Log("left wall...");
         return new_player_pos;
     }
 
     Rect handle_bottom_collisions(Rect dummy_new_player_pos, Rect current_obstacle){
         Rect new_player_pos(dummy_new_player_pos);
 
-        new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_left_corner_y() - 1);                       // SDL_Log("floor...");
+        new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_left_corner_y() - 1, true);                       // SDL_Log("floor...");
         return new_player_pos;
     }
 
     Rect handle_left_collisions(Rect dummy_new_player_pos, Rect current_obstacle){
         Rect new_player_pos(dummy_new_player_pos);
 
-        new_player_pos.set_top_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);                          // SDL_Log("right wall...");
+        new_player_pos.set_top_left_corner_x(current_obstacle.get_top_right_corner_x() + 1, true);                          // SDL_Log("right wall...");
         return new_player_pos;
     }
 
@@ -343,7 +416,7 @@ namespace supermotor
         
         Rect new_player_pos(dummy_new_player_pos);
 
-        new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);                            // SDL_Log("ceiling...");
+        new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_left_corner_y() + 1, true);                            // SDL_Log("ceiling...");
         vertical_velocity = 0.0f;     // Personal preference, honestly. Feel free to remove or commentate this line if you like a "floatier" effect :3
 
         return new_player_pos;
@@ -388,9 +461,9 @@ namespace supermotor
         int b_y = current_obstacle.get_top_left_corner_y();
 
         if (a_y > b_y) {
-            new_player_pos.set_bottom_right_corner_x(current_obstacle.get_top_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
+            new_player_pos.set_bottom_right_corner_x(current_obstacle.get_top_left_corner_x() - 1, true);       //  "Snaps" the player to the left of the obstacle.
         } else {
-            new_player_pos.set_bottom_right_corner_y(current_obstacle.get_top_left_corner_y() - 1);       //  "Snaps" the player above the obstacle.
+            new_player_pos.set_bottom_right_corner_y(current_obstacle.get_top_left_corner_y() - 1, true);       //  "Snaps" the player above the obstacle.
         }  
 
         return new_player_pos;
@@ -411,9 +484,9 @@ namespace supermotor
         int b_y = current_obstacle.get_top_right_corner_y();
 
         if (a_y > b_y) {
-            new_player_pos.set_bottom_left_corner_x(current_obstacle.get_top_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
+            new_player_pos.set_bottom_left_corner_x(current_obstacle.get_top_right_corner_x() + 1, true);       //  "Snaps" the player to the right of the obstacle.
         } else {
-            new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_right_corner_y() - 1);       //  "Snaps" the player above the obstacle.
+            new_player_pos.set_bottom_left_corner_y(current_obstacle.get_top_right_corner_y() - 1, true);       //  "Snaps" the player above the obstacle.
         }
 
         return new_player_pos;
@@ -442,9 +515,9 @@ namespace supermotor
 
 
         if ((a_y < b_y) || ((a_x - b_x) <= nudge)){
-            new_player_pos.set_top_right_corner_x(current_obstacle.get_bottom_left_corner_x() - 1);       //  "Snaps" the player to the left of the obstacle.
+            new_player_pos.set_top_right_corner_x(current_obstacle.get_bottom_left_corner_x() - 1, true);       //  "Snaps" the player to the left of the obstacle.
         } else {
-            new_player_pos.set_top_right_corner_y(current_obstacle.get_bottom_left_corner_y() + 1);       //  "Snaps" the player below the obstacle.
+            new_player_pos.set_top_right_corner_y(current_obstacle.get_bottom_left_corner_y() + 1, true);       //  "Snaps" the player below the obstacle.
         }
 
         return new_player_pos;
@@ -470,9 +543,9 @@ namespace supermotor
         int b_x = current_obstacle.get_bottom_right_corner_x();
 
         if ((a_y < b_y) || ((b_x - a_x) <= nudge) ){
-            new_player_pos.set_top_left_corner_x(current_obstacle.get_bottom_right_corner_x() + 1);       //  "Snaps" the player to the right of the obstacle.
+            new_player_pos.set_top_left_corner_x(current_obstacle.get_bottom_right_corner_x() + 1, true);       //  "Snaps" the player to the right of the obstacle.
         } else {
-            new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_right_corner_y() + 1);       //  "Snaps" the player below the obstacle.
+            new_player_pos.set_top_left_corner_y(current_obstacle.get_bottom_right_corner_y() + 1, true);       //  "Snaps" the player below the obstacle.
         }
 
         return new_player_pos;
@@ -651,6 +724,9 @@ namespace supermotor
         return handle_collisions(previous_player_pos, current_player_pos, converted_obstacles);
     }
 }
+
+
+
 
 
 

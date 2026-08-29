@@ -308,20 +308,7 @@ struct SDL_Application{
 
 
 	void Update(){
-
-        update_platforms();
-
-
-
-        is_airborne = check_airborne();
-
-        update_player_pos();
-
-        reset_vertical_timer();
-
-        update_jump_status();
-
-        reset_jump();
+        update_platforming_state();
 	}
 
     

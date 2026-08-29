@@ -6,6 +6,13 @@
 #include "../../supermotor/essentials/common.h"
 
 
+namespace supermotor
+{
+
+
+namespace platforming
+{
+
 
 
 
@@ -21,23 +28,8 @@ float gravity = 1.0f;                     //  The bigger, the smaller your jumps
 
 //  ----------------  PLAYER  ----------------------------------------------------------------------------------------------------------------------------------
 //  Your player's texture resolution goes here.
-// int player_texture_width = 32;
-// int player_texture_height = 32;
-
-#ifndef player_texture_width
-    #define player_texture_width 32
-#endif
-
-#ifndef player_texture_height
-    #define player_texture_height 32
-#endif
-
-/*
-void set_player_size(int width, int height) {
-    player_texture_width = width;
-    player_texture_height = height;
-}
-*/
+int player_texture_width = 32;
+int player_texture_height = 32;
 
 
 
@@ -57,9 +49,13 @@ SDL_FRect Player{
 
 //  ----------- Collisions and physics ---------
 
+
+// In my mind, it looked like this:
 // std::array<int, 2> previous_player_pos = {0, 0};
 // std::array<int, 2> current_player_pos = {0, 0};
 
+
+// Initial player position.
 SDL_FRect Dummy_previous_player_pos{
     .x = WINDOW_WIDTH  / 2.0f,
     .y = WINDOW_HEIGHT  / 2.7f,
@@ -67,15 +63,38 @@ SDL_FRect Dummy_previous_player_pos{
     .h = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height))
 };
 supermotor::Rect Previous_player_pos(Dummy_previous_player_pos);
+supermotor::Rect  Current_player_pos(Dummy_previous_player_pos);
 
 
-SDL_FRect Dummy_current_player_pos{
-    .x = WINDOW_WIDTH  / 2.0f,
-    .y = WINDOW_HEIGHT  / 2.7f,
-    .w = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_width)),          // WINDOW_WIDTH / WINDOW_HEIGHT = ratio
-    .h = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height))
-};
-supermotor::Rect Current_player_pos(Dummy_current_player_pos);
+
+// Warning #1: Might reset some stuff
+// Warning #2: I have no idea what I'm doing
+//
+void set_player_size(int width, int height) {
+    
+    // Global change.
+    player_texture_width = width;
+    player_texture_height = height;
+
+
+    // Specific changes.
+    Player.w = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_width));                                                  // WINDOW_WIDTH / WINDOW_HEIGHT = ratio
+    Player.h = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height));
+
+
+    
+    Current_player_pos.set_width    (((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_width)),  false);               //  WINDOW_WIDTH / WINDOW_HEIGHT = ratio
+    Current_player_pos.set_height   (((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height)), false);              //   WINDOW_WIDTH / WINDOW_HEIGHT = ratio
+
+    Previous_player_pos.set_width   (((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_width)),  false);            //    WINDOW_WIDTH / WINDOW_HEIGHT = ratio        // WINDOW_WIDTH / WINDOW_HEIGHT = ratio
+    Previous_player_pos.set_height  (((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height)), false);           //     WINDOW_WIDTH / WINDOW_HEIGHT = ratio
+}
+
+
+
+
+
+
 
 
 
@@ -274,7 +293,39 @@ void update_player_pos() {
 
 
 // -------------------------------------------
+// Utilities:
+
+// Call this function every frame for your platforming to update properly!
+// (Should be called in the Update() part.)
+// (That is: AFTER the player inputs are processed, but BEFORE anything gets rendered on screen).
+//
+//
+void update_platforming_state() {
 
 
+        update_platforms();
+
+
+
+        is_airborne = check_airborne();
+
+        update_player_pos();
+
+        reset_vertical_timer();
+
+        update_jump_status();
+
+        reset_jump();
+}
+
+
+// -------------------------------------------
+
+
+
+
+
+}
+}
 
 #endif

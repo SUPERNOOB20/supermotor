@@ -100,17 +100,8 @@ struct SDL_Application{
 
 
 	void Update(){
-
-        is_airborne = check_airborne();
-
-        update_player_pos();
-
-        reset_vertical_timer();
-
-        update_jump_status();
-
-        reset_jump();
-	}
+        supermotor::platforming::update_platforming_state();
+    }
 
     
 
