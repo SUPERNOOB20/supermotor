@@ -9,8 +9,8 @@
 
 
 // set_player_size(45 * PLAYER_SIZE,  98 * PLAYER_SIZE);
-#define player_texture_width 45
-#define player_texture_height 98
+// #define player_texture_width 45
+// #define player_texture_height 98
 #include "platformer_example.h"
 
 struct SDL_Application{
@@ -78,11 +78,11 @@ struct SDL_Application{
                     
                     SDL_Log("\n");
                     
-                    SDL_Log("Current frame: %ld", frame);
-                    SDL_Log("Player.x: %f", Player.x);
-                    SDL_Log("Player.y: %f", Player.y);
-                    SDL_Log("Player.w: %f", Player.w);
-                    SDL_Log("Player.h: %f", Player.h);
+                    SDL_Log("Current frame: %ld", supermotor::platforming::frame);
+                    SDL_Log("Player.x: %f", supermotor::platforming::Player.x);
+                    SDL_Log("Player.y: %f", supermotor::platforming::Player.y);
+                    SDL_Log("Player.w: %f", supermotor::platforming::Player.w);
+                    SDL_Log("Player.h: %f", supermotor::platforming::Player.h);
                     
                     SDL_Log("Horizontal velocity: %f", horizontal_velocity);
                     SDL_Log("Vertical velocity: %f", vertical_velocity);
@@ -114,13 +114,13 @@ struct SDL_Application{
 
 
         // SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-		SDL_RenderTexture(mRenderer, playerTexture, nullptr, &Player);                // Renders the player.
+		SDL_RenderTexture(mRenderer, playerTexture, nullptr, &supermotor::platforming::Player);                // Renders the player.
 
         
         SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0xFF, 0xFF);
-        Uint32 your_obstacles_amount = your_obstacles_here.size();
+        Uint32 your_obstacles_amount = supermotor::platforming::your_obstacles_here.size();
         for (int i = 0; i < your_obstacles_amount; i++){
-    		SDL_RenderFillRect(mRenderer, &your_obstacles_here[i]);                           // Renders the obstacles.
+    		SDL_RenderFillRect(mRenderer, &supermotor::platforming::your_obstacles_here[i]);                           // Renders the obstacles.
         }
         
 
@@ -179,15 +179,17 @@ struct SDL_Application{
 // Entry Point
 int main(int argc, char* argv[]){
 
-    your_obstacles_here.push_back(Obstacle1);
-    your_obstacles_here.push_back(Obstacle2);
-    your_obstacles_here.push_back(Obstacle3);
-    your_obstacles_here.push_back(Obstacle4);
+    supermotor::platforming::set_player_size(45 * PLAYER_SIZE,  98 * PLAYER_SIZE);
 
-    SDL_Log("Player.x: %f", Player.x);
-    SDL_Log("Player.y: %f", Player.y);
-    SDL_Log("Player.w: %f", Player.w);
-    SDL_Log("Player.h: %f", Player.h);
+    supermotor::platforming::your_obstacles_here.push_back(Obstacle1);
+    supermotor::platforming::your_obstacles_here.push_back(Obstacle2);
+    supermotor::platforming::your_obstacles_here.push_back(Obstacle3);
+    supermotor::platforming::your_obstacles_here.push_back(Obstacle4);
+
+    SDL_Log("Player.x: %f", supermotor::platforming::Player.x);
+    SDL_Log("Player.y: %f", supermotor::platforming::Player.y);
+    SDL_Log("Player.w: %f", supermotor::platforming::Player.w);
+    SDL_Log("Player.h: %f", supermotor::platforming::Player.h);
 
 	SDL_Application app("FPS test! Current FPS: ");
 	app.MainLoop();

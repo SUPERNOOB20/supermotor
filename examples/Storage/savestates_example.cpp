@@ -197,16 +197,7 @@ struct SDL_Application{
 
    
 	void Update(){
-
-        is_airborne = check_airborne();
-
-        update_player_pos();
-
-        reset_vertical_timer();
-
-        update_jump_status();
-
-        reset_jump();
+        supermotor::platforming::update_platforming_state();
 	}
 
 
@@ -223,9 +214,9 @@ struct SDL_Application{
 
 
         SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0xFF, 0xFF);
-        Uint32 your_obstacles_amount = your_obstacles_here.size();
+        Uint32 your_obstacles_amount = supermotor::platforming::your_obstacles_here.size();
         for (int i = 0; i < your_obstacles_amount; i++){
-    		SDL_RenderFillRect(mRenderer, &your_obstacles_here[i]);                   // Renders the obstacles.
+    		SDL_RenderFillRect(mRenderer, &supermotor::platforming::your_obstacles_here[i]);                   // Renders the obstacles.
         }
 
 
@@ -235,7 +226,7 @@ struct SDL_Application{
 
 
         // SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-		SDL_RenderTexture(mRenderer, playerTexture, nullptr, &Player);                // Renders the player.
+		SDL_RenderTexture(mRenderer, playerTexture, nullptr, &supermotor::platforming::Player);                // Renders the player.
 
 		// draw other things here ...
 
@@ -294,10 +285,10 @@ int main(int argc, char* argv[]){
 	SDL_Application app("FPS test! Current FPS: ");
 
 
-    set_player_size(32 * PLAYER_SIZE,  32 * PLAYER_SIZE);
+    supermotor::platforming::set_player_size(32 * PLAYER_SIZE,  32 * PLAYER_SIZE);
 
 
-    your_obstacles_here = {Floor, Platform1, Platform2, HighFloor1, HighFloor2};    
+    supermotor::platforming::your_obstacles_here = {Floor, Platform1, Platform2, HighFloor1, HighFloor2};    
 
     /*
     your_obstacles_here.reserve(5);

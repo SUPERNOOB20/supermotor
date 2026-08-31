@@ -3,9 +3,15 @@
 
 
 
+#ifndef WINDOW_WIDTH
+    #define WINDOW_WIDTH   1280
+#endif
 
-#define WINDOW_WIDTH   1280
-#define WINDOW_HEIGHT   720
+#ifndef WINDOW_HEIGHT
+    #define WINDOW_HEIGHT   720
+#endif
+
+
 
 // Tape and prayers? Tape and prayers ":3
 //

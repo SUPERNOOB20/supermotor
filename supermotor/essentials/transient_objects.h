@@ -7,13 +7,15 @@
 namespace supermotor
 {
 
+
+
 class TransientObject : Rect    // Assuming it inherits private attributes and destructors...
 {
 
   private:
     SDL_Texture* attached_texture = nullptr;      // Optional attribute
     int window_width {1280};     // You will need to update this every frame, or at least whenever you resize your window.
-    int     window_height {720};    //  You will need to update this every frame, or at least whenever you resize your window.
+    int window_height {720};    //  You will need to update this every frame, or at least whenever you resize your window.
 
   public:
 
@@ -31,7 +33,7 @@ class TransientObject : Rect    // Assuming it inherits private attributes and d
         window_height = my_window_height;
     }
 
-    void despawn_check(){
+    void despawn_check() {
 
         bool top      =   get_bottom_left_corner_y()    <  0;                 // TransientObject is above the screen
         bool bottom   =   get_top_left_corner_y()       >  window_height;     // TransientObject is below the screen

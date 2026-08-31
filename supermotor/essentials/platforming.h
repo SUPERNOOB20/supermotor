@@ -33,13 +33,35 @@ int player_texture_height = 32;
 
 
 
+// Visuals.
+SDL_FRect PlayerTexture{
+    .x = ((float) WINDOW_WIDTH)  / 2.0f,
+    .y = ((float) WINDOW_HEIGHT) / 2.7f,
+    .w = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_width)),          // WINDOW_WIDTH / WINDOW_HEIGHT = ratio
+    .h = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height))
+};
+
+
+// Hurtbox to take damage from hazards.
+SDL_FRect PlayerHurtbox{
+    .x = ((float) WINDOW_WIDTH)  / 2.0f,
+    .y = ((float) WINDOW_HEIGHT) / 2.7f,
+    .w = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_width)),          // WINDOW_WIDTH / WINDOW_HEIGHT = ratio
+    .h = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height))
+};
+
+
+// Hitbox for collisions with obstacles (you know, the platforming physics).
 SDL_FRect Player{
     .x = ((float) WINDOW_WIDTH)  / 2.0f,
-    .y = ((float) WINDOW_HEIGHT)  / 2.7f,
+    .y = ((float) WINDOW_HEIGHT) / 2.7f,
     .w = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_width)),          // WINDOW_WIDTH / WINDOW_HEIGHT = ratio
     .h = ((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height))
 };
 //  ------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 
 
 
@@ -83,11 +105,11 @@ void set_player_size(int width, int height) {
 
 
     
-    Current_player_pos.set_width    (((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_width)),  false);               //  WINDOW_WIDTH / WINDOW_HEIGHT = ratio
-    Current_player_pos.set_height   (((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height)), false);              //   WINDOW_WIDTH / WINDOW_HEIGHT = ratio
+    Current_player_pos.set_width    (((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_width)));               //  WINDOW_WIDTH / WINDOW_HEIGHT = ratio
+    Current_player_pos.set_height   (((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height)));              //   WINDOW_WIDTH / WINDOW_HEIGHT = ratio
 
-    Previous_player_pos.set_width   (((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_width)),  false);            //    WINDOW_WIDTH / WINDOW_HEIGHT = ratio        // WINDOW_WIDTH / WINDOW_HEIGHT = ratio
-    Previous_player_pos.set_height  (((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height)), false);           //     WINDOW_WIDTH / WINDOW_HEIGHT = ratio
+    Previous_player_pos.set_width   (((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_width)));            //    WINDOW_WIDTH / WINDOW_HEIGHT = ratio        // WINDOW_WIDTH / WINDOW_HEIGHT = ratio
+    Previous_player_pos.set_height  (((float) (WINDOW_WIDTH) / (float) (WINDOW_HEIGHT)) * ((float) (player_texture_height)));           //     WINDOW_WIDTH / WINDOW_HEIGHT = ratio
 }
 
 
@@ -105,8 +127,9 @@ void set_player_size(int width, int height) {
 
 
 
-std::vector<SDL_FRect> your_obstacles_here;        // I want global obstacles so I don't have to send them as parameters everywhere.
-// your_obstacles_here.reserve(6);                 // We may not be able to add the obstacles to our vector before SDL_Application, but we can at least reserve beforehand... right? right....? Ah, I guess not... well, dammit! heh ":3
+std::vector<SDL_FRect> your_obstacles_here;                        // I want global obstacles        so I don't have to send them as parameters everywhere.
+std::vector<MovingPlatform> your_moving_platforms_here = {};       // I want global moving platforms so I don't have to send them as parameters everywhere.
+
 
 
 
@@ -185,7 +208,6 @@ bool check_airborne(){
     bool res = true;
     
     Uint32 your_obstacles_amount = your_obstacles_here.size();
-
     for (int i = 0; i < your_obstacles_amount; i++){
 
         supermotor::Rect current_obstacle = your_obstacles_here[i];
@@ -195,6 +217,19 @@ bool check_airborne(){
             res = false;
         }
     }
+
+
+   Uint32 your_moving_platforms_amount = your_moving_platforms_here.size();
+   for (int i = 0; i < your_moving_platforms_amount; i++){
+
+        supermotor::Rect current_platform = your_moving_platforms_here[i];
+
+        if (player_is_on_the_ground(current_platform)) {       // your_obstacles_here[i] is the current_obstacle.
+            // SDL_Log("is airborne: false");
+            res = false;
+        }
+    }
+
 
     return res;
 }
@@ -292,6 +327,26 @@ void update_player_pos() {
 }
 
 
+
+
+void update_platforms() {
+
+    Uint32 your_moving_platforms_amount = your_moving_platforms_here.size();
+    
+    for (int i = 0; i < your_moving_platforms_amount; i++) {
+        MovingPlatform current_platform = your_moving_platforms_here[i];
+
+        current_platform.move_x(horizontal_velocity);
+        current_platform.move_y(vertical_velocity);
+    }
+}
+
+
+
+
+
+
+
 // -------------------------------------------
 // Utilities:
 
@@ -303,19 +358,20 @@ void update_player_pos() {
 void update_platforming_state() {
 
 
-        update_platforms();
+
+    update_platforms();
 
 
 
-        is_airborne = check_airborne();
+    is_airborne = check_airborne();
 
-        update_player_pos();
+    update_player_pos();
 
-        reset_vertical_timer();
+    reset_vertical_timer();
 
-        update_jump_status();
+    update_jump_status();
 
-        reset_jump();
+    reset_jump();
 }
 
 

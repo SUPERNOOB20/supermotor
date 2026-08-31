@@ -46,5 +46,20 @@ SDL_FRect Background{
 
 
 
+class Projectile : supermotor::TransientObject {
+  private:
+    int x_velocity = SDL_cos
+    int y_velocity = SDL_sin
+
+    int x_velocity = SDL_cos
+    int y_velocity = SDL_sin
+
+
+  public:
+    Projectile() : TransientObject(SDL_Texture* my_texture, int my_window_width, int my_window_height, Rect* position) : Rect (position) {
+        
+    }    
+};
+
 
 #endif

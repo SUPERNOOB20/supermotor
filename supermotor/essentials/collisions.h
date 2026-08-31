@@ -256,14 +256,14 @@ namespace supermotor
 
 
         // Analogous to "SDL_FRect my_sample_rect.h"
-        void set_height(int rect_height){
+        void set_height(int rect_height) {
             int absolute_height = get_top_left_corner_y() + rect_height; 
             set_bottom_right_corner_y(absolute_height, false);
         }
 
 
         // Analogous to "SDL_FRect my_sample_rect.w"
-        void set_width(int rect_width){
+        void set_width(int rect_width) {
             int absolute_width = get_top_left_corner_x() + rect_width; 
             set_bottom_right_corner_x(absolute_width, false);
         }
