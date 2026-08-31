@@ -331,14 +331,14 @@ void update_player_pos() {
 
 void update_platforms() {
 
-    Uint32 your_moving_platforms_amount = your_moving_platforms_here.size();
-    
-    for (int i = 0; i < your_moving_platforms_amount; i++) {
-        MovingPlatform current_platform = your_moving_platforms_here[i];
+    /*    
+    for (MovingPlatform current_platform : your_moving_platforms_here)
+        current_platform.UpdatePosition(frame);
+    */
 
-        current_platform.move_x(horizontal_velocity);
-        current_platform.move_y(vertical_velocity);
-    }
+
+    for (auto& current_platform : your_moving_platforms_here)
+        current_platform.UpdatePosition(frame);
 }
 
 

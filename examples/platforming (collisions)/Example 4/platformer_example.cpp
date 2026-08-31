@@ -99,7 +99,7 @@ struct SDL_Application{
 	}
 
 
-	inline void Update() { supermotor::platforming::update_platforming_state(); }       // Remove inline if you add more things.
+	inline void Update() { supermotor::platforming::update_platforming_state(); }       // Remove inline if you add more things to this function.
     
 
 	void Render(){
@@ -115,9 +115,9 @@ struct SDL_Application{
 
         
         SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0xFF, 0xFF);
-        Uint32 your_obstacles_amount = your_obstacles_here.size();
+        Uint32 your_obstacles_amount = supermotor::platforming::your_obstacles_here.size();
         for (int i = 0; i < your_obstacles_amount; i++){
-    		SDL_RenderFillRect(mRenderer, &your_obstacles_here[i]);                           // Renders the obstacles.
+    		SDL_RenderFillRect(mRenderer, &supermotor::platforming::your_obstacles_here[i]);                           // Renders the obstacles.
         }
 
         SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0x7F, 0xFF);
@@ -128,12 +128,17 @@ struct SDL_Application{
 
             supermotor::MovingPlatform current_platform = supermotor::platforming::your_moving_platforms_here[i]; 
 
+            SDL_Log("x: %d", current_platform.get_top_left_corner_x());
+
             SDL_FRect current_platform_sdl_rect;            
             current_platform_sdl_rect             = convert_moving_platform_to_sdl_rect(current_platform, current_platform_sdl_rect);
 
+            // SDL_Log("x: %f", current_platform_sdl_rect.x);
+
+
     		SDL_RenderFillRect(mRenderer, &current_platform_sdl_rect);                           // Renders the moving platforms.
         }
-        
+
 
 		// draw other things here ...		
 
@@ -163,8 +168,6 @@ struct SDL_Application{
 		Render();
 
         update_nudge();
-
-        // frame++;
 	}
 
 
@@ -211,19 +214,19 @@ int main(int argc, char* argv[]){
 
 
 
-    // magic number: 5
-    SDL_FRect all_obstacles[5] = {Obstacle1, Obstacle2, Obstacle3};
+    // magic number: 3
+    SDL_FRect all_obstacles[3] = {Obstacle1, Obstacle2, Obstacle3};
     unsigned int amount_of_obstacles = 3;
 
     for (int i = 0; i < amount_of_obstacles; i++){
-        your_obstacles_here.push_back(all_obstacles[i]);
+        supermotor::platforming::your_obstacles_here.push_back(all_obstacles[i]);
     }
 
     supermotor::Rect SupermotorObstacle4 = supermotor::Rect(Obstacle4);       // Convert this "SDL Rect" to a "supermotor rect"...
     supermotor::Rect SupermotorObstacle5 = supermotor::Rect(Obstacle5);      //  Convert this "SDL Rect" to a "supermotor rect"...
 
-    supermotor::MovingPlatform my_moving_platform1 ((double) 10.0f, (double) 0.0f, &SupermotorObstacle4);
-    supermotor::MovingPlatform my_moving_platform2 ((double) 40.0f, (double) 0.0f, &SupermotorObstacle5);
+    supermotor::MovingPlatform my_moving_platform1 ((double) 2.0f, (double) 0.0f, &SupermotorObstacle4);
+    supermotor::MovingPlatform my_moving_platform2 ((double) 8.0f, (double) 0.0f, &SupermotorObstacle5);
 
     // magic number: 2
     supermotor::MovingPlatform all_moving_platforms[2] = {my_moving_platform1, my_moving_platform2};

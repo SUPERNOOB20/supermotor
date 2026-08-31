@@ -281,28 +281,93 @@ namespace supermotor
     class MovingPlatform : public Rect {
 
       private:
-        double horizontal_velocity = 0.0f;
-        double vertical_velocity = 0.0f;
-        double max_horizontal_velocity = 0.0f;
-        double max_vertical_velocity = 0.0f;
+        double x_velocity {0.0f};      // Where the platform should move next (horizontally).
+        double y_velocity {0.0f};      // Where the platform should move next (vertically).
+
+        double x_normalized_accel {0.0f};        //  I say "normalized" but in reality it will be between -x_accel and x_accel.
+        double y_normalized_accel {0.0f};       //   I say "normalized" but in reality it will be between -x_accel and y_accel.
+
+        double x_accel {0.0f};          // Maximum horizontal acceleration (how fast should the platform move left and right?).
+        double y_accel {0.0f};          // Maximum vertical   acceleration (how fast should the platform move up and down?).
+
+
+
 
       public:
 
         // using Rect::Rect;
 
-        MovingPlatform(double x_speed, double y_speed, Rect* position) : Rect (position) {
-            max_horizontal_velocity = SDL_sin(0) * x_speed;
-            max_vertical_velocity   = SDL_sin(0) * y_speed;
+        MovingPlatform(double given_x_accel, double given_y_accel, Rect* position) : Rect (position) {
+
+            // init accel
+            x_accel = given_x_accel;
+            y_accel = given_y_accel;
+
+            // init speed
+            x_normalized_accel = SDL_sin(0) * x_accel;      // current_frame == 0.
+            y_normalized_accel = SDL_sin(0) * y_accel;      // current_frame == 0.
         }
 
 
-        double GetHorizontalVelocity() { return horizontal_velocity; }
-        void SetHorizontalVelocity(double new_horizontal_velocity)   { horizontal_velocity  = new_horizontal_velocity;   }
-        void AddHorizontalVelocity(double added_horizontal_velocity) { horizontal_velocity += added_horizontal_velocity; }
 
-        double GetVerticalVelocity()   { return vertical_velocity; }
-        void SetVerticalVelocity(double new_vertical_velocity)       { vertical_velocity    = new_vertical_velocity;     }
-        void AddVerticalVelocity(double added_vertical_velocity)     { vertical_velocity   += added_vertical_velocity;   }
+
+        // Getters and setters for velocity.
+        double GetHorizontalVelocity() { return x_velocity; }
+        void SetHorizontalVelocity(double new_horizontal_velocity)    { x_velocity   =  new_horizontal_velocity;   }
+        void AddHorizontalVelocity(double added_horizontal_velocity)  { x_velocity  +=  added_horizontal_velocity; }
+
+        double GetVerticalVelocity()   { return y_velocity; }
+        void SetVerticalVelocity(double new_vertical_velocity)        { y_velocity   =  new_vertical_velocity;     }
+        void AddVerticalVelocity(double added_vertical_velocity)      { y_velocity  +=  added_vertical_velocity;   }
+
+
+
+
+        // Getters and setters for normalized acceleration.
+        double GetHorizontalNormalizedAcceleration() { return x_normalized_accel; }
+        void SetHorizontalNormalizedAcceleration(double new_horizontal_normalized_acceleration)    { x_normalized_accel   =  new_horizontal_normalized_acceleration;   }
+        void AddHorizontalNormalizedAcceleration(double added_horizontal_normalized_acceleration)  { x_normalized_accel  +=  added_horizontal_normalized_acceleration; }
+
+        double GetVerticalNormalizedAcceleration()   { return y_normalized_accel; }
+        void SetVerticalNormalizedAcceleration(double new_vertical_normalized_acceleration)        { y_normalized_accel   =  new_vertical_normalized_acceleration;     }
+        void AddVerticalNormalizedAcceleration(double added_vertical_normalized_acceleration)      { y_normalized_accel  +=  added_vertical_normalized_acceleration;   }
+
+
+
+
+        // Getters and setters for acceleration.
+        double GetHorizontalAcceleration() { return x_accel; }
+        void SetHorizontalAcceleration(double new_horizontal_acceleration)    { x_accel   =  new_horizontal_acceleration;   }
+        void AddHorizontalAcceleration(double added_horizontal_acceleration)  { x_accel  +=  added_horizontal_acceleration; }
+
+        double GetVerticalAcceleration()   { return y_accel; }
+        void SetVerticalAcceleration(double new_vertical_acceleration)        { y_accel   =  new_vertical_acceleration;     }
+        void AddVerticalAcceleration(double added_vertical_acceleration)      { y_accel  +=  added_vertical_acceleration;   }
+
+
+        
+
+
+        // Given the current frame, update the platform's physics and visuals.
+        void UpdatePosition(Uint64 frame) {
+
+            // SDL_Log("framor:  %ld  :3", frame);
+
+            SDL_Log("x_normalized_accel #1:  %f   :3", GetHorizontalNormalizedAcceleration());
+
+            AddHorizontalVelocity(GetHorizontalNormalizedAcceleration());                // Updates the platform's physical position [physics].       <--- velocity
+            AddVerticalVelocity  (GetVerticalNormalizedAcceleration());                 //  Updates the platform's physical position [physics].       <--- velocity
+
+
+            this->move_x(GetHorizontalVelocity());         // Updates the platform's visuals (rendering position) [rendering].
+            this->move_y(GetVerticalVelocity());         // Updates the platform's visuals (rendering position) [rendering].
+            
+
+            SetHorizontalNormalizedAcceleration(SDL_sin(frame) * GetHorizontalAcceleration());       //  Updates accel.                               <--- acceleration
+            SetVerticalNormalizedAcceleration  (SDL_sin(frame) * GetVerticalAcceleration());        //   Updates accel.                               <--- acceleration
+
+            SDL_Log("x_normalized_accel #2:  %f   :3", GetHorizontalNormalizedAcceleration());
+        }
     };
 
 

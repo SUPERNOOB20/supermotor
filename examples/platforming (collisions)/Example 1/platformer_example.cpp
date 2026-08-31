@@ -99,9 +99,7 @@ struct SDL_Application{
 
 
 
-	void Update(){
-        supermotor::platforming::update_platforming_state();
-    }
+	inline void Update() { supermotor::platforming::update_platforming_state(); }           // Remove inline if you add more things to this function.
 
     
 
@@ -186,10 +184,10 @@ int main(int argc, char* argv[]){
     supermotor::platforming::your_obstacles_here.push_back(Obstacle3);
     supermotor::platforming::your_obstacles_here.push_back(Obstacle4);
 
-    SDL_Log("Player.x: %f", supermotor::platforming::Player.x);
-    SDL_Log("Player.y: %f", supermotor::platforming::Player.y);
-    SDL_Log("Player.w: %f", supermotor::platforming::Player.w);
-    SDL_Log("Player.h: %f", supermotor::platforming::Player.h);
+    // SDL_Log("Player.x: %f", supermotor::platforming::Player.x);
+    // SDL_Log("Player.y: %f", supermotor::platforming::Player.y);
+    // SDL_Log("Player.w: %f", supermotor::platforming::Player.w);
+    // SDL_Log("Player.h: %f", supermotor::platforming::Player.h);
 
 	SDL_Application app("FPS test! Current FPS: ");
 	app.MainLoop();

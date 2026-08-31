@@ -26,8 +26,8 @@
 
 
 // std::vector<SDL_Texture*> your_textures_here;
-std::vector<SDL_FRect> your_obstacles_here;
-std::vector<supermotor::MovingPlatform> your_moving_platforms_here;
+// std::vector<SDL_FRect> your_obstacles_here;
+// std::vector<supermotor::MovingPlatform> your_moving_platforms_here;
 
 
 // Your player's texture resolution goes here.
