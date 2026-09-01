@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+
+        <link rel="stylesheet" href="./styles.css">  
+
+        <!-- navbar here... e.e -->
+        <nav class="crumbs">
+            <ol>
+                <li class="crumb"><a href="../index.html">  SUPERMOTOR  </a></li>
+                <li class="crumb">  ADTs  </li>
+            </ol>
+        </nav>
+
+
+        <h2>ADTs</h2></a>
+            <ul>
+                <li>asset </li>
+                <li>[WIP] Grid </li>
+            </ul>
+    </head>
+
+    <body>
+
+        <h2>Defined in: &lt;core.h&gt;</h2>
+
+        <p>In asset is kind of like an image that has already been loaded to RAM! It's a union between SDL_Surface and SDL_Texture.</p>
+
+        <p>In the code, it looks like this:</p>
+        
+        <code>
+            <p>union asset {</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SDL_Surface* surface;</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SDL_Texture* texture;</p>
+            <p>};</p></code>
+<p></p>
+        Let's say that you have the following asset:<p></p>
+<div style="text-align: center;">
+<code>        asset my_asset = ... ;<p></p></code>
+</div>
+<p></p>
+        To render your asset with a CPU:<p></p>
+<div style="text-align: center;">
+<code>            my_asset.surface<p></p></code>
+</div>
+<p></p>
+        To render your asset with a GPU:<p></p>
+<div style="text-align: center;">
+<code>            my_asset.texture<p></p></code>
+</div>
+ 
+    <br>
+    <br>
+        <hr width="100%" size="1">		
+    <br>
+    </body>
+
+</html>

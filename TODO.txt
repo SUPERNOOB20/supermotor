@@ -1,4 +1,4 @@
 to-do list:
 
-
-Add concurrency for both screenshots.h and storage_demo.h
+[ ]  Learn concurrency
+[ ]  Add concurrency for both screenshots.h and storage_demo.h

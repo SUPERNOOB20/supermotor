@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+
+    <head>
+
+        <link rel="stylesheet" href="../../styles.css">  
+
+        <!-- navbar here... e.e -->
+        <nav class="crumbs">
+            <ol>
+                <li class="crumb"><a href="../../../index.html">  SUPERMOTOR  </a></li>
+                <li class="crumb"><a href="#">  Platforming  </a></li>        <!--   Empty href here cuz there ain't no such thing as platforming.html :p   -->
+                <li class="crumb">  Hurtboxes  </li>
+            </ol>
+        </nav>
+    </head>
+
+
+
+    <body>
+        Types of blocks:
+            <ul>
+              <li>Normal ones</li>
+              <li>ice blocks</li>
+              <li>(WIP) slime blocks</li>
+              <li>(WIP) ghost blocks</li>
+              <li>Moving platforms</li>
+            </ul>
+
+
+
+
+		<div style="text-align: center;">
+            <img src="illustrations/all_hurtboxes.png" alt="all_hurtboxes">                         <p> All possible hurtboxes atm: Rectangles, Triangles, and circles.</p>  <br>
+
+            <br><br><br><hr width="100%" size="1">			
+			
+            <br><hr width="100%" size="2"><br>
+			<img src="illustrations/rect.png" alt="rectangle">
+                <h1>Rectangles</h1><br><br>
+				<p>Rectangular hurtboxes simply call SDL_HasRectIntersection()</p>
+
+				
+            <br><br><br><hr width="100%" size="1">
+
+
+			<br><hr width="100%" size="2"><br>
+			<img src="illustrations/triangle.png" alt="triangle">
+                <h1>Triangles</h1>  <br><br>
+				<p>Triangles are very interesting! It's some of the oldest code in my game engine, I made it for my very first videogame back in Feb - May 2025...</p>
+				<p>...anyway. Triangles are defined as the intersection of 3 subsections of the plane.</p>
+
+				<p>Sounds complicated? I swear it's not! Here, have an illustration that will hopefully make it easier to understand:</p>
+
+         	    <img class="smol" src="illustrations/triangle_engineering.png" alt="triangle's inner workings (illustration)">
+				<p class = caption_style>Visualization of how triangular hurtboxes work!</i></p>
+
+    
+            <br><br><br><hr width="100%" size="1">
+        
+
+            <br><hr width="100%" size="2"><br>
+			<img src="illustrations/circle.png" alt="circle">
+                <h1>Circles</h1><br><br>
+				<p>[WIP] Circular hurtboxes simply use euclidean distance as defined in the &lt;math.h&gt; header file :3</p>
+        </div>
+    </body>
+
+
+</html>

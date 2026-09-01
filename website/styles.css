@@ -1,3 +1,37 @@
 .smol {
     width: 50%;
 }
+
+
+.caption_style {
+	font-style:	italic;
+	color: #666666;
+}
+
+
+
+
+/*   Credits for this "code": https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/nav    */
+
+nav {
+  border-bottom: 1px solid black;
+}
+
+.crumbs ol {    /* ordered list! :D */
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.crumb {
+  display: inline-block;
+}
+
+.crumb a::after {
+  display: inline-block;
+  color: black;
+  content: ">";
+  font-size: 80%;
+  font-weight: bold;
+  padding: 0 3px;
+}
+
