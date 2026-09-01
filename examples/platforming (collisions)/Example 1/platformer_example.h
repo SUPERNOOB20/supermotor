@@ -1,5 +1,5 @@
-#ifndef PLATFORMER_EXAMPLE_HEADER_FILE
-#define PLATFORMER_EXAMPLE_HEADER_FILE
+#ifndef PLATFORMER_EXAMPLE_1_HEADER_FILE
+#define PLATFORMER_EXAMPLE_1_HEADER_FILE
 
 
 
@@ -16,9 +16,6 @@
 #include <string>
 #include <cassert>
 #include <vector>
-
-#include "../../../supermotor/essentials/collisions.h"
-#include "../../../supermotor/essentials/common.h"
 
 #include "../../../supermotor/essentials/platforming.h"
 

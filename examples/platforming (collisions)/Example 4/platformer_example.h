@@ -1,5 +1,5 @@
-#ifndef PLATFORMER_EXAMPLE_HEADER_FILE
-#define PLATFORMER_EXAMPLE_HEADER_FILE
+#ifndef PLATFORMER_EXAMPLE_4_HEADER_FILE
+#define PLATFORMER_EXAMPLE_4_HEADER_FILE
 
 
 
@@ -17,17 +17,9 @@
 #include <cassert>
 #include <vector>
 
-#include "../../../supermotor/essentials/collisions.h"
-#include "../../../supermotor/essentials/common.h"
 
 #include "../../../supermotor/essentials/platforming.h"
 
-
-
-
-// std::vector<SDL_Texture*> your_textures_here;
-// std::vector<SDL_FRect> your_obstacles_here;
-// std::vector<supermotor::MovingPlatform> your_moving_platforms_here;
 
 
 // Your player's texture resolution goes here.

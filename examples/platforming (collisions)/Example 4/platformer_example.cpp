@@ -162,6 +162,7 @@ struct SDL_Application{
         }
         */
 
+        SDL_Delay(1000);   // Useful for debugging.
 
 		Input();
 		Update();

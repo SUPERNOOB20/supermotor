@@ -21,6 +21,7 @@ namespace platforming
 //  Adjust these to your liking! :3
 int floaty_jump_intensity = 10;            // The bigger, the longer you can hold the jump button for. Change to 0 if you want the player to always jump at the same height!
 float gravity = 1.0f;                     //  The bigger, the smaller your jumps.
+float ice_speed = 2.5f;                  //   The player's speed will be multiplied by this number when standing on ice.
 //  ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -126,9 +127,21 @@ void set_player_size(int width, int height) {
 // is_airborne();
 
 
+// I want global obstacles        so I don't have to send them as parameters everywhere.
+std::vector<SDL_FRect>          your_obstacles_here                 {{}};
 
-std::vector<SDL_FRect> your_obstacles_here;                        // I want global obstacles        so I don't have to send them as parameters everywhere.
-std::vector<MovingPlatform> your_moving_platforms_here = {};       // I want global moving platforms so I don't have to send them as parameters everywhere.
+std::vector<SDL_FRect>          your_1d_up_obstacles_here           {{}};
+std::vector<SDL_FRect>          your_1d_down_obstacles_here         {{}};
+
+std::vector<SDL_FRect>          your_floor_obstacles_here           {{}};
+
+std::vector<SDL_FRect>          your_ice_obstacles_here             {{}};
+std::vector<MovingPlatform>     your_moving_platforms_here          {{}};
+
+
+
+
+
 
 
 
@@ -183,19 +196,24 @@ void reset_jump(){
 
 
 
-bool player_is_on_the_ground(supermotor::Rect current_obstacle){
+bool player_is_on_the_ground(supermotor::Rect current_obstacle, bool check_for_ice){
 
     bool res = false;
+    bool standing_on_ice = false;
 
     supermotor::Rect dummy_current_obstacle(current_obstacle);
     dummy_current_obstacle.move_y(-2);  // Remember that our origin (0, 0) is the top-left corner of the screen.
 
     if (((supermotor::collidingVertices(Player, current_obstacle)).size() == 0) && (supermotor::collidingVertices(Player, dummy_current_obstacle).size() > 0)) {
         res = true;
+        standing_on_ice = true;
     }    
+
+    if(check_for_ice && standing_on_ice) { horizontal_velocity *= ice_speed; } 
 
     return res;
 }
+
 
 
 // consumes     std::vector<SDL_FRect> your_obstacles_here
@@ -205,34 +223,43 @@ bool player_is_on_the_ground(supermotor::Rect current_obstacle){
 // If there are no current collisions, then the player is airborne.
 bool check_airborne(){
 
-    bool res = true;
-    
-    Uint32 your_obstacles_amount = your_obstacles_here.size();
-    for (int i = 0; i < your_obstacles_amount; i++){
+    bool res = true;    
 
-        supermotor::Rect current_obstacle = your_obstacles_here[i];
+    for (auto &current_obstacle : your_obstacles_here) {
 
-        if (player_is_on_the_ground(current_obstacle)) {       // your_obstacles_here[i] is the current_obstacle.
+        if (player_is_on_the_ground(current_obstacle)) {
             // SDL_Log("is airborne: false");
             res = false;
         }
     }
 
 
-   Uint32 your_moving_platforms_amount = your_moving_platforms_here.size();
-   for (int i = 0; i < your_moving_platforms_amount; i++){
 
-        supermotor::Rect current_platform = your_moving_platforms_here[i];
+   for (auto &currentplatform : your_moving_platforms_here) {
 
-        if (player_is_on_the_ground(current_platform)) {       // your_obstacles_here[i] is the current_obstacle.
+        if (player_is_on_the_ground(current_platform)) {
             // SDL_Log("is airborne: false");
             res = false;
         }
     }
-
 
     return res;
 }
+
+
+
+// Apply slippery ice effect if player is above ice.
+void check_airborne_ice() {
+    Uint32 your_ice_obstacles_amount = your_ice_obstacles_here.size();
+
+    for (int i = 0; i < your_ice_obstacles_amount; i++){
+
+        supermotor::Rect current_ice_obstacle = your_ice_obstacles_here[i];
+
+        player_is_on_the_ground(current_ice_obstacle, true);
+    }
+}
+
 
 
 void vertical_velocity_decay() {
@@ -312,6 +339,8 @@ void update_player_pos() {
 
     process_vertical_movement();
     process_horizontal_movement();
+
+    check_airborne_ice();
 
     Current_player_pos.move_x(horizontal_velocity);
     Current_player_pos.move_y(vertical_velocity);
