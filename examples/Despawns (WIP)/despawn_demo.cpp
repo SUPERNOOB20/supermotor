@@ -1,5 +1,5 @@
 // Credits to Mike Shah  -  https://youtu.be/yZl9X47cHi8
-// g++ demo.cpp -O3 -o my_game `pkg-config --libs --cflags sdl3`
+// g++ despawn_demo.cpp -O3 -o demo `pkg-config --libs --cflags sdl3`
 
 // .
 // .
@@ -65,7 +65,7 @@ struct SDL_Application{
 
     SDL_Window* mWindow;
     SDL_Renderer* mRenderer;
-    SDL_Texture* mTexture;
+    SDL_Texture* projectileTexture;
     
     bool running = true;
 
@@ -86,6 +86,12 @@ struct SDL_Application{
 		    }
             SDL_SetRenderLogicalPresentation(mRenderer, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 	    }
+
+        SDL_Surface* projectileSurface = SDL_LoadPNG("./Assets/your_projectile_here.png");
+	    if (surface == nullptr){
+		    assert(0 == "ERROR: File not found :c");
+	    }
+	    projectileTexture = SDL_CreateTextureFromSurface(mRenderer, projectileSurface);
     }
 
 	// Destructor
@@ -137,9 +143,12 @@ struct SDL_Application{
 
 		SDL_RenderTexture(mRenderer, enemy_texture, &enemy_poses[enemy_anim()], &enemy_dst_rect);
 
+    
 		Uint64 number_of_projectiles = projectiles.size();
 		for (int i = 0; i < number_of_projectiles; i++) {
-			SDL_RenderTexture(mRenderer, projectiles[i], nullptr, nullptr);
+            
+            SDL_FRect current_dst_rect = supermotor::your_projectiles_here[i.get_SDLFrect()]
+			SDL_RenderTexture(mRenderer, projectileTexture, nullptr, current_dst_rect);
 		}
 		
 		// draw other things here ...
@@ -163,7 +172,7 @@ struct SDL_Application{
 		Uint64 lastTime = 0;
 
         enemy_texture = supermotor::create_spritesheet(mRenderer, "./Assets/fairy.png", 0xFF, 0x00, 0xFF);
-        enemy_poses   = supermotor::load_spritesheet(enemy_texture, 32, 16, VERTICAL);
+        enemy_poses   = supermotor::load_spritesheet(enemy_texture, 32, 16, supermotor::VERTICAL);
 
         enemy_dst_rect    =  screen_center_rect;
 

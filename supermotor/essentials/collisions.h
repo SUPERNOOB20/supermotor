@@ -126,6 +126,26 @@ namespace supermotor
         std::array<std::array<int, 2>, 4>   get_all_corners()   { return {{{top_left_corner[0], top_left_corner[1]}, {get_top_right_corner_x(), get_top_right_corner_y()}, {get_bottom_left_corner_x(), get_bottom_left_corner_y()}, {bottom_right_corner[0], bottom_right_corner[1]}}}; }
 
 
+        // Converts supermotor::Rect to SDL_FRect  :3
+        //
+        // You get these equations by clearing the ones from Constructor #4
+        //
+        SDL_FRect  get_SDL_FRect() {
+
+            SDL_FRect my_sdl_rectangle;
+
+            my_sdl_rectangle.x  =  top_left_corner[0];
+            my_sdl_rectangle.y  =  top_left_corner[1];
+            my_sdl_rectangle.w  =  bottom_right_corner[0] - my_sdl_rectangle.x;
+            my_sdl_rectangle.h  =  bottom_right_corner[1] - my_sdl_rectangle.y;
+
+            return my_sdl_rectangle;
+        }
+
+
+
+
+
         //  vvvv  Setters  vvvv
 
 

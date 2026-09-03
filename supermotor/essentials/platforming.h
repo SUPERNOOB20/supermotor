@@ -119,15 +119,7 @@ void set_player_size(int width, int height) {
 
 
 
-
-
-// Function declaration.
-// vertical_velocity_decay();
-// update_player_pos();
-// is_airborne();
-
-
-// I want global obstacles        so I don't have to send them as parameters everywhere.
+// I want global obstacles so I don't have to send them as parameters everywhere.
 std::vector<SDL_FRect>          your_obstacles_here                 {{}};
 
 std::vector<SDL_FRect>          your_1d_up_obstacles_here           {{}};
@@ -137,8 +129,6 @@ std::vector<SDL_FRect>          your_floor_obstacles_here           {{}};
 
 std::vector<SDL_FRect>          your_ice_obstacles_here             {{}};
 std::vector<MovingPlatform>     your_moving_platforms_here          {{}};
-
-
 
 
 

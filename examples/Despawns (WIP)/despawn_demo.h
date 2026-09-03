@@ -1,7 +1,7 @@
 #ifndef DESPAWN_DEMO_HEADER_FILE
 #define DESPAWN_DEMO_HEADER_FILE
 
-#include "../../supermotor/math.h"
+#include "../../supermotor/essentials/math.h"
 #include "../../supermotor/essentials/transient_objects.h"
 #include "../../supermotor/essentials/spritesheet_loader.h"
 

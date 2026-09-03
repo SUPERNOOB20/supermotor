@@ -4,6 +4,8 @@
 #include "collisions.h"
 #include <SDL3/SDL.h>
 
+
+
 namespace supermotor
 {
 
@@ -55,6 +57,18 @@ class TransientObject : Rect    // Assuming it inherits private attributes and d
         }
     }
 };
+
+
+
+typedef std::vector<SDL_TransientObject>  transient_objects;
+
+
+// I want global obstacles so I don't have to send them as parameters everywhere.
+transient_objects       your_transient_objects_here         {{}};
+transient_objects       your_projectiles_here               {{}};
+
+
+// ^ ... You can keep adding more transient_objects variables if you need to :3
 
 
 
