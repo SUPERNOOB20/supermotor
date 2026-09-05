@@ -14,40 +14,59 @@
         </nav>
 
 
-        <h2>ADTs</h2></a>
+	<div style="text-align: center;">
+        <h2>  ADTs  </h2>
+		<p class="caption_style">  Abstract Data Types  </p>
+	</div>	
+	<br>
+	<br>
+	<h3>ADTs</h3>
             <ul>
                 <li>asset </li>
                 <li>[WIP] Grid </li>
             </ul>
     </head>
+	
+<br>
+<br>
 
     <body>
 
-        <h2>Defined in: &lt;core.h&gt;</h2>
+
+
+        <h2 class="caption_style">Defined in: <header_file>&lt;core.h&gt;</header_file></h2>
 
         <p>In asset is kind of like an image that has already been loaded to RAM! It's a union between SDL_Surface and SDL_Texture.</p>
 
         <p>In the code, it looks like this:</p>
-        
+
+<div style="text-align: center;">        
         <code>
             <p>union asset {</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SDL_Surface* surface;</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SDL_Texture* texture;</p>
-            <p>};</p></code>
-<p></p>
-        Let's say that you have the following asset:<p></p>
-<div style="text-align: center;">
-<code>        asset my_asset = ... ;<p></p></code>
+                <p><code_tab>SDL_Surface* surface;</code_tab></p>
+                <p><code_tab>SDL_Texture* texture;</code_tab></p>
+            <p><code_tab_inverse>};</code_tab_inverse></p></code>
 </div>
-<p></p>
-        To render your asset with a CPU:<p></p>
+<br>
+<br>
+<br>
+        Let's say that you have the following asset:<br>
 <div style="text-align: center;">
-<code>            my_asset.surface<p></p></code>
+<code>        asset my_asset = ... ;</code>   <br>
 </div>
-<p></p>
-        To render your asset with a GPU:<p></p>
+<br>
+<br>
+<br>
+        To render your asset with a CPU:<br>
 <div style="text-align: center;">
-<code>            my_asset.texture<p></p></code>
+<code>            my_asset.surface</code> <br>
+</div>
+<br>
+<br>
+<br>
+        To render your asset with a GPU:<br>
+<div style="text-align: center;">
+<code>            my_asset.texture</code><br>
 </div>
  
     <br>

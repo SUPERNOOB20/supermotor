@@ -1,6 +1,36 @@
+smol_sangria {					/*  Indentation for aesthetics. Definitely not an OCD or anything like that... definitely not!!!  ":3  */
+	padding-left: 20px;
+}
+
+sangria {					/*  This one is even worse than OCD. It's pure tanteo perfectionism.  */
+	padding-left: 40px;
+}
+
+code_tab {					/*  Indentation for code. Feel free to adjust the padding value to your own liking :p  */
+	padding-left: 150px;
+}
+
+code_tab_inverse {			/*  Center is evil.  */
+	padding-right: 80px;
+}
+
+
 p10 {
     background-color: #b2fc92;
     font-size: 9px;
+}
+
+blue {
+	color: #4444de;
+}
+
+
+header_file {
+	color: #03ad4d;
+}
+
+dark_green {
+	color: #007834;
 }
 
 
