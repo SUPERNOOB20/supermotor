@@ -59,14 +59,16 @@ class Projectile : supermotor::TransientObject {
   public:
 
     // Constructor: Spawn a bullet in the center of the screen, and move it to any random direction.
-    Projectile() : TransientObject(SDL_Texture* my_texture, int my_window_width, int my_window_height, Rect* position) : Rect (position) {
-        x_velocity = SDL_rand (-1, 2);      // -1 <= x <= 1
-        y_velocity = SDL_rand (-1, 2);      // -1 <= x <= 1
+    Projectile()                           : TransientObject(                            int my_window_width, int my_window_height, Rect* position) : Rect (position) {
+        x_velocity = SDL_rand(3) - 1;      // -1 <= x <= 1
+        y_velocity = SDL_rand(3) - 1;      // -1 <= x <= 1
     }
 
-    Projectile() : TransientObject(SDL_Texture* my_texture, int my_window_width, int my_window_height, Rect* position) : Rect (position) {
-        x_velocity = SDL_rand (-1, 2);      // -1 <= x <= 1
-        y_velocity = SDL_rand (-1, 2);      // -1 <= x <= 1
+    Projectile(supermotor::asset my_asset) : TransientObject(supermotor::asset my_asset, int my_window_width, int my_window_height, Rect* position) : Rect (position) {
+        x_velocity = SDL_rand(3) - 1;      // -1 <= x <= 1
+        y_velocity = SDL_rand(3) - 1;      // -1 <= x <= 1
+
+        this->
     }
 
 
@@ -75,22 +77,22 @@ class Projectile : supermotor::TransientObject {
 
     // Setters.
     shoot_downwards_only() {
-        x_velocity = SDL_rand (-1, 2);      // -1 <= x <= 1
-        y_velocity = SDL_rand (0,  2);      //  0 <= x <= 1
+        x_velocity = SDL_rand(3) - 1;      // -1 <= x <= 1
+        y_velocity = SDL_rand(2)    ;      //  0 <= x <= 1
     }
 
 
     // If you want to shoot in a specific ("exact") direction.
     shoot_direction_exact(int given_x_velocity, int given_y_velocity) {
-        x_velocity = SDL_rand (-1, 2);      // -1 <= x <= 1
-        y_velocity = SDL_rand (0,  2);      //  0 <= x <= 1
+        x_velocity = SDL_rand(3) - 1;      // -1 <= x <= 1
+        y_velocity = SDL_rand(2)    ;      //  0 <= x <= 1
     }
 
 
     // If you want to shoot in a specific direction "range".
     shoot_direction_range(int given_x_velocity, int given_y_velocity) {
-        x_velocity = SDL_rand (-1, 2);      // -1 <= x <= 1
-        y_velocity = SDL_rand (0,  2);      //  0 <= x <= 1
+        x_velocity = SDL_rand(3) - 1;      // -1 <= x <= 1
+        y_velocity = SDL_rand(2)    ;      //  0 <= x <= 1
     }
 
 

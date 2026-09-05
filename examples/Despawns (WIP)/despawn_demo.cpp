@@ -232,6 +232,8 @@ struct SDL_Application{
 // Entry Point
 int main(int argc, char* argv[]){
     
+    supermotor::init_transient_objects();
+
 	SDL_Application app("FPS test! Current FPS: ");
 	app.MainLoop();
 	return 0;

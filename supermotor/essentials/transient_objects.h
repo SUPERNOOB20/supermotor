@@ -1,8 +1,12 @@
 #ifndef TRANSIENT_OBJECTS_HEADER_FILE
 #define TRANSIENT_OBJECTS_HEADER_FILE
 
-#include "collisions.h"
+
 #include <SDL3/SDL.h>
+
+#include "collisions.h"
+#include "../core.h"           // Even if just for the asset typedef...
+
 
 
 
@@ -11,22 +15,29 @@ namespace supermotor
 
 
 
-class TransientObject : Rect    // Assuming it inherits private attributes and destructors...
+class TransientObject : Rect     // Assuming it inherits private attributes and destructors...
 {
 
   private:
-    SDL_Texture* attached_texture = nullptr;      // Optional attribute
+    supermotor::asset attached_asset = nullptr;      // Optional attribute.
     int window_width {1280};     // You will need to update this every frame, or at least whenever you resize your window.
     int window_height {720};    //  You will need to update this every frame, or at least whenever you resize your window.
 
+
   public:
 
-    // Rect + Texture.
-    TransientObject(SDL_Texture* my_texture, int my_window_width, int my_window_height, Rect* position) : Rect (position) {
-        attached_texture = my_texture;
+    static unsigned long long int ref_count;   // Unless you really really know what you're doing (and you don't), DON'T touch this.
+
+
+    // Rect + Asset.
+    TransientObject(supermotor::asset my_asset, int my_window_width, int my_window_height, Rect* position) : Rect (position) {
+        attached_asset = my_asset;
         window_width  = my_window_width;
         window_height = my_window_height;
+        
+        ref_count++;
     }
+
 
 
     // Rect.
@@ -52,11 +63,23 @@ class TransientObject : Rect    // Assuming it inherits private attributes and d
     // Custom "destructor".
     void Despawn()
     {
-        if (attached_texture != nullptr) {
-            SDL_DestroyTexture(attached_texture);       // If your object has a texture attached to it, free that memory.
+
+        if (ref_count > 0) {
+            ref_count--;
+        } else {
+        if ( (attached_asset.texture != nullptr) || (attached_asset.surface != nullptr) )    {
+            // SDL_Log("No Objects left!!! Removing asset from RAM...");
+            supermotor::destroy_asset(attached_asset);       // If your object has a surface or texture attached to it, free that memory.
+            // SDL_Log("Object removed successfully.");
         }
     }
 };
+
+
+void init_transient_objects() {
+    unsigned long long int Rect::TransientObject::ref_count = 0;
+}
+
 
 
 

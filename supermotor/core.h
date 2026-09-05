@@ -17,9 +17,9 @@
 
 
 // Welcome! :3)7
-// core.h contains essential game engine functions like batch rendering.
+// core.h contains fundamental game engine functions like batch rendering and the asset ADT.
 //
-// That is to say, you give it filenames, and it loads aaaall those images into the GPU.
+// My batch rendering works like this: you give it filenames (or a whole directory), and it loads aaaall those images into the GPU.
 // (you should run these only ONCE either on startup or on loading screens, and NOT every single frame of your game).
 //
 // Here are some ideas if you want to improve this code (or I might do these too, in the future...):
@@ -42,6 +42,24 @@ union asset {
 typedef std::vector<asset> assets;
 
 typedef std::map<std::string, asset> asset_dict;
+
+
+
+// Free RAM when you're not using an image anymore.
+void destroy_asset(asset trashed_asset) {
+
+    if (trashed_asset.surface != nullptr) {
+        SDL_DestroySurface(trashed_asset.surface);
+    }
+
+    if (trashed_asset.texture != nullptr) {
+        SDL_DestroyTexture(trashed_asset.texture);
+    }
+}
+
+
+
+
 
 
 
